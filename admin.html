@@ -597,6 +597,40 @@
       font-weight: 800;
     }
 
+
+    .danger-zone {
+      margin-top: 24px;
+      padding: 16px;
+      border: 1px solid rgba(180, 35, 24, 0.35);
+      border-radius: 14px;
+      background: var(--danger-light);
+    }
+
+    .danger-zone h3 {
+      margin: 0 0 6px;
+      color: var(--danger);
+    }
+
+    .danger-zone p {
+      margin: 0 0 12px;
+      color: #6f2b26;
+    }
+
+    .delete-team-button {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 14px;
+      border: 1px solid var(--danger);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--danger);
+      font-weight: 900;
+    }
+
+    .delete-team-button:hover {
+      background: #fff7f6;
+    }
+
     .evaluation-status {
       display: none;
       margin-top: 10px;
@@ -836,6 +870,20 @@
             <div id="evaluationStatus" class="evaluation-status" role="status" aria-live="polite"></div>
           </section>
 
+
+          <section class="danger-zone" aria-labelledby="dangerZoneTitle">
+            <h3 id="dangerZoneTitle">Smazání výsledku</h3>
+
+            <p>
+              Smaže celý týmový výsledek včetně odeslaných fotografií.
+              Tuto akci nelze vrátit.
+            </p>
+
+            <button id="deleteTeamButton" class="delete-team-button" type="button">
+              Smazat tento tým a jeho výsledky
+            </button>
+          </section>
+
           <h3 class="section-title">Úkoly a odpovědi</h3>
           <div id="taskResults" class="task-results"></div>
 
@@ -925,6 +973,7 @@
     const evaluationNote = document.getElementById("evaluationNote");
     const saveEvaluationButton = document.getElementById("saveEvaluationButton");
     const evaluationStatus = document.getElementById("evaluationStatus");
+    const deleteTeamButton = document.getElementById("deleteTeamButton");
 
     let submissions = [];
     let currentSubmissionId = null;
@@ -1397,6 +1446,97 @@
       updateEvaluationTotals();
     }
 
+
+    async function deleteCurrentSubmission() {
+      const submission = submissions.find(
+        item => item.id === currentSubmissionId
+      );
+
+      if (!submission) {
+        return;
+      }
+
+      const firstConfirmation = window.confirm(
+        `Opravdu chcete smazat tým „${submission.team_name}“ a všechny jeho výsledky?`
+      );
+
+      if (!firstConfirmation) {
+        return;
+      }
+
+      const secondConfirmation = window.confirm(
+        "Tato akce je nevratná. Budou odstraněny odpovědi, skóre i fotografie. Opravdu pokračovat?"
+      );
+
+      if (!secondConfirmation) {
+        return;
+      }
+
+      deleteTeamButton.disabled = true;
+      deleteTeamButton.textContent = "Mažu tým…";
+
+      try {
+        const photoPaths = Object.values(
+          submission.photo_paths || {}
+        ).filter(Boolean);
+
+        if (photoPaths.length > 0) {
+          const { error: photoError } = await supabaseClient
+            .storage
+            .from("team-photos")
+            .remove(photoPaths);
+
+          if (photoError) {
+            throw new Error(
+              `Fotografie se nepodařilo smazat: ${photoError.message}`
+            );
+          }
+        }
+
+        const { error: submissionError } = await supabaseClient
+          .from("submissions")
+          .delete()
+          .eq("id", submission.id);
+
+        if (submissionError) {
+          throw submissionError;
+        }
+
+        submissions = submissions.filter(
+          item => item.id !== submission.id
+        );
+
+        currentSubmissionId = null;
+        detailPanel.classList.remove("show");
+
+        renderSummary();
+        renderTable();
+
+        showStatus(
+          dashboardStatus,
+          "success",
+          `Tým „${submission.team_name}“ byl včetně fotografií smazán.`
+        );
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      } catch (error) {
+        console.error(error);
+
+        evaluationStatus.className =
+          "evaluation-status show error";
+
+        evaluationStatus.textContent =
+          `Tým se nepodařilo smazat: ${error.message || "Neznámá chyba"}`;
+
+        deleteTeamButton.disabled = false;
+        deleteTeamButton.textContent =
+          "Smazat tento tým a jeho výsledky";
+      }
+    }
+
     async function saveEvaluation() {
       const submission = submissions.find(
         item => item.id === currentSubmissionId
@@ -1487,6 +1627,10 @@
       detailTime.textContent = formatDate(submission.submitted_at);
       detailVersion.textContent =
         submission.app_version || "Neuvedena";
+
+      deleteTeamButton.disabled = false;
+      deleteTeamButton.textContent =
+        "Smazat tento tým a jeho výsledky";
 
       renderEvaluation(submission);
 
@@ -1616,6 +1760,11 @@
     saveEvaluationButton.addEventListener(
       "click",
       saveEvaluation
+    );
+
+    deleteTeamButton.addEventListener(
+      "click",
+      deleteCurrentSubmission
     );
 
     async function startAdminApp() {
