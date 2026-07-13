@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#35205f">
+
+  <title>Plzeňská výzva – administrace</title>
+
+  <style>
+    :root {
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #222222;
+      --muted: #666b73;
+      --primary: #6f2dbd;
+      --primary-dark: #4e1d87;
+      --primary-light: #f0e7ff;
+      --border: #e3e5e9;
+      --success: #218739;
+      --danger: #b42318;
+      --danger-light: #fff0ee;
+      --shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+
+    .page {
+      width: min(100% - 24px, 1120px);
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff, #f2e8ff);
+      box-shadow: var(--shadow);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: clamp(1.65rem, 5vw, 2.4rem);
+      line-height: 1.1;
+    }
+
+    .brand p {
+      margin: 6px 0 0;
+      color: var(--muted);
+    }
+
+    .logout-button {
+      display: none;
+      flex-shrink: 0;
+      min-height: 44px;
+      padding: 9px 14px;
+      border: 1px solid var(--primary);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .logout-button.show {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .login-card {
+      width: min(100%, 480px);
+      margin: 40px auto 0;
+    }
+
+    .login-card h2,
+    .dashboard h2,
+    .detail-card h2 {
+      margin: 0 0 8px;
+    }
+
+    .intro {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .form-field {
+      margin-top: 14px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    .form-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 13px;
+      border: 1px solid #cdd0d6;
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+    }
+
+    .form-input:focus {
+      outline: 3px solid rgba(111, 45, 189, 0.18);
+      border-color: var(--primary);
+    }
+
+    .primary-button {
+      width: 100%;
+      min-height: 50px;
+      margin-top: 18px;
+      padding: 11px 15px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      padding: 11px 12px;
+      border-radius: 11px;
+      font-weight: 700;
+    }
+
+    .status.show {
+      display: block;
+    }
+
+    .status.error {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .status.success {
+      background: #e8f7ec;
+      color: var(--success);
+    }
+
+    .status.working {
+      background: #edf3ff;
+      color: #2451a6;
+    }
+
+    .dashboard {
+      display: none;
+    }
+
+    .dashboard.show {
+      display: block;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .refresh-button {
+      min-height: 48px;
+      padding: 10px 15px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--card);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .summary-number {
+      display: block;
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .summary-label {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .table-card {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 780px;
+    }
+
+    th,
+    td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #f8f6fb;
+      color: #494d55;
+      font-size: 0.86rem;
+    }
+
+    tbody tr:hover {
+      background: #fbf9ff;
+    }
+
+    .team-name {
+      font-weight: 800;
+    }
+
+    .small-text {
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 0.87rem;
+    }
+
+    .open-button {
+      min-height: 38px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 10px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 800;
+    }
+
+    .empty-state {
+      padding: 28px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .detail-panel {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .detail-panel.show {
+      display: block;
+    }
+
+    .detail-card {
+      position: relative;
+    }
+
+    .close-detail {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 50%;
+      background: #f1f1f4;
+      color: #333;
+      font-size: 1.25rem;
+      font-weight: 800;
+    }
+
+    .detail-meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 18px 0;
+    }
+
+    .meta-item {
+      padding: 12px;
+      border-radius: 12px;
+      background: #f7f4fa;
+    }
+
+    .meta-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .meta-value {
+      display: block;
+      margin-top: 4px;
+      font-weight: 800;
+      overflow-wrap: anywhere;
+    }
+
+    .section-title {
+      margin: 24px 0 10px;
+      font-size: 1.15rem;
+    }
+
+    .task-results {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-result {
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #ffffff;
+    }
+
+    .task-result.completed {
+      border-color: rgba(33, 135, 57, 0.4);
+      background: #f7fcf8;
+    }
+
+    .task-result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .task-result-title {
+      font-weight: 800;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .badge.done {
+      background: #e6f6ea;
+      color: var(--success);
+    }
+
+    .badge.missing {
+      background: #f0f1f3;
+      color: #6b7078;
+    }
+
+    .answer {
+      margin: 9px 0 0;
+      padding: 10px 11px;
+      border-radius: 10px;
+      background: #f7f7f9;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .answer.empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .photo-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #ffffff;
+    }
+
+    .photo-card img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      background: #eceef1;
+    }
+
+    .photo-caption {
+      padding: 10px 11px;
+      font-weight: 700;
+    }
+
+    .photo-error {
+      padding: 16px;
+      color: var(--danger);
+      background: var(--danger-light);
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar,
+      .summary-grid,
+      .detail-meta,
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .logout-button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Plzeňská výzva</h1>
+        <p>Administrace výsledků</p>
+      </div>
+
+      <button id="logoutButton" class="logout-button" type="button">
+        Odhlásit se
+      </button>
+    </header>
+
+    <section id="loginSection" class="card login-card">
+      <h2>Přihlášení organizátora</h2>
+
+      <p class="intro">
+        Přihlaste se účtem, který jste vytvořili v Supabase Authentication.
+      </p>
+
+      <form id="loginForm">
+        <div class="form-field">
+          <label for="email">E-mail</label>
+          <input
+            id="email"
+            class="form-input"
+            type="email"
+            autocomplete="username"
+            required
+          >
+        </div>
+
+        <div class="form-field">
+          <label for="password">Heslo</label>
+          <input
+            id="password"
+            class="form-input"
+            type="password"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+
+        <button id="loginButton" class="primary-button" type="submit">
+          Přihlásit se
+        </button>
+      </form>
+
+      <div id="loginStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="dashboard" class="dashboard">
+      <div class="summary-grid">
+        <div class="summary-card">
+          <span id="teamCount" class="summary-number">0</span>
+          <span class="summary-label">odevzdaných týmů</span>
+        </div>
+
+        <div class="summary-card">
+          <span id="averageCompleted" class="summary-number">0</span>
+          <span class="summary-label">průměrně splněných úkolů</span>
+        </div>
+
+        <div class="summary-card">
+          <span id="photoCount" class="summary-number">0</span>
+          <span class="summary-label">odeslaných fotografií</span>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input
+          id="searchInput"
+          class="form-input"
+          type="search"
+          placeholder="Hledat tým, člena nebo kód odevzdání…"
+        >
+
+        <button id="refreshButton" class="refresh-button" type="button">
+          Obnovit výsledky
+        </button>
+      </div>
+
+      <section class="card table-card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tým</th>
+                <th>Členové</th>
+                <th>Splněno</th>
+                <th>Odevzdáno</th>
+                <th>Kód</th>
+                <th>Detail</th>
+              </tr>
+            </thead>
+
+            <tbody id="submissionsBody"></tbody>
+          </table>
+
+          <div id="emptyState" class="empty-state">
+            Zatím nejsou načtené žádné výsledky.
+          </div>
+        </div>
+      </section>
+
+      <div id="dashboardStatus" class="status" role="status" aria-live="polite"></div>
+
+      <section id="detailPanel" class="detail-panel">
+        <div class="card detail-card">
+          <button id="closeDetailButton" class="close-detail" type="button" aria-label="Zavřít detail">
+            ×
+          </button>
+
+          <h2 id="detailTeamName">Detail týmu</h2>
+          <p id="detailMembers" class="intro"></p>
+
+          <div class="detail-meta">
+            <div class="meta-item">
+              <span class="meta-label">Splněno</span>
+              <span id="detailCompleted" class="meta-value"></span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Kód odevzdání</span>
+              <span id="detailCode" class="meta-value code"></span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Čas odevzdání</span>
+              <span id="detailTime" class="meta-value"></span>
+            </div>
+
+            <div class="meta-item">
+              <span class="meta-label">Verze aplikace</span>
+              <span id="detailVersion" class="meta-value"></span>
+            </div>
+          </div>
+
+          <h3 class="section-title">Úkoly a odpovědi</h3>
+          <div id="taskResults" class="task-results"></div>
+
+          <h3 class="section-title">Fotografie</h3>
+          <div id="photoGrid" class="photo-grid"></div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const supabaseUrl = "https://hqkongijaoxfbhatlxjg.supabase.co";
+    const supabasePublishableKey =
+      "sb_publishable_zID4S29fjci3_TI6M7mDPw_1vpEPpX7";
+
+    const supabaseClient = window.supabase.createClient(
+      supabaseUrl,
+      supabasePublishableKey
+    );
+
+    const taskDefinitions = [
+      { id: "katedrala", title: "Katedrála" },
+      { id: "radnice", title: "Radnice" },
+      { id: "spejbl", title: "Spejbl & Hurvínek" },
+      { id: "synagoga", title: "Synagoga" },
+      { id: "djkt", title: "DJKT" },
+      { id: "beseda", title: "Měšťanská beseda" },
+      { id: "muzeum", title: "Západočeské muzeum" },
+      { id: "masne-kramy", title: "Masné krámy" },
+      { id: "vymena", title: "Vyměňovací výzva" },
+      { id: "cizinec", title: "Fotka s cizincem" },
+      { id: "pomucka", title: "Učební pomůcka" },
+      { id: "recenze", title: "Pochvala či výtka?" },
+      { id: "talisman", title: "Týmový talisman" },
+      { id: "like", title: "LIKE?" },
+      { id: "bavilo", title: "Co vás bavilo?" },
+      { id: "byl-jsem-zde", title: "Byl jsem zde" }
+    ];
+
+    const loginSection = document.getElementById("loginSection");
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const loginStatus = document.getElementById("loginStatus");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    const dashboard = document.getElementById("dashboard");
+    const logoutButton = document.getElementById("logoutButton");
+    const refreshButton = document.getElementById("refreshButton");
+    const searchInput = document.getElementById("searchInput");
+    const submissionsBody = document.getElementById("submissionsBody");
+    const emptyState = document.getElementById("emptyState");
+    const dashboardStatus = document.getElementById("dashboardStatus");
+
+    const teamCount = document.getElementById("teamCount");
+    const averageCompleted = document.getElementById("averageCompleted");
+    const photoCount = document.getElementById("photoCount");
+
+    const detailPanel = document.getElementById("detailPanel");
+    const closeDetailButton = document.getElementById("closeDetailButton");
+    const detailTeamName = document.getElementById("detailTeamName");
+    const detailMembers = document.getElementById("detailMembers");
+    const detailCompleted = document.getElementById("detailCompleted");
+    const detailCode = document.getElementById("detailCode");
+    const detailTime = document.getElementById("detailTime");
+    const detailVersion = document.getElementById("detailVersion");
+    const taskResults = document.getElementById("taskResults");
+    const photoGrid = document.getElementById("photoGrid");
+
+    let submissions = [];
+
+    function showStatus(element, type, message) {
+      element.className = `status show ${type}`;
+      element.textContent = message;
+    }
+
+    function hideStatus(element) {
+      element.className = "status";
+      element.textContent = "";
+    }
+
+    function formatDate(value) {
+      if (!value) {
+        return "Neuvedeno";
+      }
+
+      return new Intl.DateTimeFormat("cs-CZ", {
+        dateStyle: "medium",
+        timeStyle: "short"
+      }).format(new Date(value));
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showLogin() {
+      loginSection.style.display = "block";
+      dashboard.classList.remove("show");
+      logoutButton.classList.remove("show");
+    }
+
+    function showDashboard() {
+      loginSection.style.display = "none";
+      dashboard.classList.add("show");
+      logoutButton.classList.add("show");
+    }
+
+    async function login(email, password) {
+      loginButton.disabled = true;
+      showStatus(loginStatus, "working", "Přihlašuji…");
+
+      const { error } = await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      loginButton.disabled = false;
+
+      if (error) {
+        showStatus(
+          loginStatus,
+          "error",
+          "Přihlášení se nepodařilo. Zkontrolujte e-mail a heslo."
+        );
+
+        return;
+      }
+
+      passwordInput.value = "";
+      hideStatus(loginStatus);
+      showDashboard();
+      await loadSubmissions();
+    }
+
+    async function logout() {
+      logoutButton.disabled = true;
+
+      await supabaseClient.auth.signOut();
+
+      submissions = [];
+      submissionsBody.innerHTML = "";
+      emptyState.style.display = "block";
+      detailPanel.classList.remove("show");
+      logoutButton.disabled = false;
+      showLogin();
+    }
+
+    async function loadSubmissions() {
+      refreshButton.disabled = true;
+      showStatus(
+        dashboardStatus,
+        "working",
+        "Načítám odevzdané výsledky…"
+      );
+
+      const { data, error } = await supabaseClient
+        .from("submissions")
+        .select("*")
+        .order("submitted_at", {
+          ascending: false
+        });
+
+      refreshButton.disabled = false;
+
+      if (error) {
+        showStatus(
+          dashboardStatus,
+          "error",
+          `Výsledky se nepodařilo načíst: ${error.message}`
+        );
+
+        return;
+      }
+
+      submissions = Array.isArray(data) ? data : [];
+      hideStatus(dashboardStatus);
+      renderSummary();
+      renderTable();
+    }
+
+    function renderSummary() {
+      const totalTeams = submissions.length;
+
+      const totalCompleted = submissions.reduce(
+        (sum, submission) =>
+          sum + Number(submission.completed_count || 0),
+        0
+      );
+
+      const totalPhotos = submissions.reduce(
+        (sum, submission) =>
+          sum + Object.keys(submission.photo_paths || {}).length,
+        0
+      );
+
+      teamCount.textContent = totalTeams;
+
+      averageCompleted.textContent = totalTeams
+        ? (totalCompleted / totalTeams).toFixed(1)
+        : "0";
+
+      photoCount.textContent = totalPhotos;
+    }
+
+    function getFilteredSubmissions() {
+      const query = searchInput.value
+        .trim()
+        .toLocaleLowerCase("cs");
+
+      if (query === "") {
+        return submissions;
+      }
+
+      return submissions.filter(submission => {
+        const searchableText = [
+          submission.team_name,
+          submission.team_members,
+          submission.submission_code
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLocaleLowerCase("cs");
+
+        return searchableText.includes(query);
+      });
+    }
+
+    function renderTable() {
+      const filtered = getFilteredSubmissions();
+      submissionsBody.innerHTML = "";
+
+      emptyState.style.display =
+        filtered.length === 0 ? "block" : "none";
+
+      filtered.forEach(submission => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>
+            <div class="team-name">${escapeHtml(submission.team_name)}</div>
+          </td>
+
+          <td>
+            <div class="small-text">
+              ${escapeHtml(submission.team_members || "Neuvedeno")}
+            </div>
+          </td>
+
+          <td>
+            <strong>
+              ${Number(submission.completed_count || 0)}
+              /
+              ${Number(submission.total_count || 0)}
+            </strong>
+          </td>
+
+          <td>
+            <div class="small-text">
+              ${escapeHtml(formatDate(submission.submitted_at))}
+            </div>
+          </td>
+
+          <td>
+            <span class="code">
+              ${escapeHtml(submission.submission_code)}
+            </span>
+          </td>
+
+          <td>
+            <button
+              class="open-button"
+              type="button"
+              data-submission-id="${escapeHtml(submission.id)}"
+            >
+              Otevřít
+            </button>
+          </td>
+        `;
+
+        submissionsBody.appendChild(row);
+      });
+
+      submissionsBody
+        .querySelectorAll(".open-button")
+        .forEach(button => {
+          button.addEventListener("click", () => {
+            openSubmission(button.dataset.submissionId);
+          });
+        });
+    }
+
+    function getTaskCompletionMap(submission) {
+      const map = new Map();
+
+      const completedTasks = Array.isArray(
+        submission.completed_tasks
+      )
+        ? submission.completed_tasks
+        : [];
+
+      completedTasks.forEach(task => {
+        if (task && task.id) {
+          map.set(task.id, Boolean(task.completed));
+        }
+      });
+
+      return map;
+    }
+
+    async function loadPhotoUrls(photoPaths) {
+      const entries = Object.entries(photoPaths || {});
+      const results = [];
+
+      for (const [photoId, path] of entries) {
+        const { data, error } = await supabaseClient
+          .storage
+          .from("team-photos")
+          .createSignedUrl(path, 60 * 60);
+
+        results.push({
+          photoId,
+          path,
+          signedUrl: data?.signedUrl || null,
+          error
+        });
+      }
+
+      return results;
+    }
+
+    async function openSubmission(submissionId) {
+      const submission = submissions.find(
+        item => item.id === submissionId
+      );
+
+      if (!submission) {
+        return;
+      }
+
+      detailPanel.classList.add("show");
+      detailTeamName.textContent = submission.team_name;
+      detailMembers.textContent =
+        submission.team_members || "Členové týmu nebyli uvedeni.";
+
+      detailCompleted.textContent =
+        `${submission.completed_count} / ${submission.total_count}`;
+
+      detailCode.textContent = submission.submission_code;
+      detailTime.textContent = formatDate(submission.submitted_at);
+      detailVersion.textContent =
+        submission.app_version || "Neuvedena";
+
+      const answers = submission.answers || {};
+      const completionMap = getTaskCompletionMap(submission);
+
+      taskResults.innerHTML = "";
+
+      taskDefinitions.forEach(task => {
+        const completed = completionMap.get(task.id) === true;
+        const answer = answers[task.id];
+        const item = document.createElement("article");
+
+        item.className =
+          `task-result${completed ? " completed" : ""}`;
+
+        item.innerHTML = `
+          <div class="task-result-header">
+            <span class="task-result-title">
+              ${escapeHtml(task.title)}
+            </span>
+
+            <span class="badge ${completed ? "done" : "missing"}">
+              ${completed ? "Splněno" : "Nesplněno"}
+            </span>
+          </div>
+
+          <div class="answer${answer ? "" : " empty"}">
+            ${
+              answer
+                ? escapeHtml(answer)
+                : "Bez textové odpovědi"
+            }
+          </div>
+        `;
+
+        taskResults.appendChild(item);
+      });
+
+      photoGrid.innerHTML =
+        '<div class="small-text">Načítám fotografie…</div>';
+
+      const photoResults = await loadPhotoUrls(
+        submission.photo_paths
+      );
+
+      photoGrid.innerHTML = "";
+
+      if (photoResults.length === 0) {
+        photoGrid.innerHTML =
+          '<div class="small-text">Tým neodeslal žádné fotografie.</div>';
+      } else {
+        photoResults.forEach(photo => {
+          const card = document.createElement("article");
+          card.className = "photo-card";
+
+          const title =
+            taskDefinitions.find(
+              task => task.id === photo.photoId
+            )?.title || photo.photoId;
+
+          if (photo.error || !photo.signedUrl) {
+            card.innerHTML = `
+              <div class="photo-error">
+                Fotografii se nepodařilo načíst.
+              </div>
+
+              <div class="photo-caption">
+                ${escapeHtml(title)}
+              </div>
+            `;
+          } else {
+            card.innerHTML = `
+              <a
+                href="${escapeHtml(photo.signedUrl)}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="${escapeHtml(photo.signedUrl)}"
+                  alt="Fotografie k úkolu ${escapeHtml(title)}"
+                >
+              </a>
+
+              <div class="photo-caption">
+                ${escapeHtml(title)}
+              </div>
+            `;
+          }
+
+          photoGrid.appendChild(card);
+        });
+      }
+
+      detailPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    loginForm.addEventListener("submit", event => {
+      event.preventDefault();
+
+      login(
+        emailInput.value.trim(),
+        passwordInput.value
+      );
+    });
+
+    logoutButton.addEventListener("click", logout);
+
+    refreshButton.addEventListener(
+      "click",
+      loadSubmissions
+    );
+
+    searchInput.addEventListener(
+      "input",
+      renderTable
+    );
+
+    closeDetailButton.addEventListener("click", () => {
+      detailPanel.classList.remove("show");
+    });
+
+    async function startAdminApp() {
+      const {
+        data: { session }
+      } = await supabaseClient.auth.getSession();
+
+      if (session) {
+        showDashboard();
+        await loadSubmissions();
+      } else {
+        showLogin();
+      }
+    }
+
+    startAdminApp();
+  </script>
+</body>
+</html>
