@@ -5,13 +5,111 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Plzeňská výzva</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f5f7;
+      color: #222;
+      line-height: 1.5;
+    }
+
+    .page {
+      width: min(100% - 24px, 720px);
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    .hero {
+      background: white;
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+      line-height: 1.15;
+    }
+
+    .intro {
+      margin: 0;
+      color: #555;
+    }
+
+    .task-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+    }
+
+    .task-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+    }
+
+    .task-icon {
+      font-size: 1.7rem;
+    }
+
+    .task-card p {
+      margin: 0 0 10px;
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f0e7ff;
+      color: #7024a8;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
-  <h1>Plzeňská výzva</h1>
+  <main class="page">
 
-  <p>
-    Stránka funguje. Brzy tady budou všechny úkoly.
-  </p>
+    <section class="hero">
+      <h1>Plzeňská výzva</h1>
+
+      <p class="intro">
+        Projděte město, splňte úkoly a nasbírejte co nejvíce bonusových bodů.
+      </p>
+    </section>
+
+    <article class="task-card">
+      <h2 class="task-title">
+        <span class="task-icon">⛪</span>
+        Katedrála
+      </h2>
+
+      <p>
+        Najděte slavného plzeňského andělíčka, sáhněte si na něj
+        a jako tým vymyslete jedno společné přání pro zbytek akce.
+      </p>
+
+      <p>
+        Přání napište maximálně v 7 slovech.
+      </p>
+
+      <div class="note">
+        +1 bonusový bod za nejlepší přání
+      </div>
+    </article>
+
+  </main>
 </body>
 </html>
