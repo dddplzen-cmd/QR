@@ -18,6 +18,7 @@
       --border: #e6e7eb;
       --success: #218739;
       --danger: #b42318;
+      --danger-light: #fff1ef;
     }
 
     * {
@@ -212,7 +213,7 @@
 
     .task-answer {
       width: 100%;
-      min-height: 96px;
+      min-height: 92px;
       padding: 12px 14px;
       border: 1px solid #cfcfd6;
       border-radius: 12px;
@@ -223,6 +224,11 @@
       resize: vertical;
     }
 
+    .task-answer.short-answer {
+      min-height: 52px;
+      resize: none;
+    }
+
     .task-answer:focus {
       outline: 3px solid rgba(111, 45, 189, 0.18);
       border-color: var(--primary);
@@ -230,19 +236,41 @@
 
     .task-answer.too-many-words {
       border-color: var(--danger);
-      background: #fff4f2;
+      background: var(--danger-light);
+    }
+
+    .answer-info {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.88rem;
     }
 
     .word-counter {
-      margin-top: 6px;
-      text-align: right;
-      color: var(--muted);
-      font-size: 0.88rem;
+      margin-left: auto;
+      white-space: nowrap;
     }
 
     .word-counter.limit-reached {
       color: var(--danger);
       font-weight: 700;
+    }
+
+    .limit-warning {
+      display: none;
+      margin-top: 8px;
+      padding: 9px 11px;
+      border-radius: 10px;
+      background: var(--danger-light);
+      color: var(--danger);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .limit-warning.show {
+      display: block;
     }
 
     .complete-label {
@@ -261,6 +289,15 @@
       width: 22px;
       height: 22px;
       accent-color: var(--success);
+    }
+
+    .complete-label.is-disabled {
+      color: #8a8d93;
+      cursor: not-allowed;
+    }
+
+    .complete-label input:disabled {
+      cursor: not-allowed;
     }
 
     .footer {
@@ -320,12 +357,10 @@
       <details class="task-card" open>
         <summary class="task-summary">
           <span class="task-icon">⛪</span>
-
           <span class="task-heading">
             <span class="task-title">Katedrála</span>
             <span class="task-subtitle">Týmové přání</span>
           </span>
-
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
 
@@ -336,31 +371,30 @@
             pro zbytek akce.
           </p>
 
-          <p>
-            Zapište ho maximálně v 7 slovech.
-          </p>
+          <p>Zapište ho maximálně v 7 slovech.</p>
 
           <div class="answer-box">
-            <label for="katedrala-answer">
-              Naše společné přání
-            </label>
-
+            <label for="answer-katedrala">Naše společné přání</label>
             <textarea
-              id="katedrala-answer"
+              id="answer-katedrala"
               class="task-answer"
+              data-answer-id="katedrala"
+              data-max-words="7"
               rows="3"
-              maxlength="200"
               placeholder="Sem napište společné přání…"
             ></textarea>
 
-            <div class="word-counter" id="katedrala-counter">
-              <span id="katedrala-word-count">0</span> / 7 slov
+            <div class="answer-info">
+              <span>Odpověď se ukládá automaticky.</span>
+              <span class="word-counter">0 / 7 slov</span>
+            </div>
+
+            <div class="limit-warning">
+              Zkraťte odpověď na nejvýše 7 slov. Potom půjde úkol označit jako splněný.
             </div>
           </div>
 
-          <div class="note">
-            +1 bonusový bod za nejlepší přání
-          </div>
+          <div class="note">+1 bonusový bod za nejlepší přání</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -384,6 +418,20 @@
             Zjistěte, jaká výstava se koná v mázhauzu radnice, a zapište jednu věc,
             kterou jste viděli v nejvyšším patře jedné z vitrín.
           </p>
+
+          <div class="answer-box">
+            <label for="answer-radnice">Název výstavy a nalezená věc</label>
+            <textarea
+              id="answer-radnice"
+              class="task-answer"
+              data-answer-id="radnice"
+              rows="3"
+              placeholder="Např. název výstavy – předmět ve vitríně…"
+            ></textarea>
+            <div class="answer-info">
+              <span>Odpověď se ukládá automaticky.</span>
+            </div>
+          </div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -435,9 +483,28 @@
 
           <p>Maximálně 12 slov.</p>
 
-          <div class="note">
-            +1 bonusový bod za nejlepší důvod
+          <div class="answer-box">
+            <label for="answer-synagoga">Náš důvod k návštěvě</label>
+            <textarea
+              id="answer-synagoga"
+              class="task-answer"
+              data-answer-id="synagoga"
+              data-max-words="12"
+              rows="3"
+              placeholder="Sem napište svůj důvod…"
+            ></textarea>
+
+            <div class="answer-info">
+              <span>Odpověď se ukládá automaticky.</span>
+              <span class="word-counter">0 / 12 slov</span>
+            </div>
+
+            <div class="limit-warning">
+              Zkraťte odpověď na nejvýše 12 slov. Potom půjde úkol označit jako splněný.
+            </div>
           </div>
+
+          <div class="note">+1 bonusový bod za nejlepší důvod</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -461,6 +528,17 @@
             Zjistěte, jaké nejbližší představení se v DJKT hraje. Zapište jeho název.
           </p>
 
+          <div class="answer-box">
+            <label for="answer-djkt">Název představení</label>
+            <textarea
+              id="answer-djkt"
+              class="task-answer short-answer"
+              data-answer-id="djkt"
+              rows="1"
+              placeholder="Sem napište název představení…"
+            ></textarea>
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -483,6 +561,17 @@
             Rozhlédněte se kolem sebe a zkuste zjistit, v jaké nadmořské výšce
             se nachází plzeňské náměstí.
           </p>
+
+          <div class="answer-box">
+            <label for="answer-beseda">Nadmořská výška</label>
+            <textarea
+              id="answer-beseda"
+              class="task-answer short-answer"
+              data-answer-id="beseda"
+              rows="1"
+              placeholder="Např. 310 m n. m."
+            ></textarea>
+          </div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -508,9 +597,18 @@
             a nezapomeňte ji vyfotit.
           </p>
 
-          <div class="note">
-            +1 bonusový bod za nejlepší exponát
+          <div class="answer-box">
+            <label for="answer-muzeum">Název našeho exponátu</label>
+            <textarea
+              id="answer-muzeum"
+              class="task-answer short-answer"
+              data-answer-id="muzeum"
+              rows="1"
+              placeholder="Sem napište název exponátu…"
+            ></textarea>
           </div>
+
+          <div class="note">+1 bonusový bod za nejlepší exponát</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -534,6 +632,17 @@
             Pokuste se zjistit, od kdy ZČG využívá budovu Masné krámy jako svoji galerii.
           </p>
 
+          <div class="answer-box">
+            <label for="answer-masne-kramy">Od kdy?</label>
+            <textarea
+              id="answer-masne-kramy"
+              class="task-answer short-answer"
+              data-answer-id="masne-kramy"
+              rows="1"
+              placeholder="Sem napište rok nebo datum…"
+            ></textarea>
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -554,9 +663,18 @@
         <div class="task-content">
           <p>Vyměňte propagační materiál za něco hodnotnějšího.</p>
 
-          <div class="note">
-            +3 bonusové body za nejlepší výměnu
+          <div class="answer-box">
+            <label for="answer-vymena">Co jsme získali?</label>
+            <textarea
+              id="answer-vymena"
+              class="task-answer"
+              data-answer-id="vymena"
+              rows="3"
+              placeholder="Sem napište, za co jste materiál vyměnili…"
+            ></textarea>
           </div>
+
+          <div class="note">+3 bonusové body za nejlepší výměnu</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -580,6 +698,17 @@
             Vyfoťte se s cizincem u plzeňské památky a zjistěte, odkud je.
           </p>
 
+          <div class="answer-box">
+            <label for="answer-cizinec">Odkud je?</label>
+            <textarea
+              id="answer-cizinec"
+              class="task-answer short-answer"
+              data-answer-id="cizinec"
+              rows="1"
+              placeholder="Sem napište zemi nebo město…"
+            ></textarea>
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -602,6 +731,17 @@
             Najděte po cestě něco, co by mohlo sloužit jako netradiční učební pomůcka.
             Zapište, co to je, případně to také vyfoťte.
           </p>
+
+          <div class="answer-box">
+            <label for="answer-pomucka">Naše učební pomůcka</label>
+            <textarea
+              id="answer-pomucka"
+              class="task-answer"
+              data-answer-id="pomucka"
+              rows="3"
+              placeholder="Sem napište, co jste našli…"
+            ></textarea>
+          </div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -628,6 +768,27 @@
 
           <p>Maximálně 20 slov.</p>
 
+          <div class="answer-box">
+            <label for="answer-recenze">Naše recenze</label>
+            <textarea
+              id="answer-recenze"
+              class="task-answer"
+              data-answer-id="recenze"
+              data-max-words="20"
+              rows="3"
+              placeholder="Sem napište krátkou recenzi…"
+            ></textarea>
+
+            <div class="answer-info">
+              <span>Odpověď se ukládá automaticky.</span>
+              <span class="word-counter">0 / 20 slov</span>
+            </div>
+
+            <div class="limit-warning">
+              Zkraťte odpověď na nejvýše 20 slov. Potom půjde úkol označit jako splněný.
+            </div>
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -646,13 +807,20 @@
         </summary>
 
         <div class="task-content">
-          <p>
-            Najděte po cestě drobný symbolický talisman týmu.
-          </p>
+          <p>Najděte po cestě drobný symbolický talisman týmu.</p>
 
-          <div class="note">
-            +1 bonusový bod za nejlepší talisman
+          <div class="answer-box">
+            <label for="answer-talisman">Náš týmový talisman</label>
+            <textarea
+              id="answer-talisman"
+              class="task-answer"
+              data-answer-id="talisman"
+              rows="3"
+              placeholder="Sem napište, co jste vybrali a proč…"
+            ></textarea>
           </div>
+
+          <div class="note">+1 bonusový bod za nejlepší talisman</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -676,6 +844,17 @@
             Najděte po cestě něco, co se opravdu líbí všem členům týmu.
           </p>
 
+          <div class="answer-box">
+            <label for="answer-like">Co se líbí celému týmu?</label>
+            <textarea
+              id="answer-like"
+              class="task-answer"
+              data-answer-id="like"
+              rows="3"
+              placeholder="Sem napište svůj společný výběr…"
+            ></textarea>
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -698,9 +877,18 @@
             Napište, co vás na dnešní výpravě nejvíce bavilo.
           </p>
 
-          <div class="note">
-            +1 bonusový bod za nejlepší historku
+          <div class="answer-box">
+            <label for="answer-bavilo">Co nás nejvíce bavilo?</label>
+            <textarea
+              id="answer-bavilo"
+              class="task-answer"
+              data-answer-id="bavilo"
+              rows="4"
+              placeholder="Sem napište svůj nejlepší zážitek nebo historku…"
+            ></textarea>
           </div>
+
+          <div class="note">+1 bonusový bod za nejlepší historku</div>
 
           <label class="complete-label">
             <input type="checkbox" class="task-check">
@@ -734,68 +922,19 @@
     </section>
 
     <p class="footer">
-      Stav úkolů a odpověď se ukládají přímo v tomto telefonu.
+      Stav úkolů a všechny zapsané odpovědi se ukládají přímo v tomto telefonu.
     </p>
   </main>
 
   <script>
     const checks = [...document.querySelectorAll(".task-check")];
+    const answerFields = [...document.querySelectorAll(".task-answer")];
+
     const progressText = document.getElementById("progressText");
     const progressBar = document.getElementById("progressBar");
 
     const tasksStorageKey = "plzenska-vyzva-splnene-ukoly";
-    const cathedralAnswerStorageKey = "plzenska-vyzva-katedrala-odpoved";
-
-    function loadProgress() {
-      const saved = JSON.parse(
-        localStorage.getItem(tasksStorageKey) || "[]"
-      );
-
-      checks.forEach((checkbox, index) => {
-        checkbox.checked = Boolean(saved[index]);
-
-        checkbox
-          .closest(".task-card")
-          .classList.toggle("is-complete", checkbox.checked);
-      });
-
-      updateProgress();
-    }
-
-    function updateProgress() {
-      const completed = checks.filter(
-        checkbox => checkbox.checked
-      ).length;
-
-      const total = checks.length;
-      const percentage = total ? (completed / total) * 100 : 0;
-
-      progressText.textContent = `${completed} / ${total}`;
-      progressBar.style.width = `${percentage}%`;
-
-      const state = checks.map(
-        checkbox => checkbox.checked
-      );
-
-      localStorage.setItem(
-        tasksStorageKey,
-        JSON.stringify(state)
-      );
-    }
-
-    checks.forEach(checkbox => {
-      checkbox.addEventListener("change", () => {
-        checkbox
-          .closest(".task-card")
-          .classList.toggle("is-complete", checkbox.checked);
-
-        updateProgress();
-      });
-    });
-
-    const cathedralAnswer = document.getElementById("katedrala-answer");
-    const cathedralWordCount = document.getElementById("katedrala-word-count");
-    const cathedralCounter = document.getElementById("katedrala-counter");
+    const answersStorageKey = "plzenska-vyzva-odpovedi";
 
     function countWords(text) {
       const cleanedText = text.trim();
@@ -807,43 +946,146 @@
       return cleanedText.split(/\s+/).length;
     }
 
-    function updateCathedralAnswer() {
-      const wordCount = countWords(cathedralAnswer.value);
-      const isOverLimit = wordCount > 7;
+    function getTaskCheckbox(field) {
+      return field
+        .closest(".task-content")
+        .querySelector(".task-check");
+    }
 
-      cathedralWordCount.textContent = wordCount;
+    function getCompleteLabel(checkbox) {
+      return checkbox.closest(".complete-label");
+    }
 
-      cathedralAnswer.classList.toggle(
-        "too-many-words",
-        isOverLimit
+    function updateAnswerField(field) {
+      const maxWords = Number(field.dataset.maxWords || 0);
+      const wordCount = countWords(field.value);
+      const isOverLimit = maxWords > 0 && wordCount > maxWords;
+
+      field.classList.toggle("too-many-words", isOverLimit);
+
+      const answerBox = field.closest(".answer-box");
+      const counter = answerBox.querySelector(".word-counter");
+      const warning = answerBox.querySelector(".limit-warning");
+      const checkbox = getTaskCheckbox(field);
+      const completeLabel = getCompleteLabel(checkbox);
+
+      if (counter && maxWords > 0) {
+        counter.textContent = `${wordCount} / ${maxWords} slov`;
+        counter.classList.toggle("limit-reached", isOverLimit);
+      }
+
+      if (warning) {
+        warning.classList.toggle("show", isOverLimit);
+      }
+
+      if (isOverLimit) {
+        checkbox.checked = false;
+        checkbox.disabled = true;
+        completeLabel.classList.add("is-disabled");
+
+        checkbox
+          .closest(".task-card")
+          .classList.remove("is-complete");
+      } else {
+        checkbox.disabled = false;
+        completeLabel.classList.remove("is-disabled");
+      }
+    }
+
+    function saveAnswers() {
+      const answers = {};
+
+      answerFields.forEach(field => {
+        answers[field.dataset.answerId] = field.value;
+      });
+
+      localStorage.setItem(
+        answersStorageKey,
+        JSON.stringify(answers)
+      );
+    }
+
+    function loadAnswers() {
+      const savedAnswers = JSON.parse(
+        localStorage.getItem(answersStorageKey) || "{}"
       );
 
-      cathedralCounter.classList.toggle(
-        "limit-reached",
-        isOverLimit
+      answerFields.forEach(field => {
+        const answerId = field.dataset.answerId;
+
+        if (Object.prototype.hasOwnProperty.call(savedAnswers, answerId)) {
+          field.value = savedAnswers[answerId];
+        }
+
+        updateAnswerField(field);
+      });
+    }
+
+    function loadProgress() {
+      const saved = JSON.parse(
+        localStorage.getItem(tasksStorageKey) || "[]"
+      );
+
+      checks.forEach((checkbox, index) => {
+        if (!checkbox.disabled) {
+          checkbox.checked = Boolean(saved[index]);
+        }
+
+        checkbox
+          .closest(".task-card")
+          .classList.toggle(
+            "is-complete",
+            checkbox.checked && !checkbox.disabled
+          );
+      });
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const completed = checks.filter(
+        checkbox => checkbox.checked && !checkbox.disabled
+      ).length;
+
+      const total = checks.length;
+      const percentage = total ? (completed / total) * 100 : 0;
+
+      progressText.textContent = `${completed} / ${total}`;
+      progressBar.style.width = `${percentage}%`;
+
+      const state = checks.map(
+        checkbox => checkbox.checked && !checkbox.disabled
       );
 
       localStorage.setItem(
-        cathedralAnswerStorageKey,
-        cathedralAnswer.value
+        tasksStorageKey,
+        JSON.stringify(state)
       );
     }
 
-    const savedCathedralAnswer = localStorage.getItem(
-      cathedralAnswerStorageKey
-    );
+    answerFields.forEach(field => {
+      field.addEventListener("input", () => {
+        updateAnswerField(field);
+        saveAnswers();
+        updateProgress();
+      });
+    });
 
-    if (savedCathedralAnswer !== null) {
-      cathedralAnswer.value = savedCathedralAnswer;
-    }
+    checks.forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        checkbox
+          .closest(".task-card")
+          .classList.toggle(
+            "is-complete",
+            checkbox.checked && !checkbox.disabled
+          );
 
-    cathedralAnswer.addEventListener(
-      "input",
-      updateCathedralAnswer
-    );
+        updateProgress();
+      });
+    });
 
+    loadAnswers();
     loadProgress();
-    updateCathedralAnswer();
   </script>
 </body>
 </html>
