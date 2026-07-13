@@ -653,6 +653,108 @@
       color: var(--danger);
     }
 
+
+    .toolbar {
+      grid-template-columns: minmax(220px, 1fr) 190px auto auto;
+    }
+
+    .filter-select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      border: 1px solid #cdd0d6;
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .export-button {
+      min-height: 48px;
+      padding: 10px 15px;
+      border: 1px solid var(--primary);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .evaluation-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .evaluation-badge.done {
+      background: #e6f6ea;
+      color: var(--success);
+    }
+
+    .evaluation-badge.waiting {
+      background: #fff4df;
+      color: #8a5a00;
+    }
+
+    .bonus-overview {
+      margin-bottom: 16px;
+    }
+
+    .bonus-overview h2 {
+      margin: 0 0 8px;
+    }
+
+    .bonus-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .bonus-overview-item {
+      padding: 12px 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+
+    .bonus-overview-title {
+      display: block;
+      font-weight: 800;
+    }
+
+    .bonus-overview-winner {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .bonus-overview-winner.assigned {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .toolbar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .bonus-overview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .toolbar {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 760px) {
       .bonus-row,
       .evaluation-summary {
@@ -762,10 +864,31 @@
           placeholder="Hledat tým, člena nebo kód odevzdání…"
         >
 
+        <select id="evaluationFilter" class="filter-select" aria-label="Filtrovat podle stavu hodnocení">
+          <option value="all">Všechny týmy</option>
+          <option value="evaluated">Jen vyhodnocené</option>
+          <option value="waiting">Jen nevyhodnocené</option>
+        </select>
+
+        <button id="exportButton" class="export-button" type="button">
+          Exportovat CSV
+        </button>
+
         <button id="refreshButton" class="refresh-button" type="button">
           Obnovit výsledky
         </button>
       </div>
+
+
+      <section class="card bonus-overview" aria-labelledby="bonusOverviewTitle">
+        <h2 id="bonusOverviewTitle">Přehled bonusových vítězů</h2>
+
+        <p class="intro">
+          Zde rychle vidíte, které bonusové kategorie už mají vítěze.
+        </p>
+
+        <div id="bonusOverviewGrid" class="bonus-overview-grid"></div>
+      </section>
 
       <section class="card table-card">
         <div class="table-wrap">
@@ -778,6 +901,7 @@
                 <th>Základ</th>
                 <th>Bonus</th>
                 <th>Celkem</th>
+                <th>Hodnocení</th>
                 <th>Odevzdáno</th>
                 <th>Detail</th>
               </tr>
@@ -947,6 +1071,9 @@
     const logoutButton = document.getElementById("logoutButton");
     const refreshButton = document.getElementById("refreshButton");
     const searchInput = document.getElementById("searchInput");
+    const evaluationFilter = document.getElementById("evaluationFilter");
+    const exportButton = document.getElementById("exportButton");
+    const bonusOverviewGrid = document.getElementById("bonusOverviewGrid");
     const submissionsBody = document.getElementById("submissionsBody");
     const emptyState = document.getElementById("emptyState");
     const dashboardStatus = document.getElementById("dashboardStatus");
@@ -1020,6 +1147,136 @@
       logoutButton.classList.add("show");
     }
 
+
+    function escapeCsv(value) {
+      const text = String(value ?? "");
+      return `"${text.replaceAll('"', '""')}"`;
+    }
+
+    function downloadCsv(filename, rows) {
+      const csvContent = rows
+        .map(row => row.map(escapeCsv).join(";"))
+        .join("\n");
+
+      const blob = new Blob(
+        ["\uFEFF" + csvContent],
+        { type: "text/csv;charset=utf-8" }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      URL.revokeObjectURL(url);
+    }
+
+    function exportResultsToCsv() {
+      if (submissions.length === 0) {
+        showStatus(
+          dashboardStatus,
+          "error",
+          "Není co exportovat."
+        );
+
+        return;
+      }
+
+      const rankedSubmissions = [...submissions].sort((a, b) => {
+        const totalA =
+          Number(a.completed_count || 0) +
+          Number(a.bonus_points || 0);
+
+        const totalB =
+          Number(b.completed_count || 0) +
+          Number(b.bonus_points || 0);
+
+        if (totalB !== totalA) {
+          return totalB - totalA;
+        }
+
+        const bonusA = Number(a.bonus_points || 0);
+        const bonusB = Number(b.bonus_points || 0);
+
+        if (bonusB !== bonusA) {
+          return bonusB - bonusA;
+        }
+
+        return new Date(a.submitted_at) - new Date(b.submitted_at);
+      });
+
+      let previousBase = null;
+      let previousBonus = null;
+      let previousRank = 0;
+
+      const headers = [
+        "Pořadí",
+        "Tým",
+        "Členové",
+        "Základní body",
+        "Bonusové body",
+        "Body celkem",
+        "Stav hodnocení",
+        "Kód odevzdání",
+        "Čas odevzdání",
+        ...taskDefinitions.map(task => task.title),
+        "Poznámka hodnotitele"
+      ];
+
+      const rows = [headers];
+
+      rankedSubmissions.forEach((submission, index) => {
+        const basePoints = Number(submission.completed_count || 0);
+        const bonusPoints = Number(submission.bonus_points || 0);
+
+        const sameScore =
+          index > 0 &&
+          basePoints === previousBase &&
+          bonusPoints === previousBonus;
+
+        const rank = sameScore
+          ? previousRank
+          : index + 1;
+
+        previousBase = basePoints;
+        previousBonus = bonusPoints;
+        previousRank = rank;
+
+        const answers = submission.answers || {};
+
+        rows.push([
+          rank,
+          submission.team_name,
+          submission.team_members || "",
+          basePoints,
+          bonusPoints,
+          basePoints + bonusPoints,
+          submission.evaluated_at ? "Vyhodnoceno" : "Nevyhodnoceno",
+          submission.submission_code,
+          formatDate(submission.submitted_at),
+          ...taskDefinitions.map(task => answers[task.id] || ""),
+          submission.evaluation_note || ""
+        ]);
+      });
+
+      const date = new Date().toISOString().slice(0, 10);
+
+      downloadCsv(
+        `plzenska-vyzva-vysledky-${date}.csv`,
+        rows
+      );
+
+      showStatus(
+        dashboardStatus,
+        "success",
+        "Export CSV byl vytvořen."
+      );
+    }
+
     async function login(email, password) {
       loginButton.disabled = true;
       showStatus(loginStatus, "working", "Přihlašuji…");
@@ -1090,6 +1347,7 @@
       submissions = Array.isArray(data) ? data : [];
       hideStatus(dashboardStatus);
       renderSummary();
+      renderBonusOverview();
       renderTable();
     }
 
@@ -1121,14 +1379,42 @@
       ).length;
     }
 
+
+    function renderBonusOverview() {
+      bonusOverviewGrid.innerHTML = "";
+
+      bonusDefinitions.forEach(bonus => {
+        const winner = submissions.find(submission =>
+          Number(submission.bonus_details?.[bonus.id] || 0) > 0
+        );
+
+        const item = document.createElement("article");
+        item.className = "bonus-overview-item";
+
+        item.innerHTML = `
+          <span class="bonus-overview-title">
+            ${escapeHtml(bonus.title)}
+          </span>
+
+          <span class="bonus-overview-winner${winner ? " assigned" : ""}">
+            ${
+              winner
+                ? `Vítěz: ${escapeHtml(winner.team_name)} (${Number(winner.bonus_details?.[bonus.id] || 0)} b.)`
+                : "Zatím nepřiděleno"
+            }
+          </span>
+        `;
+
+        bonusOverviewGrid.appendChild(item);
+      });
+    }
+
     function getFilteredSubmissions() {
       const query = searchInput.value
         .trim()
         .toLocaleLowerCase("cs");
 
-      if (query === "") {
-        return submissions;
-      }
+      const filterValue = evaluationFilter.value;
 
       return submissions.filter(submission => {
         const searchableText = [
@@ -1140,7 +1426,17 @@
           .join(" ")
           .toLocaleLowerCase("cs");
 
-        return searchableText.includes(query);
+        const matchesSearch =
+          query === "" || searchableText.includes(query);
+
+        const isEvaluated = Boolean(submission.evaluated_at);
+
+        const matchesFilter =
+          filterValue === "all" ||
+          (filterValue === "evaluated" && isEvaluated) ||
+          (filterValue === "waiting" && !isEvaluated);
+
+        return matchesSearch && matchesFilter;
       });
     }
 
@@ -1189,24 +1485,13 @@
         previousRank = rank;
       });
 
-      const query = searchInput.value
-        .trim()
-        .toLocaleLowerCase("cs");
+      const filteredIds = new Set(
+        getFilteredSubmissions().map(submission => submission.id)
+      );
 
-      const filtered = query === ""
-        ? rankedSubmissions
-        : rankedSubmissions.filter(submission => {
-            const searchableText = [
-              submission.team_name,
-              submission.team_members,
-              submission.submission_code
-            ]
-              .filter(Boolean)
-              .join(" ")
-              .toLocaleLowerCase("cs");
-
-            return searchableText.includes(query);
-          });
+      const filtered = rankedSubmissions.filter(
+        submission => filteredIds.has(submission.id)
+      );
 
       submissionsBody.innerHTML = "";
 
@@ -1247,6 +1532,12 @@
 
           <td>
             <span class="score-value">${totalPoints}</span>
+          </td>
+
+          <td>
+            <span class="evaluation-badge ${submission.evaluated_at ? "done" : "waiting"}">
+              ${submission.evaluated_at ? "✅ Vyhodnoceno" : "⏳ Čeká"}
+            </span>
           </td>
 
           <td>
@@ -1510,6 +1801,7 @@
         detailPanel.classList.remove("show");
 
         renderSummary();
+        renderBonusOverview();
         renderTable();
 
         showStatus(
@@ -1601,6 +1893,7 @@
         "Hodnocení bylo úspěšně uloženo.";
 
       renderSummary();
+      renderBonusOverview();
       renderTable();
       renderEvaluation(submission);
       updateEvaluationTotals();
@@ -1750,6 +2043,16 @@
     searchInput.addEventListener(
       "input",
       renderTable
+    );
+
+    evaluationFilter.addEventListener(
+      "change",
+      renderTable
+    );
+
+    exportButton.addEventListener(
+      "click",
+      exportResultsToCsv
     );
 
     closeDetailButton.addEventListener("click", () => {
