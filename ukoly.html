@@ -281,6 +281,13 @@
       }
     }
 
+
+    .save-info {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
     .progress-box {
       margin-top: 20px;
       padding-top: 18px;
@@ -721,6 +728,86 @@
       cursor: wait;
     }
 
+
+    .pre-submit-summary {
+      display: none;
+      margin-top: 16px;
+      padding: 15px;
+      border: 1px solid rgba(111, 45, 189, 0.28);
+      border-radius: 14px;
+      background: #fbf8ff;
+    }
+
+    .pre-submit-summary.show {
+      display: block;
+    }
+
+    .pre-submit-summary h3 {
+      margin: 0 0 10px;
+      font-size: 1.08rem;
+    }
+
+    .pre-submit-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .pre-submit-item {
+      padding: 10px;
+      border-radius: 11px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .pre-submit-number {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: var(--primary);
+    }
+
+    .pre-submit-label {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    .missing-tasks {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .missing-tasks li {
+      margin-bottom: 5px;
+    }
+
+    .summary-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .secondary-button {
+      min-height: 48px;
+      padding: 10px 14px;
+      border: 1px solid var(--primary);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    @media (max-width: 520px) {
+      .pre-submit-grid,
+      .summary-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .submit-status {
       display: none;
       margin-top: 14px;
@@ -867,6 +954,10 @@
       </div>
 
 
+
+      <p class="save-info">
+        Odpovědi, splněné úkoly a fotografie se průběžně ukládají v tomto telefonu.
+      </p>
       <div class="progress-box" aria-label="Průběh plnění úkolů">
         <div class="progress-row">
           <span>Splněné úkoly</span>
@@ -1768,8 +1859,44 @@
       </div>
 
       <button id="submitResultsButton" class="submit-button" type="button">
-        Odeslat výsledky organizátorovi
+        Zkontrolovat a odeslat výsledky
       </button>
+
+      <div id="preSubmitSummary" class="pre-submit-summary">
+        <h3>Kontrolní souhrn před odesláním</h3>
+
+        <div class="pre-submit-grid">
+          <div class="pre-submit-item">
+            <span id="reviewCompletedCount" class="pre-submit-number">0</span>
+            <span class="pre-submit-label">splněných úkolů</span>
+          </div>
+
+          <div class="pre-submit-item">
+            <span id="reviewAnswerCount" class="pre-submit-number">0</span>
+            <span class="pre-submit-label">vyplněných odpovědí</span>
+          </div>
+
+          <div class="pre-submit-item">
+            <span id="reviewPhotoCount" class="pre-submit-number">0</span>
+            <span class="pre-submit-label">vložených fotografií</span>
+          </div>
+        </div>
+
+        <div>
+          <strong>Nesplněné úkoly:</strong>
+          <ul id="missingTasksList" class="missing-tasks"></ul>
+        </div>
+
+        <div class="summary-actions">
+          <button id="cancelSubmitButton" class="secondary-button" type="button">
+            Vrátit se k úkolům
+          </button>
+
+          <button id="confirmSubmitButton" class="submit-button" type="button">
+            Potvrdit a odeslat
+          </button>
+        </div>
+      </div>
 
       <button id="newGameButton" class="new-game-button" type="button">
         Začít novou hru a vymazat data
@@ -1834,6 +1961,13 @@
     const submitCompletedCount = document.getElementById("submitCompletedCount");
     const submitAnswerCount = document.getElementById("submitAnswerCount");
     const submitPhotoCount = document.getElementById("submitPhotoCount");
+    const preSubmitSummary = document.getElementById("preSubmitSummary");
+    const reviewCompletedCount = document.getElementById("reviewCompletedCount");
+    const reviewAnswerCount = document.getElementById("reviewAnswerCount");
+    const reviewPhotoCount = document.getElementById("reviewPhotoCount");
+    const missingTasksList = document.getElementById("missingTasksList");
+    const cancelSubmitButton = document.getElementById("cancelSubmitButton");
+    const confirmSubmitButton = document.getElementById("confirmSubmitButton");
     const newGameButton = document.getElementById("newGameButton");
     const lockedBanner = document.getElementById("lockedBanner");
     const lockedBannerText = document.getElementById("lockedBannerText");
@@ -1862,10 +1996,8 @@
     const photoDatabaseVersion = 1;
 
 
-    function getTodayDeadline() {
-      const deadline = new Date();
-      deadline.setHours(17, 30, 0, 0);
-      return deadline;
+    function getCompetitionDeadline() {
+      return new Date("2026-07-21T17:30:00+02:00");
     }
 
     function formatCountdown(milliseconds) {
@@ -1887,7 +2019,7 @@
 
     function updateCountdown() {
       const now = new Date();
-      const deadline = getTodayDeadline();
+      const deadline = getCompetitionDeadline();
       const difference = deadline.getTime() - now.getTime();
 
       if (difference <= 0) {
@@ -2544,6 +2676,72 @@
       return photoPaths;
     }
 
+
+    function showPreSubmitSummary() {
+      const teamName = teamNameInput.value.trim();
+
+      if (teamName === "") {
+        teamNameInput.focus();
+
+        showSubmitStatus(
+          "error",
+          "Nejdříve vyplňte název týmu."
+        );
+
+        return;
+      }
+
+      const completedTasks = getCompletedTasks();
+      const completedCount = completedTasks.filter(
+        task => task.completed
+      ).length;
+
+      const answerCount = Object.keys(
+        getCurrentAnswers()
+      ).length;
+
+      const photoCount = getLocalPhotoCount();
+
+      reviewCompletedCount.textContent = completedCount;
+      reviewAnswerCount.textContent = answerCount;
+      reviewPhotoCount.textContent = photoCount;
+
+      missingTasksList.innerHTML = "";
+
+      const missingTasks = completedTasks.filter(
+        task => !task.completed
+      );
+
+      if (missingTasks.length === 0) {
+        const item = document.createElement("li");
+        item.textContent = "Žádné – všechny úkoly jsou označené jako splněné.";
+        missingTasksList.appendChild(item);
+      } else {
+        missingTasks.forEach(task => {
+          const item = document.createElement("li");
+          item.textContent = task.title;
+          missingTasksList.appendChild(item);
+        });
+      }
+
+      hideSubmitStatus();
+      preSubmitSummary.classList.add("show");
+
+      preSubmitSummary.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function hidePreSubmitSummary() {
+      preSubmitSummary.classList.remove("show");
+    }
+
+    function hideSubmitStatus() {
+      submitStatus.className = "submit-status";
+      submitStatus.textContent = "";
+    }
+
     async function submitResults() {
       const teamName = teamNameInput.value.trim();
       const teamMembers = teamMembersInput.value.trim();
@@ -2580,14 +2778,6 @@
         if (!sendAgain) {
           return;
         }
-      }
-
-      const confirmed = window.confirm(
-        `Odeslat výsledky týmu „${teamName}“ organizátorovi? Po úspěšném odeslání se aplikace uzamkne a výsledky už nepůjde upravovat.`
-      );
-
-      if (!confirmed) {
-        return;
       }
 
       submitResultsButton.disabled = true;
@@ -2652,6 +2842,7 @@
           submissionCode
         );
 
+        hidePreSubmitSummary();
         lockApplication(receipt);
       } catch (error) {
         console.error(error);
@@ -2739,6 +2930,7 @@
 
     answerFields.forEach(field => {
       field.addEventListener("input", () => {
+        hidePreSubmitSummary();
         updateAnswerAppearance(field);
         saveAnswers();
 
@@ -2750,8 +2942,15 @@
       });
     });
 
-    teamNameInput.addEventListener("input", saveTeamInfo);
-    teamMembersInput.addEventListener("input", saveTeamInfo);
+    teamNameInput.addEventListener("input", () => {
+      saveTeamInfo();
+      hidePreSubmitSummary();
+    });
+
+    teamMembersInput.addEventListener("input", () => {
+      saveTeamInfo();
+      hidePreSubmitSummary();
+    });
 
     nextIncompleteButton.addEventListener(
       "click",
@@ -2773,6 +2972,16 @@
 
     submitResultsButton.addEventListener(
       "click",
+      showPreSubmitSummary
+    );
+
+    cancelSubmitButton.addEventListener(
+      "click",
+      hidePreSubmitSummary
+    );
+
+    confirmSubmitButton.addEventListener(
+      "click",
       submitResults
     );
 
@@ -2783,6 +2992,7 @@
 
     checks.forEach(checkbox => {
       checkbox.addEventListener("change", () => {
+        hidePreSubmitSummary();
         checkbox
           .closest(".task-card")
           .classList.toggle(
