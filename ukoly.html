@@ -3,113 +3,651 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6f2dbd">
 
   <title>Plzeňská výzva</title>
 
   <style>
+    :root {
+      --bg: #f4f5f7;
+      --card: #ffffff;
+      --text: #222222;
+      --muted: #62656b;
+      --primary: #6f2dbd;
+      --primary-light: #f0e7ff;
+      --border: #e6e7eb;
+      --success: #218739;
+    }
+
     * {
       box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background: #f4f5f7;
-      color: #222;
-      line-height: 1.5;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    summary {
+      font: inherit;
     }
 
     .page {
       width: min(100% - 24px, 720px);
       margin: 0 auto;
-      padding: 24px 0 48px;
+      padding: 20px 0 48px;
     }
 
     .hero {
-      background: white;
-      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff, #f5edff);
+      border-radius: 22px;
       padding: 24px;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      margin-bottom: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
     }
 
     h1 {
-      margin: 0 0 10px;
-      font-size: 2rem;
-      line-height: 1.15;
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 8vw, 3rem);
+      line-height: 1.1;
     }
 
     .intro {
       margin: 0;
-      color: #555;
+      color: var(--muted);
+    }
+
+    .progress-box {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(111, 45, 189, 0.18);
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      background: #dedfe4;
+      border-radius: 999px;
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      background: var(--primary);
+      border-radius: inherit;
+      transition: width 0.25s ease;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 14px;
     }
 
     .task-card {
-      background: white;
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 18px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     }
 
-    .task-title {
+    .task-card[open] {
+      border-color: rgba(111, 45, 189, 0.35);
+    }
+
+    .task-summary {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin: 0 0 12px;
-      font-size: 1.25rem;
+      gap: 12px;
+      padding: 18px;
+      cursor: pointer;
+      list-style: none;
+      user-select: none;
+    }
+
+    .task-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .task-summary:focus-visible {
+      outline: 3px solid rgba(111, 45, 189, 0.3);
+      outline-offset: -3px;
     }
 
     .task-icon {
-      font-size: 1.7rem;
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--primary-light);
+      font-size: 1.4rem;
     }
 
-    .task-card p {
-      margin: 0 0 10px;
+    .task-heading {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .task-title {
+      display: block;
+      font-size: 1.08rem;
+      font-weight: 800;
+      line-height: 1.25;
+    }
+
+    .task-subtitle {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .chevron {
+      flex: 0 0 auto;
+      color: var(--primary);
+      font-size: 1.35rem;
+      transition: transform 0.2s ease;
+    }
+
+    .task-card[open] .chevron {
+      transform: rotate(180deg);
+    }
+
+    .task-content {
+      padding: 0 18px 18px 72px;
+      border-top: 1px solid var(--border);
+    }
+
+    .task-content p {
+      margin: 16px 0 0;
     }
 
     .note {
       margin-top: 14px;
       padding: 10px 12px;
       border-radius: 12px;
-      background: #f0e7ff;
-      color: #7024a8;
-      font-weight: bold;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .complete-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--border);
+      color: var(--success);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .complete-label input {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--success);
+    }
+
+    .task-card.is-complete {
+      border-color: rgba(33, 135, 57, 0.45);
+    }
+
+    .task-card.is-complete .task-icon {
+      background: #e7f6eb;
+    }
+
+    .footer {
+      margin-top: 22px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 520px) {
+      .hero {
+        padding: 20px;
+      }
+
+      .task-summary {
+        padding: 16px;
+      }
+
+      .task-content {
+        padding: 0 16px 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 
 <body>
   <main class="page">
-
     <section class="hero">
       <h1>Plzeňská výzva</h1>
-
       <p class="intro">
         Projděte město, splňte úkoly a nasbírejte co nejvíce bonusových bodů.
+        Klepnutím na úkol zobrazíte jeho zadání.
       </p>
+
+      <div class="progress-box" aria-label="Průběh plnění úkolů">
+        <div class="progress-row">
+          <span>Splněné úkoly</span>
+          <span id="progressText">0 / 16</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
     </section>
 
-    <article class="task-card">
-      <h2 class="task-title">
-        <span class="task-icon">⛪</span>
-        Katedrála
-      </h2>
+    <section class="task-list" aria-label="Seznam úkolů">
 
-      <p>
-        Najděte slavného plzeňského andělíčka, sáhněte si na něj
-        a jako tým vymyslete jedno společné přání pro zbytek akce.
-      </p>
+      <details class="task-card" open>
+        <summary class="task-summary">
+          <span class="task-icon">⛪</span>
+          <span class="task-heading">
+            <span class="task-title">Katedrála</span>
+            <span class="task-subtitle">Týmové přání</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Najděte slavného plzeňského andělíčka, sáhněte si na něj,
+            něco si přejte a jako tým vymyslete jedno společné přání
+            pro zbytek akce.
+          </p>
+          <p>Přání zapište maximálně v 7 slovech.</p>
+          <div class="note">+1 bonusový bod za nejlepší přání</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
 
-      <p>
-        Přání napište maximálně v 7 slovech.
-      </p>
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🏛️</span>
+          <span class="task-heading">
+            <span class="task-title">Radnice</span>
+            <span class="task-subtitle">Výstava v mázhauzu</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Zjistěte, jaká výstava se koná v mázhauzu radnice, a zapište jednu věc,
+            kterou jste viděli v nejvyšším patře jedné z vitrín.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
 
-      <div class="note">
-        +1 bonusový bod za nejlepší přání
-      </div>
-    </article>
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">📸</span>
+          <span class="task-heading">
+            <span class="task-title">Spejbl &amp; Hurvínek</span>
+            <span class="task-subtitle">Společná fotografie</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>Vyfoťte se společně u sousoší Spejbla a Hurvínka.</p>
+          <div class="note">
+            +1 bonusový bod za fotku i s druhou sochou, která se nachází nedaleko
+          </div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
 
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">✡️</span>
+          <span class="task-heading">
+            <span class="task-title">Synagoga</span>
+            <span class="task-subtitle">Důvod k návštěvě</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Velká synagoga patří mezi největší synagogy na světě. Zkuste jako tým
+            vymyslet jeden důvod, proč by stálo za to ji navštívit i člověku,
+            který se běžně o historii nezajímá.
+          </p>
+          <p>Maximálně 12 slov.</p>
+          <div class="note">+1 bonusový bod za nejlepší důvod</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🎭</span>
+          <span class="task-heading">
+            <span class="task-title">DJKT</span>
+            <span class="task-subtitle">Nejbližší představení</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Zjistěte, jaké nejbližší představení se v DJKT hraje. Zapište jeho název.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🏙️</span>
+          <span class="task-heading">
+            <span class="task-title">Měšťanská beseda</span>
+            <span class="task-subtitle">Nadmořská výška náměstí</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Rozhlédněte se kolem sebe a zkuste zjistit, v jaké nadmořské výšce
+            se nachází plzeňské náměstí.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🏺</span>
+          <span class="task-heading">
+            <span class="task-title">Západočeské muzeum</span>
+            <span class="task-subtitle">Vlastní exponát</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Najděte na budově muzea nebo v jejím bezprostředním okolí něco,
+            co by mohlo být muzejním exponátem. Dejte této věci název jako v muzeu
+            a nezapomeňte ji vyfotit.
+          </p>
+          <div class="note">+1 bonusový bod za nejlepší exponát</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🖼️</span>
+          <span class="task-heading">
+            <span class="task-title">Masné krámy</span>
+            <span class="task-subtitle">Galerie ZČG</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Pokuste se zjistit, od kdy ZČG využívá budovu Masné krámy jako svoji galerii.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🔄</span>
+          <span class="task-heading">
+            <span class="task-title">Vyměňovací výzva</span>
+            <span class="task-subtitle">Směna za něco hodnotnějšího</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>Vyměňte propagační materiál za něco hodnotnějšího.</p>
+          <div class="note">+3 bonusové body za nejlepší výměnu</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🌍</span>
+          <span class="task-heading">
+            <span class="task-title">Fotka s cizincem</span>
+            <span class="task-subtitle">Odkud přijel?</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Vyfoťte se s cizincem u plzeňské památky a zjistěte, odkud je.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🧠</span>
+          <span class="task-heading">
+            <span class="task-title">Učební pomůcka</span>
+            <span class="task-subtitle">Netradiční nález</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Najděte po cestě něco, co by mohlo sloužit jako netradiční učební pomůcka.
+            Zapište, co to je, případně to také vyfoťte.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">⭐</span>
+          <span class="task-heading">
+            <span class="task-title">Pochvala či výtka?</span>
+            <span class="task-subtitle">Recenze ve stylu e-shopu</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Najděte něco, co by si zasloužilo pochvalu nebo drobnou reklamaci.
+            Napište k tomu krátkou „recenzi“ ve stylu e-shopu.
+          </p>
+          <p>Maximálně 20 slov.</p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">🧿</span>
+          <span class="task-heading">
+            <span class="task-title">Týmový talisman</span>
+            <span class="task-subtitle">Symbolický předmět</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>Najděte po cestě drobný symbolický talisman týmu.</p>
+          <div class="note">+1 bonusový bod za nejlepší talisman</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">❤️</span>
+          <span class="task-heading">
+            <span class="task-title">LIKE?</span>
+            <span class="task-subtitle">Něco pro celý tým</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Najděte po cestě něco, co se opravdu líbí všem členům týmu.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">😄</span>
+          <span class="task-heading">
+            <span class="task-title">Co vás bavilo?</span>
+            <span class="task-subtitle">Nejlepší zážitek dne</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            Napište, co vás na dnešní výpravě nejvíce bavilo.
+          </p>
+          <div class="note">+1 bonusový bod za nejlepší historku</div>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+      <details class="task-card">
+        <summary class="task-summary">
+          <span class="task-icon">✅</span>
+          <span class="task-heading">
+            <span class="task-title">Byl jsem zde</span>
+            <span class="task-subtitle">Důkaz návštěvy</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="task-content">
+          <p>
+            V infocentru získejte razítko nebo drobnou tiskovinu jako důkaz vaší návštěvy.
+          </p>
+          <label class="complete-label">
+            <input type="checkbox" class="task-check">
+            Úkol máme splněný
+          </label>
+        </div>
+      </details>
+
+    </section>
+
+    <p class="footer">
+      Stav úkolů se ukládá přímo v tomto telefonu.
+    </p>
   </main>
+
+  <script>
+    const checks = [...document.querySelectorAll(".task-check")];
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const storageKey = "plzenska-vyzva-splnene-ukoly";
+
+    function loadProgress() {
+      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+      checks.forEach((checkbox, index) => {
+        checkbox.checked = Boolean(saved[index]);
+        checkbox.closest(".task-card").classList.toggle("is-complete", checkbox.checked);
+      });
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const completed = checks.filter(checkbox => checkbox.checked).length;
+      const total = checks.length;
+      const percentage = total ? (completed / total) * 100 : 0;
+
+      progressText.textContent = `${completed} / ${total}`;
+      progressBar.style.width = `${percentage}%`;
+
+      const state = checks.map(checkbox => checkbox.checked);
+      localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    checks.forEach(checkbox => {
+      checkbox.addEventListener("change", () => {
+        checkbox.closest(".task-card").classList.toggle("is-complete", checkbox.checked);
+        updateProgress();
+      });
+    });
+
+    loadProgress();
+  </script>
 </body>
 </html>
