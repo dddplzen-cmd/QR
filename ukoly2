@@ -1275,6 +1275,31 @@
       }
     }
 
+  
+
+    /* ÚPRAVA ÚVODNÍ KARTY – plná šířka bez kokosů */
+    .hero {
+      min-height: 0;
+    }
+
+    .hero::after {
+      display: none !important;
+    }
+
+    h1,
+    .countdown-box,
+    .save-info,
+    .progress-box {
+      max-width: 100% !important;
+      width: 100%;
+    }
+
+    @media (max-width: 620px) {
+      .hero {
+        padding: 28px 18px 24px;
+      }
+    }
+
   </style>
 </head>
 
