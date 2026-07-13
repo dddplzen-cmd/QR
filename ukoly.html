@@ -416,6 +416,144 @@
       cursor: not-allowed;
     }
 
+
+    .team-card,
+    .submit-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+    }
+
+    .team-card h2,
+    .submit-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+    }
+
+    .section-intro {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .form-field {
+      margin-top: 14px;
+    }
+
+    .form-field label {
+      display: block;
+      margin-bottom: 7px;
+      font-weight: 700;
+    }
+
+    .form-input {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 13px;
+      border: 1px solid #cfcfd6;
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .form-input:focus {
+      outline: 3px solid rgba(111, 45, 189, 0.18);
+      border-color: var(--primary);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .summary-item {
+      padding: 12px 8px;
+      border-radius: 12px;
+      background: #f6f1fc;
+      text-align: center;
+    }
+
+    .summary-number {
+      display: block;
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .summary-label {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .submit-button {
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      border: 0;
+      border-radius: 13px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .submit-button:disabled {
+      background: #a9abb2;
+      cursor: wait;
+    }
+
+    .submit-status {
+      display: none;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+    }
+
+    .submit-status.show {
+      display: block;
+    }
+
+    .submit-status.working {
+      background: #eef3ff;
+      color: #2451a6;
+    }
+
+    .submit-status.success {
+      background: #e7f6eb;
+      color: var(--success);
+    }
+
+    .submit-status.error {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .receipt {
+      margin-top: 8px;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .privacy-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 520px) {
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .footer {
       margin-top: 22px;
       text-align: center;
@@ -465,6 +603,39 @@
         <div class="progress-track">
           <div class="progress-bar" id="progressBar"></div>
         </div>
+      </div>
+    </section>
+
+
+    <section class="team-card" aria-labelledby="teamTitle">
+      <h2 id="teamTitle">Váš tým</h2>
+
+      <p class="section-intro">
+        Název týmu se uloží v tomto telefonu a připojí se k závěrečnému odevzdání.
+      </p>
+
+      <div class="form-field">
+        <label for="teamName">Název týmu *</label>
+        <input
+          id="teamName"
+          class="form-input"
+          type="text"
+          maxlength="100"
+          autocomplete="organization"
+          placeholder="Např. Plzeňští šneci"
+        >
+      </div>
+
+      <div class="form-field">
+        <label for="teamMembers">Členové týmu</label>
+        <input
+          id="teamMembers"
+          class="form-input"
+          type="text"
+          maxlength="300"
+          autocomplete="off"
+          placeholder="Např. Eva, Karel, Pepa"
+        >
       </div>
     </section>
 
@@ -1173,11 +1344,48 @@
 
     </section>
 
+
+    <section class="submit-card" aria-labelledby="submitTitle">
+      <h2 id="submitTitle">Odevzdat výsledky</h2>
+
+      <p class="section-intro">
+        Až budete hotovi, odešlete splněné úkoly, odpovědi a vložené fotografie organizátorovi.
+      </p>
+
+      <div class="summary-grid" aria-label="Souhrn výsledků">
+        <div class="summary-item">
+          <span class="summary-number" id="submitCompletedCount">0</span>
+          <span class="summary-label">splněných úkolů</span>
+        </div>
+
+        <div class="summary-item">
+          <span class="summary-number" id="submitAnswerCount">0</span>
+          <span class="summary-label">vyplněných odpovědí</span>
+        </div>
+
+        <div class="summary-item">
+          <span class="summary-number" id="submitPhotoCount">0</span>
+          <span class="summary-label">vložených fotek</span>
+        </div>
+      </div>
+
+      <button id="submitResultsButton" class="submit-button" type="button">
+        Odeslat výsledky organizátorovi
+      </button>
+
+      <div id="submitStatus" class="submit-status" role="status" aria-live="polite"></div>
+
+      <p class="privacy-note">
+        Odesláním se název týmu, výsledky a fotografie nahrají do zabezpečeného úložiště organizátora.
+      </p>
+    </section>
+
     <p class="footer">
       Stav úkolů a všechny zapsané odpovědi se ukládají přímo v tomto telefonu.
     </p>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const checks = [...document.querySelectorAll(".task-check")];
     const answerFields = [...document.querySelectorAll(".task-answer")];
@@ -1188,6 +1396,45 @@
 
     const tasksStorageKey = "plzenska-vyzva-splnene-ukoly";
     const answersStorageKey = "plzenska-vyzva-odpovedi";
+
+    const teamStorageKey = "plzenska-vyzva-tym";
+    const lastSubmissionStorageKey = "plzenska-vyzva-posledni-odevzdani";
+
+    const supabaseUrl = "https://hqkongijaoxfbhatlxjg.supabase.co";
+    const supabasePublishableKey =
+      "sb_publishable_zID4S29fjci3_TI6M7mDPw_1vpEPpX7";
+
+    const supabaseClient = window.supabase.createClient(
+      supabaseUrl,
+      supabasePublishableKey
+    );
+
+    const teamNameInput = document.getElementById("teamName");
+    const teamMembersInput = document.getElementById("teamMembers");
+    const submitResultsButton = document.getElementById("submitResultsButton");
+    const submitStatus = document.getElementById("submitStatus");
+    const submitCompletedCount = document.getElementById("submitCompletedCount");
+    const submitAnswerCount = document.getElementById("submitAnswerCount");
+    const submitPhotoCount = document.getElementById("submitPhotoCount");
+
+    const taskDefinitions = [
+      { id: "katedrala", title: "Katedrála" },
+      { id: "radnice", title: "Radnice" },
+      { id: "spejbl", title: "Spejbl & Hurvínek" },
+      { id: "synagoga", title: "Synagoga" },
+      { id: "djkt", title: "DJKT" },
+      { id: "beseda", title: "Měšťanská beseda" },
+      { id: "muzeum", title: "Západočeské muzeum" },
+      { id: "masne-kramy", title: "Masné krámy" },
+      { id: "vymena", title: "Vyměňovací výzva" },
+      { id: "cizinec", title: "Fotka s cizincem" },
+      { id: "pomucka", title: "Učební pomůcka" },
+      { id: "recenze", title: "Pochvala či výtka?" },
+      { id: "talisman", title: "Týmový talisman" },
+      { id: "like", title: "LIKE?" },
+      { id: "bavilo", title: "Co vás bavilo?" },
+      { id: "byl-jsem-zde", title: "Byl jsem zde" }
+    ];
 
     const photoDatabaseName = "plzenska-vyzva-fotky";
     const photoStoreName = "photos";
@@ -1507,6 +1754,329 @@
       });
     }
 
+
+    function saveTeamInfo() {
+      const teamInfo = {
+        teamName: teamNameInput.value,
+        teamMembers: teamMembersInput.value
+      };
+
+      localStorage.setItem(
+        teamStorageKey,
+        JSON.stringify(teamInfo)
+      );
+    }
+
+    function loadTeamInfo() {
+      const savedTeam = JSON.parse(
+        localStorage.getItem(teamStorageKey) || "{}"
+      );
+
+      teamNameInput.value = savedTeam.teamName || "";
+      teamMembersInput.value = savedTeam.teamMembers || "";
+    }
+
+    function getCurrentAnswers() {
+      const answers = {};
+
+      answerFields.forEach(field => {
+        const value = field.value.trim();
+
+        if (value !== "") {
+          answers[field.dataset.answerId] = value;
+        }
+      });
+
+      return answers;
+    }
+
+    function getCompletedTasks() {
+      return taskDefinitions.map((task, index) => ({
+        id: task.id,
+        title: task.title,
+        completed: Boolean(
+          checks[index] &&
+          checks[index].checked &&
+          !checks[index].disabled
+        )
+      }));
+    }
+
+    function getLocalPhotoCount() {
+      return photoBoxes.filter(
+        photoBox => photoBox.dataset.hasPhoto === "true"
+      ).length;
+    }
+
+    function updateSubmissionSummary() {
+      submitCompletedCount.textContent = checks.filter(
+        checkbox => checkbox.checked && !checkbox.disabled
+      ).length;
+
+      submitAnswerCount.textContent = Object.keys(
+        getCurrentAnswers()
+      ).length;
+
+      submitPhotoCount.textContent = getLocalPhotoCount();
+    }
+
+    function showSubmitStatus(type, message, receiptCode = "") {
+      submitStatus.className = `submit-status show ${type}`;
+      submitStatus.innerHTML = "";
+
+      const messageLine = document.createElement("div");
+      messageLine.textContent = message;
+      submitStatus.appendChild(messageLine);
+
+      if (receiptCode) {
+        const receipt = document.createElement("div");
+        receipt.className = "receipt";
+        receipt.textContent = `Kód odevzdání: ${receiptCode}`;
+        submitStatus.appendChild(receipt);
+      }
+    }
+
+    function createSubmissionCode() {
+      const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let randomPart = "";
+
+      for (let index = 0; index < 6; index += 1) {
+        const randomIndex = crypto.getRandomValues(
+          new Uint32Array(1)
+        )[0] % alphabet.length;
+
+        randomPart += alphabet[randomIndex];
+      }
+
+      return `PLZ-${randomPart}`;
+    }
+
+    function getFileExtension(mimeType) {
+      if (mimeType === "image/png") {
+        return "png";
+      }
+
+      if (mimeType === "image/webp") {
+        return "webp";
+      }
+
+      return "jpg";
+    }
+
+    async function compressPhoto(file) {
+      const imageBitmap = await createImageBitmap(file);
+      const maxDimension = 1600;
+
+      let width = imageBitmap.width;
+      let height = imageBitmap.height;
+
+      if (width > maxDimension || height > maxDimension) {
+        const scale = Math.min(
+          maxDimension / width,
+          maxDimension / height
+        );
+
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext("2d", {
+        alpha: false
+      });
+
+      context.drawImage(
+        imageBitmap,
+        0,
+        0,
+        width,
+        height
+      );
+
+      imageBitmap.close();
+
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(
+          blob => {
+            if (blob) {
+              resolve(blob);
+            } else {
+              reject(
+                new Error("Fotografii se nepodařilo zmenšit.")
+              );
+            }
+          },
+          "image/jpeg",
+          0.78
+        );
+      });
+    }
+
+    async function uploadSubmissionPhotos(submissionId) {
+      const photoPaths = {};
+      const photosToUpload = photoBoxes.filter(
+        photoBox => photoBox.dataset.hasPhoto === "true"
+      );
+
+      for (
+        let index = 0;
+        index < photosToUpload.length;
+        index += 1
+      ) {
+        const photoBox = photosToUpload[index];
+        const photoId = photoBox.dataset.photoId;
+
+        showSubmitStatus(
+          "working",
+          `Odesílání fotografií ${index + 1} / ${photosToUpload.length}…`
+        );
+
+        const localPhoto = await loadPhoto(photoId);
+
+        if (!localPhoto) {
+          throw new Error(
+            `Fotografie „${photoId}“ nebyla v telefonu nalezena.`
+          );
+        }
+
+        const compressedPhoto = await compressPhoto(localPhoto);
+        const extension = getFileExtension(compressedPhoto.type);
+        const storagePath =
+          `${submissionId}/${photoId}.${extension}`;
+
+        const { error } = await supabaseClient
+          .storage
+          .from("team-photos")
+          .upload(storagePath, compressedPhoto, {
+            contentType: compressedPhoto.type,
+            cacheControl: "3600",
+            upsert: false
+          });
+
+        if (error) {
+          throw error;
+        }
+
+        photoPaths[photoId] = storagePath;
+      }
+
+      return photoPaths;
+    }
+
+    async function submitResults() {
+      const teamName = teamNameInput.value.trim();
+      const teamMembers = teamMembersInput.value.trim();
+
+      if (teamName === "") {
+        teamNameInput.focus();
+
+        showSubmitStatus(
+          "error",
+          "Nejdříve vyplňte název týmu."
+        );
+
+        return;
+      }
+
+      if (!navigator.onLine) {
+        showSubmitStatus(
+          "error",
+          "Telefon není připojený k internetu. Připojte se a zkuste odeslání znovu."
+        );
+
+        return;
+      }
+
+      const previousSubmission = JSON.parse(
+        localStorage.getItem(lastSubmissionStorageKey) || "null"
+      );
+
+      if (previousSubmission) {
+        const sendAgain = window.confirm(
+          `Tento telefon už jednou odevzdal výsledky s kódem ${previousSubmission.code}. Opravdu chcete vytvořit nové odevzdání?`
+        );
+
+        if (!sendAgain) {
+          return;
+        }
+      }
+
+      submitResultsButton.disabled = true;
+      saveTeamInfo();
+
+      const submissionId = crypto.randomUUID();
+      const submissionCode = createSubmissionCode();
+      const completedTasks = getCompletedTasks();
+      const completedCount = completedTasks.filter(
+        task => task.completed
+      ).length;
+
+      try {
+        showSubmitStatus(
+          "working",
+          "Připravuji výsledky k odeslání…"
+        );
+
+        const photoPaths = await uploadSubmissionPhotos(
+          submissionId
+        );
+
+        showSubmitStatus(
+          "working",
+          "Ukládám odpovědi a výsledky…"
+        );
+
+        const { error } = await supabaseClient
+          .from("submissions")
+          .insert({
+            id: submissionId,
+            submission_code: submissionCode,
+            team_name: teamName,
+            team_members: teamMembers || null,
+            completed_count: completedCount,
+            total_count: taskDefinitions.length,
+            completed_tasks: completedTasks,
+            answers: getCurrentAnswers(),
+            photo_paths: photoPaths,
+            app_version: "1.0-supabase"
+          });
+
+        if (error) {
+          throw error;
+        }
+
+        const receipt = {
+          id: submissionId,
+          code: submissionCode,
+          teamName,
+          submittedAt: new Date().toISOString()
+        };
+
+        localStorage.setItem(
+          lastSubmissionStorageKey,
+          JSON.stringify(receipt)
+        );
+
+        showSubmitStatus(
+          "success",
+          `Výsledky týmu „${teamName}“ byly úspěšně odeslány organizátorovi.`,
+          submissionCode
+        );
+      } catch (error) {
+        console.error(error);
+
+        showSubmitStatus(
+          "error",
+          `Odeslání se nepodařilo: ${error.message || "Neznámá chyba"}. Zkontrolujte internet a zkuste to znovu.`
+        );
+      } finally {
+        submitResultsButton.disabled = false;
+      }
+    }
+
     function loadProgress() {
       const saved = JSON.parse(
         localStorage.getItem(tasksStorageKey) || "[]"
@@ -1547,6 +2117,8 @@
         tasksStorageKey,
         JSON.stringify(state)
       );
+
+      updateSubmissionSummary();
     }
 
     answerFields.forEach(field => {
@@ -1562,6 +2134,14 @@
       });
     });
 
+    teamNameInput.addEventListener("input", saveTeamInfo);
+    teamMembersInput.addEventListener("input", saveTeamInfo);
+
+    submitResultsButton.addEventListener(
+      "click",
+      submitResults
+    );
+
     checks.forEach(checkbox => {
       checkbox.addEventListener("change", () => {
         checkbox
@@ -1576,6 +2156,7 @@
     });
 
     async function startApp() {
+      loadTeamInfo();
       loadAnswers();
       validateAllTasks();
 
@@ -1585,6 +2166,19 @@
 
       validateAllTasks();
       loadProgress();
+      updateSubmissionSummary();
+
+      const previousSubmission = JSON.parse(
+        localStorage.getItem(lastSubmissionStorageKey) || "null"
+      );
+
+      if (previousSubmission) {
+        showSubmitStatus(
+          "success",
+          `Z tohoto telefonu už byly odeslány výsledky týmu „${previousSubmission.teamName}“.`,
+          previousSubmission.code
+        );
+      }
     }
 
     startApp();
