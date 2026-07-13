@@ -273,6 +273,110 @@
       display: block;
     }
 
+
+    .photo-box {
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fafafa;
+    }
+
+    .photo-title {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .photo-input {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .photo-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 14px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .photo-button:active {
+      transform: translateY(1px);
+    }
+
+    .photo-help {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .photo-preview-wrap {
+      display: none;
+      margin-top: 12px;
+    }
+
+    .photo-preview-wrap.has-photo {
+      display: block;
+    }
+
+    .photo-preview {
+      display: block;
+      width: 100%;
+      max-height: 360px;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #ececf0;
+    }
+
+    .photo-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .photo-delete {
+      width: 100%;
+      min-height: 44px;
+      padding: 9px 12px;
+      border: 1px solid var(--danger);
+      border-radius: 11px;
+      background: #ffffff;
+      color: var(--danger);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .photo-status {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .photo-status.saved {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .photo-status.error {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
     .complete-label {
       display: flex;
       align-items: center;
@@ -453,6 +557,35 @@
         <div class="task-content">
           <p>Vyfoťte se společně u sousoší Spejbla a Hurvínka.</p>
 
+          <div class="photo-box" data-photo-id="spejbl" data-photo-required="true">
+            <span class="photo-title">Povinná fotografie</span>
+
+            <label class="photo-button" for="photo-spejbl">
+              📷 Vyfotit nebo vybrat fotku
+            </label>
+
+            <input
+              id="photo-spejbl"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <p class="photo-help">
+              Bez vložené fotografie nepůjde úkol označit jako splněný.
+            </p>
+
+            <div class="photo-preview-wrap">
+              <img class="photo-preview" alt="Náhled fotografie u Spejbla a Hurvínka">
+              <div class="photo-actions">
+                <button class="photo-delete" type="button">Odstranit fotografii</button>
+              </div>
+            </div>
+
+            <div class="photo-status">Fotografie zatím není vložená.</div>
+          </div>
+
           <div class="note">
             +1 bonusový bod za fotku i s druhou sochou, která se nachází nedaleko
           </div>
@@ -611,6 +744,35 @@
             <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
+          <div class="photo-box" data-photo-id="muzeum" data-photo-required="true">
+            <span class="photo-title">Povinná fotografie exponátu</span>
+
+            <label class="photo-button" for="photo-muzeum">
+              📷 Vyfotit nebo vybrat fotku
+            </label>
+
+            <input
+              id="photo-muzeum"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <p class="photo-help">
+              Je potřeba vyplnit název exponátu a vložit fotografii.
+            </p>
+
+            <div class="photo-preview-wrap">
+              <img class="photo-preview" alt="Náhled fotografie muzejního exponátu">
+              <div class="photo-actions">
+                <button class="photo-delete" type="button">Odstranit fotografii</button>
+              </div>
+            </div>
+
+            <div class="photo-status">Fotografie zatím není vložená.</div>
+          </div>
+
           <div class="note">+1 bonusový bod za nejlepší exponát</div>
 
           <label class="complete-label">
@@ -713,6 +875,35 @@
               placeholder="Sem napište zemi nebo město…"
             ></textarea>
             <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
+          </div>
+
+          <div class="photo-box" data-photo-id="cizinec" data-photo-required="true">
+            <span class="photo-title">Povinná společná fotografie</span>
+
+            <label class="photo-button" for="photo-cizinec">
+              📷 Vyfotit nebo vybrat fotku
+            </label>
+
+            <input
+              id="photo-cizinec"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <p class="photo-help">
+              Je potřeba napsat, odkud člověk je, a vložit fotografii.
+            </p>
+
+            <div class="photo-preview-wrap">
+              <img class="photo-preview" alt="Náhled fotografie s cizincem">
+              <div class="photo-actions">
+                <button class="photo-delete" type="button">Odstranit fotografii</button>
+              </div>
+            </div>
+
+            <div class="photo-status">Fotografie zatím není vložená.</div>
           </div>
 
           <label class="complete-label">
@@ -939,12 +1130,17 @@
   <script>
     const checks = [...document.querySelectorAll(".task-check")];
     const answerFields = [...document.querySelectorAll(".task-answer")];
+    const photoBoxes = [...document.querySelectorAll(".photo-box")];
 
     const progressText = document.getElementById("progressText");
     const progressBar = document.getElementById("progressBar");
 
     const tasksStorageKey = "plzenska-vyzva-splnene-ukoly";
     const answersStorageKey = "plzenska-vyzva-odpovedi";
+
+    const photoDatabaseName = "plzenska-vyzva-fotky";
+    const photoStoreName = "photos";
+    const photoDatabaseVersion = 1;
 
     function countWords(text) {
       const cleanedText = text.trim();
@@ -956,30 +1152,139 @@
       return cleanedText.split(/\s+/).length;
     }
 
-    function getTaskCheckbox(field) {
-      return field
-        .closest(".task-content")
-        .querySelector(".task-check");
-    }
-
     function getCompleteLabel(checkbox) {
       return checkbox.closest(".complete-label");
     }
 
-    function updateAnswerField(field) {
+    function openPhotoDatabase() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(
+          photoDatabaseName,
+          photoDatabaseVersion
+        );
+
+        request.onupgradeneeded = () => {
+          const database = request.result;
+
+          if (!database.objectStoreNames.contains(photoStoreName)) {
+            database.createObjectStore(photoStoreName);
+          }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function savePhoto(photoId, file) {
+      const database = await openPhotoDatabase();
+
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction(
+          photoStoreName,
+          "readwrite"
+        );
+
+        transaction.objectStore(photoStoreName).put(file, photoId);
+
+        transaction.oncomplete = () => {
+          database.close();
+          resolve();
+        };
+
+        transaction.onerror = () => {
+          database.close();
+          reject(transaction.error);
+        };
+      });
+    }
+
+    async function loadPhoto(photoId) {
+      const database = await openPhotoDatabase();
+
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction(
+          photoStoreName,
+          "readonly"
+        );
+
+        const request = transaction
+          .objectStore(photoStoreName)
+          .get(photoId);
+
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error);
+
+        transaction.oncomplete = () => database.close();
+      });
+    }
+
+    async function deletePhoto(photoId) {
+      const database = await openPhotoDatabase();
+
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction(
+          photoStoreName,
+          "readwrite"
+        );
+
+        transaction.objectStore(photoStoreName).delete(photoId);
+
+        transaction.oncomplete = () => {
+          database.close();
+          resolve();
+        };
+
+        transaction.onerror = () => {
+          database.close();
+          reject(transaction.error);
+        };
+      });
+    }
+
+    function setPhotoPreview(photoBox, file) {
+      const previewWrap = photoBox.querySelector(".photo-preview-wrap");
+      const preview = photoBox.querySelector(".photo-preview");
+      const status = photoBox.querySelector(".photo-status");
+
+      if (preview.dataset.objectUrl) {
+        URL.revokeObjectURL(preview.dataset.objectUrl);
+      }
+
+      if (file) {
+        const objectUrl = URL.createObjectURL(file);
+
+        preview.src = objectUrl;
+        preview.dataset.objectUrl = objectUrl;
+        previewWrap.classList.add("has-photo");
+
+        photoBox.dataset.hasPhoto = "true";
+
+        status.textContent = "Fotografie je uložená v tomto telefonu.";
+        status.classList.add("saved");
+        status.classList.remove("error");
+      } else {
+        preview.removeAttribute("src");
+        delete preview.dataset.objectUrl;
+        previewWrap.classList.remove("has-photo");
+
+        photoBox.dataset.hasPhoto = "false";
+
+        status.textContent = "Fotografie zatím není vložená.";
+        status.classList.remove("saved", "error");
+      }
+    }
+
+    function updateAnswerAppearance(field) {
       const maxWords = Number(field.dataset.maxWords || 0);
       const wordCount = countWords(field.value);
-      const hasText = field.value.trim().length >= 1;
       const isOverLimit = maxWords > 0 && wordCount > maxWords;
-      const cannotComplete = !hasText || isOverLimit;
 
       field.classList.toggle("too-many-words", isOverLimit);
 
       const answerBox = field.closest(".answer-box");
       const counter = answerBox.querySelector(".word-counter");
       const warning = answerBox.querySelector(".limit-warning");
-      const checkbox = getTaskCheckbox(field);
-      const completeLabel = getCompleteLabel(checkbox);
 
       if (counter && maxWords > 0) {
         counter.textContent = `${wordCount} / ${maxWords} slov`;
@@ -990,13 +1295,48 @@
         if (isOverLimit) {
           warning.textContent =
             `Zkraťte odpověď na nejvýše ${maxWords} slov. Potom půjde úkol označit jako splněný.`;
+
           warning.classList.add("show");
         } else {
           warning.classList.remove("show");
         }
       }
+    }
 
-      if (cannotComplete) {
+    function taskCanBeCompleted(taskContent) {
+      const taskAnswers = [
+        ...taskContent.querySelectorAll(".task-answer")
+      ];
+
+      const requiredPhotos = [
+        ...taskContent.querySelectorAll(
+          '.photo-box[data-photo-required="true"]'
+        )
+      ];
+
+      const answersAreValid = taskAnswers.every(field => {
+        const maxWords = Number(field.dataset.maxWords || 0);
+        const wordCount = countWords(field.value);
+        const hasText = field.value.trim().length >= 1;
+        const isWithinLimit =
+          maxWords === 0 || wordCount <= maxWords;
+
+        return hasText && isWithinLimit;
+      });
+
+      const photosAreValid = requiredPhotos.every(
+        photoBox => photoBox.dataset.hasPhoto === "true"
+      );
+
+      return answersAreValid && photosAreValid;
+    }
+
+    function validateTask(taskContent) {
+      const checkbox = taskContent.querySelector(".task-check");
+      const completeLabel = getCompleteLabel(checkbox);
+      const canComplete = taskCanBeCompleted(taskContent);
+
+      if (!canComplete) {
         checkbox.checked = false;
         checkbox.disabled = true;
         completeLabel.classList.add("is-disabled");
@@ -1008,6 +1348,12 @@
         checkbox.disabled = false;
         completeLabel.classList.remove("is-disabled");
       }
+    }
+
+    function validateAllTasks() {
+      document.querySelectorAll(".task-content").forEach(
+        taskContent => validateTask(taskContent)
+      );
     }
 
     function saveAnswers() {
@@ -1035,7 +1381,76 @@
           field.value = savedAnswers[answerId];
         }
 
-        updateAnswerField(field);
+        updateAnswerAppearance(field);
+      });
+    }
+
+    async function initializePhotoBox(photoBox) {
+      const photoId = photoBox.dataset.photoId;
+      const input = photoBox.querySelector(".photo-input");
+      const deleteButton = photoBox.querySelector(".photo-delete");
+      const status = photoBox.querySelector(".photo-status");
+      const taskContent = photoBox.closest(".task-content");
+
+      photoBox.dataset.hasPhoto = "false";
+
+      try {
+        const savedPhoto = await loadPhoto(photoId);
+        setPhotoPreview(photoBox, savedPhoto);
+      } catch (error) {
+        console.error(error);
+        status.textContent =
+          "Fotografii se nepodařilo načíst. Zkuste ji vložit znovu.";
+        status.classList.add("error");
+      }
+
+      validateTask(taskContent);
+
+      input.addEventListener("change", async () => {
+        const file = input.files && input.files[0];
+
+        if (!file) {
+          return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+          status.textContent = "Vybraný soubor není fotografie.";
+          status.classList.add("error");
+          input.value = "";
+          return;
+        }
+
+        status.textContent = "Fotografie se ukládá…";
+        status.classList.remove("saved", "error");
+
+        try {
+          await savePhoto(photoId, file);
+          setPhotoPreview(photoBox, file);
+        } catch (error) {
+          console.error(error);
+          status.textContent =
+            "Fotografii se nepodařilo uložit. Zkuste menší snímek nebo uvolněte místo v telefonu.";
+          status.classList.add("error");
+        }
+
+        input.value = "";
+        validateTask(taskContent);
+        updateProgress();
+      });
+
+      deleteButton.addEventListener("click", async () => {
+        try {
+          await deletePhoto(photoId);
+          setPhotoPreview(photoBox, null);
+        } catch (error) {
+          console.error(error);
+          status.textContent =
+            "Fotografii se nepodařilo odstranit.";
+          status.classList.add("error");
+        }
+
+        validateTask(taskContent);
+        updateProgress();
       });
     }
 
@@ -1083,8 +1498,13 @@
 
     answerFields.forEach(field => {
       field.addEventListener("input", () => {
-        updateAnswerField(field);
+        updateAnswerAppearance(field);
         saveAnswers();
+
+        validateTask(
+          field.closest(".task-content")
+        );
+
         updateProgress();
       });
     });
@@ -1102,8 +1522,19 @@
       });
     });
 
-    loadAnswers();
-    loadProgress();
+    async function startApp() {
+      loadAnswers();
+      validateAllTasks();
+
+      await Promise.all(
+        photoBoxes.map(photoBox => initializePhotoBox(photoBox))
+      );
+
+      validateAllTasks();
+      loadProgress();
+    }
+
+    startApp();
   </script>
 </body>
 </html>
