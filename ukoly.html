@@ -17,6 +17,7 @@
       --primary-light: #f0e7ff;
       --border: #e6e7eb;
       --success: #218739;
+      --danger: #b42318;
     }
 
     * {
@@ -37,6 +38,7 @@
 
     button,
     input,
+    textarea,
     summary {
       font: inherit;
     }
@@ -112,6 +114,10 @@
       border-color: rgba(111, 45, 189, 0.35);
     }
 
+    .task-card.is-complete {
+      border-color: rgba(33, 135, 57, 0.5);
+    }
+
     .task-summary {
       display: flex;
       align-items: center;
@@ -140,6 +146,10 @@
       border-radius: 12px;
       background: var(--primary-light);
       font-size: 1.4rem;
+    }
+
+    .task-card.is-complete .task-icon {
+      background: #e7f6eb;
     }
 
     .task-heading {
@@ -190,6 +200,51 @@
       font-weight: 700;
     }
 
+    .answer-box {
+      margin-top: 16px;
+    }
+
+    .answer-box label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .task-answer {
+      width: 100%;
+      min-height: 96px;
+      padding: 12px 14px;
+      border: 1px solid #cfcfd6;
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--text);
+      font: inherit;
+      line-height: 1.5;
+      resize: vertical;
+    }
+
+    .task-answer:focus {
+      outline: 3px solid rgba(111, 45, 189, 0.18);
+      border-color: var(--primary);
+    }
+
+    .task-answer.too-many-words {
+      border-color: var(--danger);
+      background: #fff4f2;
+    }
+
+    .word-counter {
+      margin-top: 6px;
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .word-counter.limit-reached {
+      color: var(--danger);
+      font-weight: 700;
+    }
+
     .complete-label {
       display: flex;
       align-items: center;
@@ -206,14 +261,6 @@
       width: 22px;
       height: 22px;
       accent-color: var(--success);
-    }
-
-    .task-card.is-complete {
-      border-color: rgba(33, 135, 57, 0.45);
-    }
-
-    .task-card.is-complete .task-icon {
-      background: #e7f6eb;
     }
 
     .footer {
@@ -250,8 +297,9 @@
   <main class="page">
     <section class="hero">
       <h1>Plzeňská výzva</h1>
+
       <p class="intro">
-        Projděte město, splňte úkoly a nasbírejte co nejvíce bodů.
+        Projděte město, splňte úkoly a nasbírejte co nejvíce bonusových bodů.
         Klepnutím na úkol zobrazíte jeho zadání.
       </p>
 
@@ -260,6 +308,7 @@
           <span>Splněné úkoly</span>
           <span id="progressText">0 / 16</span>
         </div>
+
         <div class="progress-track">
           <div class="progress-bar" id="progressBar"></div>
         </div>
@@ -271,20 +320,48 @@
       <details class="task-card" open>
         <summary class="task-summary">
           <span class="task-icon">⛪</span>
+
           <span class="task-heading">
             <span class="task-title">Katedrála</span>
             <span class="task-subtitle">Týmové přání</span>
           </span>
+
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Najděte slavného plzeňského andělíčka, sáhněte si na něj,
             něco si přejte a jako tým vymyslete jedno společné přání
             pro zbytek akce.
           </p>
-          <p>Přání zapište maximálně v 7 slovech.</p>
-          <div class="note">+1 bonusový bod za nejlepší přání</div>
+
+          <p>
+            Zapište ho maximálně v 7 slovech.
+          </p>
+
+          <div class="answer-box">
+            <label for="katedrala-answer">
+              Naše společné přání
+            </label>
+
+            <textarea
+              id="katedrala-answer"
+              class="task-answer"
+              rows="3"
+              maxlength="200"
+              placeholder="Sem napište společné přání…"
+            ></textarea>
+
+            <div class="word-counter" id="katedrala-counter">
+              <span id="katedrala-word-count">0</span> / 7 slov
+            </div>
+          </div>
+
+          <div class="note">
+            +1 bonusový bod za nejlepší přání
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -301,11 +378,13 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Zjistěte, jaká výstava se koná v mázhauzu radnice, a zapište jednu věc,
             kterou jste viděli v nejvyšším patře jedné z vitrín.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -322,11 +401,14 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>Vyfoťte se společně u sousoší Spejbla a Hurvínka.</p>
+
           <div class="note">
             +1 bonusový bod za fotku i s druhou sochou, která se nachází nedaleko
           </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -343,14 +425,20 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Velká synagoga patří mezi největší synagogy na světě. Zkuste jako tým
             vymyslet jeden důvod, proč by stálo za to ji navštívit i člověku,
             který se běžně o historii nezajímá.
           </p>
+
           <p>Maximálně 12 slov.</p>
-          <div class="note">+1 bonusový bod za nejlepší důvod</div>
+
+          <div class="note">
+            +1 bonusový bod za nejlepší důvod
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -367,10 +455,12 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Zjistěte, jaké nejbližší představení se v DJKT hraje. Zapište jeho název.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -387,11 +477,13 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Rozhlédněte se kolem sebe a zkuste zjistit, v jaké nadmořské výšce
             se nachází plzeňské náměstí.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -408,13 +500,18 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Najděte na budově muzea nebo v jejím bezprostředním okolí něco,
             co by mohlo být muzejním exponátem. Dejte této věci název jako v muzeu
             a nezapomeňte ji vyfotit.
           </p>
-          <div class="note">+1 bonusový bod za nejlepší exponát</div>
+
+          <div class="note">
+            +1 bonusový bod za nejlepší exponát
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -431,10 +528,12 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Pokuste se zjistit, od kdy ZČG využívá budovu Masné krámy jako svoji galerii.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -451,9 +550,14 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>Vyměňte propagační materiál za něco hodnotnějšího.</p>
-          <div class="note">+3 bonusové body za nejlepší výměnu</div>
+
+          <div class="note">
+            +3 bonusové body za nejlepší výměnu
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -470,10 +574,12 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Vyfoťte se s cizincem u plzeňské památky a zjistěte, odkud je.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -490,11 +596,13 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Najděte po cestě něco, co by mohlo sloužit jako netradiční učební pomůcka.
             Zapište, co to je, případně to také vyfoťte.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -511,12 +619,15 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Najděte něco, co by si zasloužilo pochvalu nebo drobnou reklamaci.
             Napište k tomu krátkou „recenzi“ ve stylu e-shopu.
           </p>
+
           <p>Maximálně 20 slov.</p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -533,9 +644,16 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
-          <p>Najděte po cestě drobný symbolický talisman týmu.</p>
-          <div class="note">+1 bonusový bod za nejlepší talisman</div>
+          <p>
+            Najděte po cestě drobný symbolický talisman týmu.
+          </p>
+
+          <div class="note">
+            +1 bonusový bod za nejlepší talisman
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -552,10 +670,12 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Najděte po cestě něco, co se opravdu líbí všem členům týmu.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -572,11 +692,16 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             Napište, co vás na dnešní výpravě nejvíce bavilo.
           </p>
-          <div class="note">+1 bonusový bod za nejlepší historku</div>
+
+          <div class="note">
+            +1 bonusový bod za nejlepší historku
+          </div>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -593,10 +718,12 @@
           </span>
           <span class="chevron" aria-hidden="true">⌄</span>
         </summary>
+
         <div class="task-content">
           <p>
             V infocentru získejte razítko nebo drobnou tiskovinu jako důkaz vaší návštěvy.
           </p>
+
           <label class="complete-label">
             <input type="checkbox" class="task-check">
             Úkol máme splněný
@@ -607,7 +734,7 @@
     </section>
 
     <p class="footer">
-      Stav úkolů se ukládá přímo v tomto telefonu.
+      Stav úkolů a odpověď se ukládají přímo v tomto telefonu.
     </p>
   </main>
 
@@ -615,39 +742,108 @@
     const checks = [...document.querySelectorAll(".task-check")];
     const progressText = document.getElementById("progressText");
     const progressBar = document.getElementById("progressBar");
-    const storageKey = "plzenska-vyzva-splnene-ukoly";
+
+    const tasksStorageKey = "plzenska-vyzva-splnene-ukoly";
+    const cathedralAnswerStorageKey = "plzenska-vyzva-katedrala-odpoved";
 
     function loadProgress() {
-      const saved = JSON.parse(localStorage.getItem(storageKey) || "[]");
+      const saved = JSON.parse(
+        localStorage.getItem(tasksStorageKey) || "[]"
+      );
 
       checks.forEach((checkbox, index) => {
         checkbox.checked = Boolean(saved[index]);
-        checkbox.closest(".task-card").classList.toggle("is-complete", checkbox.checked);
+
+        checkbox
+          .closest(".task-card")
+          .classList.toggle("is-complete", checkbox.checked);
       });
 
       updateProgress();
     }
 
     function updateProgress() {
-      const completed = checks.filter(checkbox => checkbox.checked).length;
+      const completed = checks.filter(
+        checkbox => checkbox.checked
+      ).length;
+
       const total = checks.length;
       const percentage = total ? (completed / total) * 100 : 0;
 
       progressText.textContent = `${completed} / ${total}`;
       progressBar.style.width = `${percentage}%`;
 
-      const state = checks.map(checkbox => checkbox.checked);
-      localStorage.setItem(storageKey, JSON.stringify(state));
+      const state = checks.map(
+        checkbox => checkbox.checked
+      );
+
+      localStorage.setItem(
+        tasksStorageKey,
+        JSON.stringify(state)
+      );
     }
 
     checks.forEach(checkbox => {
       checkbox.addEventListener("change", () => {
-        checkbox.closest(".task-card").classList.toggle("is-complete", checkbox.checked);
+        checkbox
+          .closest(".task-card")
+          .classList.toggle("is-complete", checkbox.checked);
+
         updateProgress();
       });
     });
 
+    const cathedralAnswer = document.getElementById("katedrala-answer");
+    const cathedralWordCount = document.getElementById("katedrala-word-count");
+    const cathedralCounter = document.getElementById("katedrala-counter");
+
+    function countWords(text) {
+      const cleanedText = text.trim();
+
+      if (cleanedText === "") {
+        return 0;
+      }
+
+      return cleanedText.split(/\s+/).length;
+    }
+
+    function updateCathedralAnswer() {
+      const wordCount = countWords(cathedralAnswer.value);
+      const isOverLimit = wordCount > 7;
+
+      cathedralWordCount.textContent = wordCount;
+
+      cathedralAnswer.classList.toggle(
+        "too-many-words",
+        isOverLimit
+      );
+
+      cathedralCounter.classList.toggle(
+        "limit-reached",
+        isOverLimit
+      );
+
+      localStorage.setItem(
+        cathedralAnswerStorageKey,
+        cathedralAnswer.value
+      );
+    }
+
+    const savedCathedralAnswer = localStorage.getItem(
+      cathedralAnswerStorageKey
+    );
+
+    if (savedCathedralAnswer !== null) {
+      cathedralAnswer.value = savedCathedralAnswer;
+    }
+
+    cathedralAnswer.addEventListener(
+      "input",
+      updateCathedralAnswer
+    );
+
     loadProgress();
+    updateCathedralAnswer();
   </script>
 </body>
 </html>
