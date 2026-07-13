@@ -315,6 +315,18 @@
       text-align: center;
     }
 
+    .photo-choice {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .photo-button-secondary {
+      background: #ffffff;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+
     .photo-button:active {
       transform: translateY(1px);
     }
@@ -560,12 +572,26 @@
           <div class="photo-box" data-photo-id="spejbl" data-photo-required="true">
             <span class="photo-title">Povinná fotografie</span>
 
-            <label class="photo-button" for="photo-spejbl">
-              📷 Vyfotit nebo vybrat fotku
-            </label>
+            <div class="photo-choice">
+              <label class="photo-button" for="photo-spejbl-camera">
+                📷 Vyfotit novou fotku
+              </label>
+
+              <label class="photo-button photo-button-secondary" for="photo-spejbl-gallery">
+                🖼️ Vybrat z galerie
+              </label>
+            </div>
 
             <input
-              id="photo-spejbl"
+              id="photo-spejbl-camera"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <input
+              id="photo-spejbl-gallery"
               class="photo-input"
               type="file"
               accept="image/*"
@@ -746,12 +772,26 @@
           <div class="photo-box" data-photo-id="muzeum" data-photo-required="true">
             <span class="photo-title">Povinná fotografie exponátu</span>
 
-            <label class="photo-button" for="photo-muzeum">
-              📷 Vyfotit nebo vybrat fotku
-            </label>
+            <div class="photo-choice">
+              <label class="photo-button" for="photo-muzeum-camera">
+                📷 Vyfotit novou fotku
+              </label>
+
+              <label class="photo-button photo-button-secondary" for="photo-muzeum-gallery">
+                🖼️ Vybrat z galerie
+              </label>
+            </div>
 
             <input
-              id="photo-muzeum"
+              id="photo-muzeum-camera"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <input
+              id="photo-muzeum-gallery"
               class="photo-input"
               type="file"
               accept="image/*"
@@ -878,12 +918,26 @@
           <div class="photo-box" data-photo-id="cizinec" data-photo-required="true">
             <span class="photo-title">Povinná společná fotografie</span>
 
-            <label class="photo-button" for="photo-cizinec">
-              📷 Vyfotit nebo vybrat fotku
-            </label>
+            <div class="photo-choice">
+              <label class="photo-button" for="photo-cizinec-camera">
+                📷 Vyfotit novou fotku
+              </label>
+
+              <label class="photo-button photo-button-secondary" for="photo-cizinec-gallery">
+                🖼️ Vybrat z galerie
+              </label>
+            </div>
 
             <input
-              id="photo-cizinec"
+              id="photo-cizinec-camera"
+              class="photo-input"
+              type="file"
+              accept="image/*"
+              capture="environment"
+            >
+
+            <input
+              id="photo-cizinec-gallery"
               class="photo-input"
               type="file"
               accept="image/*"
@@ -1384,7 +1438,7 @@
 
     async function initializePhotoBox(photoBox) {
       const photoId = photoBox.dataset.photoId;
-      const input = photoBox.querySelector(".photo-input");
+      const inputs = [...photoBox.querySelectorAll(".photo-input")];
       const deleteButton = photoBox.querySelector(".photo-delete");
       const status = photoBox.querySelector(".photo-status");
       const taskContent = photoBox.closest(".task-content");
@@ -1403,36 +1457,38 @@
 
       validateTask(taskContent);
 
-      input.addEventListener("change", async () => {
-        const file = input.files && input.files[0];
+      inputs.forEach(input => {
+        input.addEventListener("change", async () => {
+          const file = input.files && input.files[0];
 
-        if (!file) {
-          return;
-        }
+          if (!file) {
+            return;
+          }
 
-        if (!file.type.startsWith("image/")) {
-          status.textContent = "Vybraný soubor není fotografie.";
-          status.classList.add("error");
+          if (!file.type.startsWith("image/")) {
+            status.textContent = "Vybraný soubor není fotografie.";
+            status.classList.add("error");
+            input.value = "";
+            return;
+          }
+
+          status.textContent = "Fotografie se ukládá…";
+          status.classList.remove("saved", "error");
+
+          try {
+            await savePhoto(photoId, file);
+            setPhotoPreview(photoBox, file);
+          } catch (error) {
+            console.error(error);
+            status.textContent =
+              "Fotografii se nepodařilo uložit. Zkuste menší snímek nebo uvolněte místo v telefonu.";
+            status.classList.add("error");
+          }
+
           input.value = "";
-          return;
-        }
-
-        status.textContent = "Fotografie se ukládá…";
-        status.classList.remove("saved", "error");
-
-        try {
-          await savePhoto(photoId, file);
-          setPhotoPreview(photoBox, file);
-        } catch (error) {
-          console.error(error);
-          status.textContent =
-            "Fotografii se nepodařilo uložit. Zkuste menší snímek nebo uvolněte místo v telefonu.";
-          status.classList.add("error");
-        }
-
-        input.value = "";
-        validateTask(taskContent);
-        updateProgress();
+          validateTask(taskContent);
+          updateProgress();
+        });
       });
 
       deleteButton.addEventListener("click", async () => {
