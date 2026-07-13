@@ -554,6 +554,60 @@
       }
     }
 
+
+    .app-locked .team-card,
+    .app-locked .task-card,
+    .app-locked .submit-card {
+      opacity: 0.92;
+    }
+
+    .app-locked input,
+    .app-locked textarea,
+    .app-locked .photo-button,
+    .app-locked .photo-delete,
+    .app-locked .submit-button {
+      pointer-events: none;
+    }
+
+    .locked-banner {
+      display: none;
+      margin-bottom: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #e7f6eb;
+      color: var(--success);
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    }
+
+    .locked-banner.show {
+      display: block;
+    }
+
+    .locked-banner strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
+    .new-game-button {
+      display: none;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 12px;
+      padding: 11px 14px;
+      border: 1px solid var(--danger);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--danger);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .new-game-button.show {
+      display: block;
+    }
+
     .footer {
       margin-top: 22px;
       text-align: center;
@@ -606,6 +660,12 @@
       </div>
     </section>
 
+
+
+    <section id="lockedBanner" class="locked-banner" aria-live="polite">
+      <strong>Výsledky byly odeslány a hra je uzamčená.</strong>
+      <span id="lockedBannerText"></span>
+    </section>
 
     <section class="team-card" aria-labelledby="teamTitle">
       <h2 id="teamTitle">Váš tým</h2>
@@ -1373,6 +1433,10 @@
         Odeslat výsledky organizátorovi
       </button>
 
+      <button id="newGameButton" class="new-game-button" type="button">
+        Začít novou hru a vymazat data
+      </button>
+
       <div id="submitStatus" class="submit-status" role="status" aria-live="polite"></div>
 
       <p class="privacy-note">
@@ -1416,6 +1480,9 @@
     const submitCompletedCount = document.getElementById("submitCompletedCount");
     const submitAnswerCount = document.getElementById("submitAnswerCount");
     const submitPhotoCount = document.getElementById("submitPhotoCount");
+    const newGameButton = document.getElementById("newGameButton");
+    const lockedBanner = document.getElementById("lockedBanner");
+    const lockedBannerText = document.getElementById("lockedBannerText");
 
     const taskDefinitions = [
       { id: "katedrala", title: "Katedrála" },
@@ -1755,6 +1822,97 @@
     }
 
 
+
+    function lockApplication(receipt) {
+      document.body.classList.add("app-locked");
+
+      teamNameInput.disabled = true;
+      teamMembersInput.disabled = true;
+      submitResultsButton.disabled = true;
+
+      answerFields.forEach(field => {
+        field.disabled = true;
+      });
+
+      checks.forEach(checkbox => {
+        checkbox.disabled = true;
+      });
+
+      document.querySelectorAll(".photo-input").forEach(input => {
+        input.disabled = true;
+      });
+
+      document.querySelectorAll(".photo-button").forEach(button => {
+        button.setAttribute("aria-disabled", "true");
+      });
+
+      document.querySelectorAll(".photo-delete").forEach(button => {
+        button.disabled = true;
+      });
+
+      lockedBanner.classList.add("show");
+      newGameButton.classList.add("show");
+
+      lockedBannerText.textContent =
+        ` Tým „${receipt.teamName}“, kód odevzdání ${receipt.code}.`;
+    }
+
+    async function clearAllStoredPhotos() {
+      const database = await openPhotoDatabase();
+
+      return new Promise((resolve, reject) => {
+        const transaction = database.transaction(
+          photoStoreName,
+          "readwrite"
+        );
+
+        transaction.objectStore(photoStoreName).clear();
+
+        transaction.oncomplete = () => {
+          database.close();
+          resolve();
+        };
+
+        transaction.onerror = () => {
+          database.close();
+          reject(transaction.error);
+        };
+      });
+    }
+
+    async function startNewGame() {
+      const confirmed = window.confirm(
+        "Opravdu chcete vymazat všechny odpovědi, fotky, zaškrtnuté úkoly a údaje týmu? Tato akce nejde vrátit."
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
+      newGameButton.disabled = true;
+      newGameButton.textContent = "Mažu data…";
+
+      try {
+        localStorage.removeItem(tasksStorageKey);
+        localStorage.removeItem(answersStorageKey);
+        localStorage.removeItem(teamStorageKey);
+        localStorage.removeItem(lastSubmissionStorageKey);
+
+        await clearAllStoredPhotos();
+
+        window.location.reload();
+      } catch (error) {
+        console.error(error);
+        newGameButton.disabled = false;
+        newGameButton.textContent = "Začít novou hru a vymazat data";
+
+        showSubmitStatus(
+          "error",
+          "Data se nepodařilo úplně vymazat. Zkuste stránku obnovit a akci zopakovat."
+        );
+      }
+    }
+
     function saveTeamInfo() {
       const teamInfo = {
         teamName: teamNameInput.value,
@@ -2004,6 +2162,14 @@
         }
       }
 
+      const confirmed = window.confirm(
+        `Odeslat výsledky týmu „${teamName}“ organizátorovi? Po úspěšném odeslání se aplikace uzamkne a výsledky už nepůjde upravovat.`
+      );
+
+      if (!confirmed) {
+        return;
+      }
+
       submitResultsButton.disabled = true;
       saveTeamInfo();
 
@@ -2065,6 +2231,8 @@
           `Výsledky týmu „${teamName}“ byly úspěšně odeslány organizátorovi.`,
           submissionCode
         );
+
+        lockApplication(receipt);
       } catch (error) {
         console.error(error);
 
@@ -2073,7 +2241,13 @@
           `Odeslání se nepodařilo: ${error.message || "Neznámá chyba"}. Zkontrolujte internet a zkuste to znovu.`
         );
       } finally {
-        submitResultsButton.disabled = false;
+        const isLocked = Boolean(
+          localStorage.getItem(lastSubmissionStorageKey)
+        );
+
+        if (!isLocked) {
+          submitResultsButton.disabled = false;
+        }
       }
     }
 
@@ -2142,6 +2316,11 @@
       submitResults
     );
 
+    newGameButton.addEventListener(
+      "click",
+      startNewGame
+    );
+
     checks.forEach(checkbox => {
       checkbox.addEventListener("change", () => {
         checkbox
@@ -2178,6 +2357,8 @@
           `Z tohoto telefonu už byly odeslány výsledky týmu „${previousSubmission.teamName}“.`,
           previousSubmission.code
         );
+
+        lockApplication(previousSubmission);
       }
     }
 
