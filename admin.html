@@ -524,6 +524,26 @@
       font-size: 0.82rem;
     }
 
+
+    .bonus-row.is-occupied {
+      background: #f3f4f6;
+      opacity: 0.82;
+    }
+
+    .bonus-winner {
+      display: block;
+      margin-top: 4px;
+      color: var(--danger);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .bonus-input:disabled {
+      background: #e7e8eb;
+      color: #777b82;
+      cursor: not-allowed;
+    }
+
     .bonus-input {
       width: 100%;
       min-height: 42px;
@@ -1077,23 +1097,47 @@
 
     function renderTable() {
       const rankedSubmissions = [...submissions].sort((a, b) => {
-        const totalA =
-          Number(a.completed_count || 0) +
-          Number(a.bonus_points || 0);
-
-        const totalB =
-          Number(b.completed_count || 0) +
-          Number(b.bonus_points || 0);
+        const baseA = Number(a.completed_count || 0);
+        const baseB = Number(b.completed_count || 0);
+        const bonusA = Number(a.bonus_points || 0);
+        const bonusB = Number(b.bonus_points || 0);
+        const totalA = baseA + bonusA;
+        const totalB = baseB + bonusB;
 
         if (totalB !== totalA) {
           return totalB - totalA;
         }
 
-        if (Number(b.completed_count || 0) !== Number(a.completed_count || 0)) {
-          return Number(b.completed_count || 0) - Number(a.completed_count || 0);
+        if (bonusB !== bonusA) {
+          return bonusB - bonusA;
         }
 
         return new Date(a.submitted_at) - new Date(b.submitted_at);
+      });
+
+      const rankById = new Map();
+      let previousBase = null;
+      let previousBonus = null;
+      let previousRank = 0;
+
+      rankedSubmissions.forEach((submission, index) => {
+        const basePoints = Number(submission.completed_count || 0);
+        const bonusPoints = Number(submission.bonus_points || 0);
+
+        const hasSameScore =
+          index > 0 &&
+          basePoints === previousBase &&
+          bonusPoints === previousBonus;
+
+        const rank = hasSameScore
+          ? previousRank
+          : index + 1;
+
+        rankById.set(submission.id, rank);
+
+        previousBase = basePoints;
+        previousBonus = bonusPoints;
+        previousRank = rank;
       });
 
       const query = searchInput.value
@@ -1114,21 +1158,22 @@
 
             return searchableText.includes(query);
           });
+
       submissionsBody.innerHTML = "";
 
       emptyState.style.display =
         filtered.length === 0 ? "block" : "none";
 
-      filtered.forEach((submission, index) => {
+      filtered.forEach(submission => {
         const row = document.createElement("tr");
-
         const basePoints = Number(submission.completed_count || 0);
         const bonusPoints = Number(submission.bonus_points || 0);
         const totalPoints = basePoints + bonusPoints;
+        const rank = rankById.get(submission.id);
 
         row.innerHTML = `
           <td>
-            <span class="ranking-position">${index + 1}</span>
+            <span class="ranking-position">${rank}.</span>
           </td>
 
           <td>
@@ -1264,6 +1309,18 @@
       detailTotalPoints.textContent = basePoints + bonusPoints;
     }
 
+    function getBonusWinner(bonusId, currentSubmissionId) {
+      return submissions.find(otherSubmission => {
+        if (otherSubmission.id === currentSubmissionId) {
+          return false;
+        }
+
+        return Number(
+          otherSubmission.bonus_details?.[bonusId] || 0
+        ) > 0;
+      }) || null;
+    }
+
     function renderEvaluation(submission) {
       currentSubmissionId = submission.id;
       bonusList.innerHTML = "";
@@ -1272,7 +1329,10 @@
 
       bonusDefinitions.forEach(bonus => {
         const row = document.createElement("div");
-        row.className = "bonus-row";
+        const winner = getBonusWinner(
+          bonus.id,
+          submission.id
+        );
 
         const savedValue = Math.max(
           0,
@@ -1282,10 +1342,18 @@
           )
         );
 
+        row.className =
+          `bonus-row${winner ? " is-occupied" : ""}`;
+
         row.innerHTML = `
           <div>
             <span class="bonus-name">${escapeHtml(bonus.title)}</span>
             <span class="bonus-maximum">Maximum: ${bonus.max} b.</span>
+            ${
+              winner
+                ? `<span class="bonus-winner">Bonus už získal tým „${escapeHtml(winner.team_name)}“.</span>`
+                : ""
+            }
           </div>
 
           <input
@@ -1298,6 +1366,7 @@
             data-bonus-id="${escapeHtml(bonus.id)}"
             data-max="${bonus.max}"
             aria-label="${escapeHtml(bonus.title)}"
+            ${winner ? "disabled" : ""}
           >
         `;
 
@@ -1367,8 +1436,13 @@
         evaluationStatus.className =
           "evaluation-status show error";
 
-        evaluationStatus.textContent =
-          `Hodnocení se nepodařilo uložit: ${error.message}`;
+        if (error.code === "23505") {
+          evaluationStatus.textContent =
+            "Tento bonus mezitím získal jiný tým. Obnovte výsledky a vyberte jinou kategorii.";
+        } else {
+          evaluationStatus.textContent =
+            `Hodnocení se nepodařilo uložit: ${error.message}`;
+        }
 
         return;
       }
@@ -1388,6 +1462,7 @@
 
       renderSummary();
       renderTable();
+      renderEvaluation(submission);
       updateEvaluationTotals();
     }
 
