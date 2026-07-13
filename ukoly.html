@@ -385,7 +385,7 @@
             ></textarea>
 
             <div class="answer-info">
-              <span>Odpověď se ukládá automaticky.</span>
+              <span>Vyplňte alespoň 1 znak. Odpověď se ukládá automaticky.</span>
               <span class="word-counter">0 / 7 slov</span>
             </div>
 
@@ -429,7 +429,7 @@
               placeholder="Např. název výstavy – předmět ve vitríně…"
             ></textarea>
             <div class="answer-info">
-              <span>Odpověď se ukládá automaticky.</span>
+              <span>Vyplňte alespoň 1 znak. Odpověď se ukládá automaticky.</span>
             </div>
           </div>
 
@@ -495,7 +495,7 @@
             ></textarea>
 
             <div class="answer-info">
-              <span>Odpověď se ukládá automaticky.</span>
+              <span>Vyplňte alespoň 1 znak. Odpověď se ukládá automaticky.</span>
               <span class="word-counter">0 / 12 slov</span>
             </div>
 
@@ -537,6 +537,7 @@
               rows="1"
               placeholder="Sem napište název představení…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -571,6 +572,7 @@
               rows="1"
               placeholder="Např. 310 m n. m."
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -606,6 +608,7 @@
               rows="1"
               placeholder="Sem napište název exponátu…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <div class="note">+1 bonusový bod za nejlepší exponát</div>
@@ -641,6 +644,7 @@
               rows="1"
               placeholder="Sem napište rok nebo datum…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -672,6 +676,7 @@
               rows="3"
               placeholder="Sem napište, za co jste materiál vyměnili…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <div class="note">+3 bonusové body za nejlepší výměnu</div>
@@ -707,6 +712,7 @@
               rows="1"
               placeholder="Sem napište zemi nebo město…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -741,6 +747,7 @@
               rows="3"
               placeholder="Sem napište, co jste našli…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -780,7 +787,7 @@
             ></textarea>
 
             <div class="answer-info">
-              <span>Odpověď se ukládá automaticky.</span>
+              <span>Vyplňte alespoň 1 znak. Odpověď se ukládá automaticky.</span>
               <span class="word-counter">0 / 20 slov</span>
             </div>
 
@@ -818,6 +825,7 @@
               rows="3"
               placeholder="Sem napište, co jste vybrali a proč…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <div class="note">+1 bonusový bod za nejlepší talisman</div>
@@ -853,6 +861,7 @@
               rows="3"
               placeholder="Sem napište svůj společný výběr…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <label class="complete-label">
@@ -886,6 +895,7 @@
               rows="4"
               placeholder="Sem napište svůj nejlepší zážitek nebo historku…"
             ></textarea>
+            <div class="answer-info"><span>Vyplňte alespoň 1 znak.</span></div>
           </div>
 
           <div class="note">+1 bonusový bod za nejlepší historku</div>
@@ -959,7 +969,9 @@
     function updateAnswerField(field) {
       const maxWords = Number(field.dataset.maxWords || 0);
       const wordCount = countWords(field.value);
+      const hasText = field.value.trim().length >= 1;
       const isOverLimit = maxWords > 0 && wordCount > maxWords;
+      const cannotComplete = !hasText || isOverLimit;
 
       field.classList.toggle("too-many-words", isOverLimit);
 
@@ -975,10 +987,16 @@
       }
 
       if (warning) {
-        warning.classList.toggle("show", isOverLimit);
+        if (isOverLimit) {
+          warning.textContent =
+            `Zkraťte odpověď na nejvýše ${maxWords} slov. Potom půjde úkol označit jako splněný.`;
+          warning.classList.add("show");
+        } else {
+          warning.classList.remove("show");
+        }
       }
 
-      if (isOverLimit) {
+      if (cannotComplete) {
         checkbox.checked = false;
         checkbox.disabled = true;
         completeLabel.classList.add("is-disabled");
