@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14291b">
+  <meta name="description" content="Zažij PLZEŇ – drobný průvodce kavárnami, restauracemi, pivem, památkami a večerním posezením.">
+  <title>Zažij PLZEŇ – mini průvodce</title>
+
+  <style>
+    :root {
+      --bg-deep: #07110b;
+      --bg-mid: #142d1d;
+      --stone-dark: #302315;
+      --stone-mid: #695034;
+      --stone-light: #91734b;
+      --paper: #e5cca0;
+      --paper-2: #d6b77e;
+      --paper-3: #c59e62;
+      --ink: #2d1d0d;
+      --muted: #654c2b;
+      --gold: #f1c75c;
+      --gold-2: #d59a2b;
+      --gold-3: #915914;
+      --green: #203721;
+      --green-2: #304d30;
+      --edge: #28190a;
+      --success: #1f642a;
+      --danger: #962e1f;
+      --shadow: rgba(0, 0, 0, .5);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--bg-deep); }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.5;
+      background:
+        radial-gradient(circle at 50% -5%, rgba(255, 220, 118, .5), transparent 25rem),
+        radial-gradient(circle at 7% 16%, rgba(39, 92, 52, .5), transparent 18rem),
+        radial-gradient(circle at 93% 18%, rgba(39, 92, 52, .5), transparent 18rem),
+        linear-gradient(180deg, rgba(6, 15, 9, .06), rgba(6, 15, 9, .42)),
+        linear-gradient(180deg, #173723 0%, var(--bg-deep) 60%, #090f0a 100%);
+      background-attachment: fixed;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    body::before {
+      opacity: .95;
+      background:
+        radial-gradient(ellipse at -4% 13%, rgba(33, 77, 43, .96) 0 12%, transparent 12.6%),
+        radial-gradient(ellipse at 3% 39%, rgba(20, 51, 27, .98) 0 10%, transparent 10.5%),
+        radial-gradient(ellipse at 104% 14%, rgba(33, 77, 43, .96) 0 12%, transparent 12.6%),
+        radial-gradient(ellipse at 97% 41%, rgba(20, 51, 27, .98) 0 10%, transparent 10.5%),
+        linear-gradient(90deg, rgba(0, 0, 0, .5), transparent 13%, transparent 87%, rgba(0, 0, 0, .5));
+    }
+
+    body::after {
+      opacity: .22;
+      background:
+        repeating-linear-gradient(120deg, transparent 0 34px, rgba(238, 196, 89, .08) 34px 36px, transparent 36px 70px),
+        radial-gradient(circle at 50% 0%, rgba(255, 223, 132, .3), transparent 36rem);
+    }
+
+    button, input, summary { font: inherit; }
+
+    .app {
+      width: min(100% - 14px, 760px);
+      margin: 0 auto;
+      padding: 8px 0 calc(102px + env(safe-area-inset-bottom));
+    }
+
+    .stone-panel,
+    .guide-section,
+    .search-panel,
+    .intro-panel {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--edge);
+      border-radius: 15px;
+      box-shadow:
+        0 5px 0 rgba(29, 18, 7, .95),
+        0 17px 32px var(--shadow),
+        inset 0 0 0 1px rgba(255, 255, 255, .08);
+    }
+
+    .stone-panel::before,
+    .guide-section::before,
+    .search-panel::before,
+    .intro-panel::before {
+      content: "";
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(83, 55, 22, .48);
+      border-radius: 9px;
+      pointer-events: none;
+    }
+
+    .hero {
+      padding: 13px 12px 18px;
+      background:
+        radial-gradient(circle at 50% -2%, rgba(255, 230, 145, .58), transparent 17rem),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(0,0,0,.16)),
+        linear-gradient(145deg, #5f4b31 0%, #3e301f 14%, #7e6240 46%, #45311e 72%, #6b5233 100%);
+    }
+
+    .topbar {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .round-button {
+      width: 58px;
+      height: 58px;
+      border: 2px solid #25170a;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,255,255,.18), transparent 34%),
+        linear-gradient(145deg, #8b7149, #544029 60%, #2e2317 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), 0 4px 0 #201408, 0 9px 16px rgba(0,0,0,.18);
+    }
+
+    .hamburger {
+      width: 23px;
+      height: 15px;
+      border-top: 3px solid currentColor;
+      border-bottom: 3px solid currentColor;
+      position: relative;
+    }
+
+    .hamburger::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 3px solid currentColor;
+      transform: translateY(-50%);
+    }
+
+    .compass {
+      width: 25px;
+      height: 25px;
+      border: 3px solid currentColor;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .compass::before {
+      content: "";
+      position: absolute;
+      inset: 5px 8px;
+      background: currentColor;
+      clip-path: polygon(50% 0, 100% 100%, 50% 72%, 0 100%);
+      transform: rotate(30deg);
+    }
+
+    .monument {
+      position: relative;
+      padding: 15px 10px 0;
+      overflow: hidden;
+    }
+
+    .monument::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -35px;
+      width: min(98%, 600px);
+      height: 184px;
+      transform: translateX(-50%);
+      border: 3px solid #25170a;
+      border-radius: 50% 50% 8% 8% / 72% 72% 10% 10%;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255, 225, 140, .35), transparent 30%),
+        linear-gradient(180deg, #755a38, #44331f 35%, #876a45 72%, #584229 100%);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.05), 0 8px 18px rgba(0,0,0,.24);
+    }
+
+    .emblem,
+    .title-plaque,
+    .subtitle-plaque { position: relative; z-index: 2; }
+
+    .emblem {
+      width: min(53vw, 190px);
+      aspect-ratio: 1;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 45%, #d8a43c 0 19%, transparent 19.7%),
+        radial-gradient(circle at 50% 50%, #2d2114 0 56%, transparent 56.8%),
+        radial-gradient(circle at 50% 50%, #e7bf5b 0 66%, #6e491b 66.5% 75%, #21150a 75.5% 100%);
+      box-shadow: 0 0 0 4px rgba(255,228,152,.12), 0 0 38px rgba(255,200,80,.3);
+    }
+
+    .emblem::before {
+      content: "";
+      position: absolute;
+      inset: -29px;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent 0 8deg, #e5b653 8deg 15deg, transparent 15deg 30deg);
+      filter: drop-shadow(0 3px 0 #58360f);
+    }
+
+    .emblem::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 5px solid rgba(247, 214, 117, .38);
+      border-radius: 50%;
+    }
+
+    .robot {
+      position: relative;
+      z-index: 2;
+      width: 42%;
+      aspect-ratio: 1.04;
+      border-radius: 32% 32% 28% 28% / 30% 30% 34% 34%;
+      background: linear-gradient(180deg, #ebcd74, #b7832d);
+      box-shadow: inset 0 2px 0 rgba(255,255,255,.45), inset 0 -8px 12px rgba(70,42,10,.18), 0 4px 0 #5f3910;
+    }
+
+    .robot::before,
+    .robot::after {
+      content: "";
+      position: absolute;
+      top: 38%;
+      width: 22%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: #20150b;
+    }
+
+    .robot::before { left: 18%; }
+    .robot::after { right: 18%; }
+
+    .robot .mouth {
+      position: absolute;
+      left: 50%;
+      bottom: 18%;
+      width: 32%;
+      height: 8%;
+      border-radius: 999px;
+      background: rgba(54,34,12,.38);
+      transform: translateX(-50%);
+    }
+
+    .robot .antenna {
+      position: absolute;
+      left: 50%;
+      top: -18%;
+      width: 7%;
+      height: 18%;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #e8c86c, #8d5a19);
+      transform: translateX(-50%);
+    }
+
+    .robot .antenna::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -16%;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #f0d67b;
+      box-shadow: 0 0 10px rgba(255,219,110,.45);
+      transform: translateX(-50%);
+    }
+
+    .title-plaque {
+      width: min(96%, 620px);
+      margin: 0 auto 8px;
+      padding: 15px 12px 12px;
+      text-align: center;
+      border: 2px solid #241609;
+      border-radius: 13px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.16)),
+        linear-gradient(145deg, #51402a, #292015 50%, #665233 100%);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), 0 4px 0 #201408, 0 10px 22px rgba(0,0,0,.22);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: clamp(2.5rem, 10vw, 4.6rem);
+      line-height: 1;
+      letter-spacing: .025em;
+      text-transform: uppercase;
+      font-weight: 900;
+      text-shadow: 0 1px 0 #fff0b9, 0 3px 0 #714511, 0 5px 0 #4b2d0a, 0 13px 20px rgba(0,0,0,.42);
+    }
+
+    .subtitle-plaque {
+      width: fit-content;
+      max-width: 100%;
+      margin: 0 auto 2px;
+      padding: 7px 18px;
+      border: 2px solid #2b1b0a;
+      border-radius: 14px;
+      color: #f0cb6b;
+      font-weight: 900;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+      background: linear-gradient(180deg, #34462d, #172316);
+      box-shadow: 0 3px 0 #201408;
+    }
+
+    .subtitle-plaque::before,
+    .subtitle-plaque::after {
+      content: "☀";
+      margin: 0 8px;
+      color: var(--gold);
+    }
+
+    .intro-panel {
+      margin-top: 16px;
+      padding: 18px 18px 18px 72px;
+      color: #f1dcaa;
+      background: linear-gradient(180deg, rgba(35,55,34,.98), rgba(19,33,21,.99));
+    }
+
+    .intro-panel::after {
+      content: "🤖";
+      position: absolute;
+      left: 17px;
+      top: 50%;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 2px solid #8d7040;
+      border-radius: 50%;
+      background: linear-gradient(180deg, #3d5b3f, #1d2d1e);
+      transform: translateY(-50%);
+      box-shadow: 0 2px 0 #120c05;
+    }
+
+    .intro-panel p { margin: 0; }
+    .intro-panel p + p { margin-top: 6px; }
+    .intro-panel strong { color: var(--gold); }
+
+    .search-panel {
+      margin-top: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ecd7ad, #d5b67e);
+    }
+
+    .search-row {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 50px;
+      padding: 11px 14px 11px 42px;
+      border: 2px solid #74542d;
+      border-radius: 10px;
+      color: var(--ink);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.15), transparent),
+        #ead2a4;
+      box-shadow: inset 0 2px 8px rgba(67,40,10,.12);
+    }
+
+    .search-wrap { position: relative; }
+    .search-wrap::before {
+      content: "⌕";
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      z-index: 3;
+      color: #6d4b21;
+      font-size: 1.4rem;
+      transform: translateY(-54%);
+    }
+
+    .clear-button {
+      min-width: 52px;
+      min-height: 50px;
+      border: 2px solid #70440d;
+      border-radius: 10px;
+      color: #341f09;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(180deg, #ffdf82, #d99b2e 56%, #ae6811);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.4), 0 3px 0 #5f350a;
+    }
+
+    .search-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .92rem;
+      font-weight: 700;
+    }
+
+    .guide-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .guide-section {
+      scroll-margin-top: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(0,0,0,.02)), linear-gradient(180deg, #edd9af, #d4b478);
+    }
+
+    .section-summary {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 78px;
+      padding: 14px 16px;
+      list-style: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .section-summary::-webkit-details-marker { display: none; }
+
+    .section-icon {
+      width: 48px;
+      height: 48px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      border: 2px solid #28190a;
+      border-radius: 10px;
+      color: var(--gold);
+      font-size: 1.4rem;
+      background: linear-gradient(180deg, #344a34, #1b2a19);
+      box-shadow: inset 0 0 10px rgba(0,0,0,.25), 0 2px 0 rgba(25,14,5,.65);
+    }
+
+    .section-heading { flex: 1; min-width: 0; }
+
+    .section-title {
+      display: block;
+      color: var(--ink);
+      font-size: 1.26rem;
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .section-count {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .chevron {
+      color: #5d3810;
+      font-size: 1.55rem;
+      font-weight: 900;
+      transition: transform .18s ease;
+    }
+
+    .guide-section[open] .chevron { transform: rotate(180deg); }
+
+    .places {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 11px;
+      padding: 0 14px 15px;
+      border-top: 2px solid rgba(92,61,21,.22);
+    }
+
+    .place-card {
+      position: relative;
+      padding: 14px 14px 14px 57px;
+      border: 1px solid rgba(103,70,25,.5);
+      border-radius: 11px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.18), transparent 34%),
+        linear-gradient(180deg, #ead4a9, #ddc18c);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 2px 0 rgba(77,48,13,.2);
+    }
+
+    .place-number {
+      position: absolute;
+      left: 12px;
+      top: 13px;
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 2px solid #2a1a0a;
+      border-radius: 8px;
+      color: var(--gold);
+      font-weight: 900;
+      background: linear-gradient(180deg, #344a34, #1c2b1a);
+      box-shadow: 0 2px 0 #211408;
+    }
+
+    .place-name {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.12rem;
+      font-weight: 900;
+    }
+
+    .place-description {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    .no-results {
+      display: none;
+      margin-top: 16px;
+      padding: 18px;
+      text-align: center;
+      color: #efd9a0;
+      border: 2px solid #2a1b0b;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(34,54,33,.98), rgba(20,33,21,.99));
+      box-shadow: 0 5px 0 rgba(29,18,7,.95), 0 15px 30px var(--shadow);
+    }
+
+    .no-results.show { display: block; }
+
+    .footer {
+      margin: 22px 0 0;
+      color: rgba(255, 242, 207, .82);
+      text-align: center;
+      font-size: .92rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,.55);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: max(7px, env(safe-area-inset-bottom));
+      z-index: 20;
+      width: min(calc(100% - 14px), 760px);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      overflow: hidden;
+      border: 2px solid #241609;
+      border-radius: 15px;
+      background: linear-gradient(180deg, #314330, #172316);
+      box-shadow: 0 5px 0 #171006, 0 15px 30px rgba(0,0,0,.48), inset 0 0 0 1px rgba(255,255,255,.06);
+      transform: translateX(-50%);
+    }
+
+    .nav-link {
+      min-width: 0;
+      padding: 8px 3px 7px;
+      color: #cbb787;
+      text-align: center;
+      text-decoration: none;
+      border-right: 1px solid rgba(198,165,100,.14);
+      transition: background .15s ease, color .15s ease;
+    }
+
+    .nav-link:last-child { border-right: 0; }
+    .nav-link:hover,
+    .nav-link:focus-visible,
+    .nav-link.active {
+      color: var(--gold);
+      background: linear-gradient(180deg, rgba(230,177,56,.15), rgba(112,67,11,.15));
+      outline: none;
+    }
+
+    .nav-icon {
+      display: block;
+      font-size: 1.25rem;
+      line-height: 1;
+    }
+
+    .nav-text {
+      display: block;
+      margin-top: 4px;
+      overflow: hidden;
+      font-size: .68rem;
+      font-weight: 900;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .back-to-top {
+      position: fixed;
+      right: 14px;
+      bottom: 92px;
+      z-index: 22;
+      width: 50px;
+      height: 50px;
+      display: none;
+      place-items: center;
+      border: 3px solid #70420b;
+      border-radius: 50%;
+      color: #341f09;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(180deg, #ffe18d, #cf8620);
+      box-shadow: 0 4px 0 #61360a, 0 10px 20px rgba(0,0,0,.35);
+    }
+
+    .back-to-top.show { display: grid; }
+
+    .hidden-by-search { display: none !important; }
+
+    @media (max-width: 540px) {
+      .app { width: min(100% - 10px, 760px); }
+      .hero { padding: 11px 9px 15px; }
+      .round-button { width: 53px; height: 53px; }
+      .monument { padding-top: 10px; }
+      .monument::before { top: -27px; height: 165px; }
+      .emblem { width: min(55vw, 174px); }
+      h1 { font-size: clamp(2.25rem, 11vw, 3.4rem); }
+      .title-plaque { padding: 13px 8px 10px; }
+      .subtitle-plaque { font-size: .8rem; letter-spacing: .075em; padding: 7px 10px; }
+      .subtitle-plaque::before,
+      .subtitle-plaque::after { margin: 0 5px; }
+      .intro-panel { padding: 16px 14px 16px 64px; }
+      .intro-panel::after { left: 13px; }
+      .search-row { grid-template-columns: 1fr 48px; }
+      .guide-list { gap: 13px; }
+      .section-summary { padding: 13px 13px; }
+      .section-icon { width: 44px; height: 44px; }
+      .section-title { font-size: 1.12rem; }
+      .places { padding: 0 11px 12px; }
+      .place-card { padding: 12px 11px 12px 51px; }
+      .place-number { left: 10px; top: 11px; }
+      .place-name { font-size: 1.04rem; }
+      .place-description { font-size: .93rem; }
+      .nav-text { font-size: .61rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero stone-panel">
+      <div class="topbar" aria-hidden="true">
+        <div class="round-button"><span class="hamburger"></span></div>
+        <div class="round-button"><span class="compass"></span></div>
+      </div>
+
+      <div class="monument">
+        <div class="emblem" aria-hidden="true">
+          <div class="robot">
+            <span class="antenna"></span>
+            <span class="mouth"></span>
+          </div>
+        </div>
+
+        <div class="title-plaque">
+          <h1>Zažij PLZEŇ</h1>
+        </div>
+        <div class="subtitle-plaque">Mini průvodce</div>
+      </div>
+    </header>
+
+    <section class="intro-panel" aria-label="Úvod">
+      <p>Zajímá Tě, kam večer zajít na něco dobrého k jídlu nebo pití?</p>
+      <p>Nechceš procházet recenze na Googlu nebo jít někam jen tak naslepo?</p>
+      <p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ ♥</strong></p>
+    </section>
+
+    <section class="search-panel" aria-label="Vyhledávání v průvodci">
+      <div class="search-row">
+        <div class="search-wrap">
+          <input id="searchInput" class="search-input" type="search" placeholder="Hledat místo, jídlo nebo pití…" autocomplete="off">
+        </div>
+        <button id="clearSearch" class="clear-button" type="button" aria-label="Vymazat hledání">×</button>
+      </div>
+      <div class="search-meta">
+        <span>5 kategorií</span>
+        <span id="resultCount">23 tipů</span>
+      </div>
+    </section>
+
+    <section class="guide-list" aria-label="Tipy v Plzni">
+      <details id="coffee" class="guide-section" open data-category="káva kavárna snídaně brunch">
+        <summary class="section-summary">
+          <span class="section-icon">☕</span>
+          <span class="section-heading">
+            <span class="section-title">Kafíčko jako základ dne</span>
+            <span class="section-count">5 tipů na kávu a něco dobrého</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="places">
+          <article class="place-card" data-search="Chromá liška malá útulná kavárna dobrá káva domácí sladkosti">
+            <span class="place-number">1</span>
+            <h2 class="place-name">Chromá liška</h2>
+            <p class="place-description">Malá útulná kavárna s dobrou kávou a domácími sladkostmi.</p>
+          </article>
+          <article class="place-card" data-search="Walter výběrová káva brunch moderní městské posezení centrum">
+            <span class="place-number">2</span>
+            <h2 class="place-name">Walter</h2>
+            <p class="place-description">Výběrová káva, brunch a moderní městské posezení přímo v centru.</p>
+          </article>
+          <article class="place-card" data-search="Le Frenchie café francouzská kavárna výběrová káva koláče snídaně">
+            <span class="place-number">3</span>
+            <h2 class="place-name">Le Frenchie café</h2>
+            <p class="place-description">Francouzsky laděná kavárna s výběrovou kávou, koláči a snídaněmi.</p>
+          </article>
+          <article class="place-card" data-search="CrossCafe plzeňská kavárenská síť rychlá káva snídaně pracovní pauza">
+            <span class="place-number">4</span>
+            <h2 class="place-name">CrossCafe</h2>
+            <p class="place-description">Plzeňská kavárenská síť na rychlou kávu, snídani nebo pracovní pauzu.</p>
+          </article>
+          <article class="place-card" data-search="Orient Café kavárna pražírna centrum káva">
+            <span class="place-number">5</span>
+            <h2 class="place-name">Orient Café</h2>
+            <p class="place-description">Kavárna a pražírna v centru, ideální pro ty, kteří berou kávu trochu vážněji.</p>
+          </article>
+        </div>
+      </details>
+
+      <details id="food" class="guide-section" data-category="jídlo restaurace pizza asie indie nepál">
+        <summary class="section-summary">
+          <span class="section-icon">🍽️</span>
+          <span class="section-heading">
+            <span class="section-title">Kam na dobré jídlo</span>
+            <span class="section-count">5 restaurací pro hladovou výpravu</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="places">
+          <article class="place-card" data-search="Da Pietro moderní neapolská pizza pec dřevo">
+            <span class="place-number">1</span>
+            <h2 class="place-name">Da Pietro</h2>
+            <p class="place-description">Moderní neapolská pizza pečená v peci na dřevo.</p>
+          </article>
+          <article class="place-card" data-search="Pivstro pivní bistro kreativní kuchyně řemeslné pivo">
+            <span class="place-number">2</span>
+            <h2 class="place-name">Pivstro</h2>
+            <p class="place-description">Pivní bistro, kde se kreativní kuchyně potkává s řemeslným pivem.</p>
+          </article>
+          <article class="place-card" data-search="Štipec moderní kuchyně sezónní suroviny otevřená kuchyň kamenná pec">
+            <span class="place-number">3</span>
+            <h2 class="place-name">Štipec</h2>
+            <p class="place-description">Moderní kuchyně ze sezónních surovin, otevřená kuchyň a výrazná kamenná pec.</p>
+          </article>
+          <article class="place-card" data-search="Kathmandu indická nepálská kuchyně koření omáčky curry">
+            <span class="place-number">4</span>
+            <h2 class="place-name">Kathmandu</h2>
+            <p class="place-description">Indická a nepálská kuchyně plná koření, omáček a klasických curry.</p>
+          </article>
+          <article class="place-card" data-search="Homy moderní asijská kuchyně sushi Vietnam Japonsko Thajsko">
+            <span class="place-number">5</span>
+            <h2 class="place-name">Homy</h2>
+            <p class="place-description">Moderní asijská kuchyně, sushi a chutě Vietnamu, Japonska i Thajska.</p>
+          </article>
+        </div>
+      </details>
+
+      <details id="beer" class="guide-section" data-category="pivo hospoda pub šenk pivní bar">
+        <summary class="section-summary">
+          <span class="section-icon">🍺</span>
+          <span class="section-heading">
+            <span class="section-title">Pivooooo (jakože nečekali jste návod v Plzni bez piva, že ne? 😁)</span>
+            <span class="section-count">5 míst, kde to teče správným směrem</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="places">
+          <article class="place-card" data-search="Parkán tradiční plzeňský šenk nefiltrovaný Pilsner Urquell česká kuchyně">
+            <span class="place-number">1</span>
+            <h2 class="place-name">Parkán</h2>
+            <p class="place-description">Tradiční plzeňský šenk s nefiltrovaným Pilsner Urquell a českou kuchyní.</p>
+          </article>
+          <article class="place-card" data-search="Lokál Pod Divadlem česká hospoda tanková Plzeň domácí kuchyně">
+            <span class="place-number">2</span>
+            <h2 class="place-name">Lokál Pod Divadlem</h2>
+            <p class="place-description">Poctivá česká hospoda, tanková Plzeň a klasiky domácí kuchyně.</p>
+          </article>
+          <article class="place-card" data-search="Srdcovka restaurace sady Plzeň na čepu maso terasa">
+            <span class="place-number">3</span>
+            <h2 class="place-name">Srdcovka</h2>
+            <p class="place-description">Stylová restaurace v sadech s Plzní na čepu, masem a příjemnou terasou.</p>
+          </article>
+          <article class="place-card" data-search="KEGzistence craftový pivní bar dvanáct píp lahvová piva">
+            <span class="place-number">4</span>
+            <h2 class="place-name">KEGzistence</h2>
+            <p class="place-description">Craftový pivní bar s dvanácti pípami a velkým výběrem lahvových piv.</p>
+          </article>
+          <article class="place-card" data-search="Zach’s Pub irský pub hudební klub zahrádka živá atmosféra">
+            <span class="place-number">5</span>
+            <h2 class="place-name">Zach’s Pub</h2>
+            <p class="place-description">Legendární irský pub a hudební klub se zahrádkou a živou atmosférou.</p>
+          </article>
+        </div>
+      </details>
+
+      <details id="sights" class="guide-section" data-category="památky prohlídka pivovar muzeum podzemí historie">
+        <summary class="section-summary">
+          <span class="section-icon">🏛️</span>
+          <span class="section-heading">
+            <span class="section-title">Co vidět v Plzni</span>
+            <span class="section-count">3 zastávky pro průzkumníky města</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="places">
+          <article class="place-card" data-search="Plzeňský Prazdroj pivovar sklepy ochutnávka piva u zdroje">
+            <span class="place-number">1</span>
+            <h2 class="place-name">Plzeňský Prazdroj</h2>
+            <p class="place-description">Slavný pivovar, sklepy a ochutnávka piva přímo u zdroje.</p>
+          </article>
+          <article class="place-card" data-search="Pivovarské muzeum historie výroby pití piva právovárečný dům 15 století">
+            <span class="place-number">2</span>
+            <h2 class="place-name">Pivovarské muzeum</h2>
+            <p class="place-description">Historie výroby a pití piva v původním právovárečném domě z 15. století.</p>
+          </article>
+          <article class="place-card" data-search="Plzeňské podzemí středověké sklepy chodby studny centrum města">
+            <span class="place-number">3</span>
+            <h2 class="place-name">Plzeňské podzemí</h2>
+            <p class="place-description">Prohlídka středověkých sklepů, chodeb a studní pod centrem města.</p>
+          </article>
+        </div>
+      </details>
+
+      <details id="evening" class="guide-section" data-category="čaj víno koktejly bar večer čajovna vinárna">
+        <summary class="section-summary">
+          <span class="section-icon">🍷</span>
+          <span class="section-heading">
+            <span class="section-title">Nejen pivem živ je člověk</span>
+            <span class="section-count">5 tipů na čaj, víno a koktejly</span>
+          </span>
+          <span class="chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="places">
+          <article class="place-card" data-search="Čajovna U Pekla sypané čaje vodní dýmky zahrádka">
+            <span class="place-number">1</span>
+            <h2 class="place-name">Čajovna U Pekla</h2>
+            <p class="place-description">Čajovna s kvalitními sypanými čaji, vodními dýmkami a zahrádkou.</p>
+          </article>
+          <article class="place-card" data-search="Dobrý čajovna klidná čajovna vnitroblok výhled Stará synagoga">
+            <span class="place-number">2</span>
+            <h2 class="place-name">Dobrý čajovna</h2>
+            <p class="place-description">Klidná čajovna ve vnitrobloku s výhledem na Starou synagogu.</p>
+          </article>
+          <article class="place-card" data-search="Na břehu Rhony francouzský vinný bar vína tapas sýry">
+            <span class="place-number">3</span>
+            <h2 class="place-name">Na břehu Rhony</h2>
+            <p class="place-description">Francouzský vinný bar s víny, tapas a sýry.</p>
+          </article>
+          <article class="place-card" data-search="Vinný bar Hrozen vinárna centrum moravská zahraniční vína">
+            <span class="place-number">4</span>
+            <h2 class="place-name">Vinný bar Hrozen</h2>
+            <p class="place-description">Vinárna v centru s moravskými i zahraničními víny.</p>
+          </article>
+          <article class="place-card" data-search="My Friends stylový koktejlový bar kvalitní drinky příjemná atmosféra">
+            <span class="place-number">5</span>
+            <h2 class="place-name">My Friends</h2>
+            <p class="place-description">Stylový koktejlový bar s kvalitními drinky a příjemnou atmosférou.</p>
+          </article>
+        </div>
+      </details>
+    </section>
+
+    <div id="noResults" class="no-results">
+      V chrámovém archivu se nic takového nenašlo. Zkus jiné slovo. 🗿
+    </div>
+
+    <footer class="footer">
+      Zažij PLZEŇ • 23 tipů pro městskou expedici
+    </footer>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Kategorie průvodce">
+    <a class="nav-link active" href="#coffee" data-target="coffee">
+      <span class="nav-icon">☕</span><span class="nav-text">KÁVA</span>
+    </a>
+    <a class="nav-link" href="#food" data-target="food">
+      <span class="nav-icon">🍽️</span><span class="nav-text">JÍDLO</span>
+    </a>
+    <a class="nav-link" href="#beer" data-target="beer">
+      <span class="nav-icon">🍺</span><span class="nav-text">PIVO</span>
+    </a>
+    <a class="nav-link" href="#sights" data-target="sights">
+      <span class="nav-icon">🏛️</span><span class="nav-text">VIDĚT</span>
+    </a>
+    <a class="nav-link" href="#evening" data-target="evening">
+      <span class="nav-icon">🍷</span><span class="nav-text">VEČER</span>
+    </a>
+  </nav>
+
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Zpět nahoru">↑</button>
+
+  <script>
+    (() => {
+      const input = document.getElementById('searchInput');
+      const clearButton = document.getElementById('clearSearch');
+      const resultCount = document.getElementById('resultCount');
+      const noResults = document.getElementById('noResults');
+      const sections = [...document.querySelectorAll('.guide-section')];
+      const cards = [...document.querySelectorAll('.place-card')];
+      const navLinks = [...document.querySelectorAll('.nav-link')];
+      const backToTop = document.getElementById('backToTop');
+      const normalize = value => value
+        .toLocaleLowerCase('cs-CZ')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+
+      function filterGuide() {
+        const query = normalize(input.value);
+        let visibleCards = 0;
+
+        cards.forEach(card => {
+          const haystack = normalize(`${card.dataset.search || ''} ${card.textContent}`);
+          const matches = !query || haystack.includes(query);
+          card.classList.toggle('hidden-by-search', !matches);
+          if (matches) visibleCards += 1;
+        });
+
+        sections.forEach(section => {
+          const visibleInSection = section.querySelectorAll('.place-card:not(.hidden-by-search)').length;
+          section.classList.toggle('hidden-by-search', query && visibleInSection === 0);
+          if (query && visibleInSection > 0) section.open = true;
+        });
+
+        resultCount.textContent = `${visibleCards} ${visibleCards === 1 ? 'tip' : visibleCards >= 2 && visibleCards <= 4 ? 'tipy' : 'tipů'}`;
+        noResults.classList.toggle('show', visibleCards === 0);
+      }
+
+      input.addEventListener('input', filterGuide);
+      clearButton.addEventListener('click', () => {
+        input.value = '';
+        filterGuide();
+        input.focus();
+      });
+
+      navLinks.forEach(link => {
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          const section = document.getElementById(link.dataset.target);
+          if (!section) return;
+          section.classList.remove('hidden-by-search');
+          section.open = true;
+          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          navLinks.forEach(item => item.classList.toggle('active', item === link));
+        });
+      });
+
+      const observer = new IntersectionObserver(entries => {
+        const visible = entries
+          .filter(entry => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.target === visible.target.id);
+        });
+      }, { rootMargin: '-18% 0px -65% 0px', threshold: [0.1, 0.3, 0.6] });
+
+      sections.forEach(section => observer.observe(section));
+
+      window.addEventListener('scroll', () => {
+        backToTop.classList.toggle('show', window.scrollY > 700);
+      }, { passive: true });
+
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
+  </script>
+</body>
+</html>
