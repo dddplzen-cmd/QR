@@ -806,6 +806,84 @@
       }
     }
 
+  
+
+    /* =========================================
+       PRales V3 — liány jen v pozadí
+       ========================================= */
+    body::before,
+    body::after {
+      top: -18px;
+      width: 560px;
+      height: 260px;
+      opacity: 0.82;
+      filter: none;
+      background:
+        radial-gradient(ellipse at 8% 14%, rgba(49, 103, 70, 0.92) 0 10%, transparent 10.7%),
+        radial-gradient(ellipse at 24% 12%, rgba(23, 63, 42, 0.94) 0 12%, transparent 12.7%),
+        radial-gradient(ellipse at 39% 18%, rgba(67, 128, 80, 0.86) 0 10%, transparent 10.7%),
+        radial-gradient(ellipse at 56% 11%, rgba(28, 73, 48, 0.90) 0 12%, transparent 12.7%),
+        radial-gradient(ellipse at 74% 16%, rgba(78, 135, 88, 0.84) 0 10%, transparent 10.7%),
+        radial-gradient(ellipse at 92% 11%, rgba(36, 79, 56, 0.90) 0 12%, transparent 12.7%),
+        radial-gradient(ellipse at 18% 45%, rgba(77, 133, 84, 0.85) 0 11%, transparent 11.7%),
+        radial-gradient(ellipse at 52% 42%, rgba(36, 79, 56, 0.78) 0 12%, transparent 12.7%),
+        linear-gradient(104deg, transparent 30%, rgba(23, 63, 42, 0.82) 30.6% 31.7%, transparent 32.3%),
+        linear-gradient(96deg, transparent 52%, rgba(23, 63, 42, 0.62) 52.6% 53.5%, transparent 54.1%),
+        linear-gradient(88deg, transparent 74%, rgba(23, 63, 42, 0.54) 74.5% 75.2%, transparent 75.8%);
+    }
+
+    body::before {
+      left: -120px;
+      transform: rotate(-3deg);
+    }
+
+    body::after {
+      right: -120px;
+      transform: scaleX(-1) rotate(-3deg);
+    }
+
+    .app {
+      padding-top: 24px;
+    }
+
+    .hero {
+      min-height: 0;
+      padding-top: 34px;
+    }
+
+    .hero-jungle,
+    .hero-jungle::before,
+    .hero-jungle::after,
+    .jungle-vine,
+    .jungle-vine::before,
+    .jungle-vine::after {
+      display: none !important;
+    }
+
+    @media (max-width: 620px) {
+      .app { padding-top: 22px; }
+      .hero { padding-top: 28px; }
+    }
+
+    @media (max-width: 520px) {
+      body::before,
+      body::after {
+        top: -10px;
+        width: 360px;
+        height: 185px;
+        opacity: 0.78;
+      }
+
+      body::before { left: -92px; }
+      body::after { right: -92px; }
+
+      .app { padding-top: 18px; }
+      .hero {
+        min-height: 0;
+        padding: 30px 18px 24px;
+      }
+    }
+
   </style>
 </head>
 
@@ -820,10 +898,6 @@
 
   <main class="app">
     <header class="hero">
-      <div class="hero-jungle" aria-hidden="true">
-        <span class="jungle-vine jungle-vine-left"></span>
-        <span class="jungle-vine jungle-vine-right"></span>
-      </div>
       <span class="hero-kicker">📍 Mini průvodce Plzní</span>
       <h1>Zažij PLZEŇ</h1>
       <p class="hero-description">Káva, jídlo, pivo, památky i večerní posezení — přehledně na jednom místě.</p>
