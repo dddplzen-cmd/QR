@@ -1,13 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="cs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#6f2dbd">
-  <meta name="description" content="Zažij PLZEŇ – drobný průvodce kavárnami, restauracemi, pivem, památkami a večerním posezením.">
-  <title>Zažij PLZEŇ – mini průvodce</title>
-
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="#6f2dbd" name="theme-color"/>
+<meta content="Zažij PLZEŇ – drobný průvodce kavárnami, restauracemi, pivem, památkami a večerním posezením." name="description"/>
+<title>Zažij PLZEŇ – mini průvodce</title>
+<style>
 
     :root {
       --bg: #f4f5f7;
@@ -358,6 +358,59 @@
       font-size: 0.92rem;
     }
 
+
+    .place-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .place-link {
+      min-height: 42px;
+      padding: 9px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border-radius: 10px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      line-height: 1.2;
+      text-align: center;
+      text-decoration: none;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+    }
+
+    .place-link:hover {
+      transform: translateY(-1px);
+    }
+
+    .place-link-primary {
+      border: 1px solid var(--primary);
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .place-link-primary:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .place-link-secondary {
+      border: 1px solid var(--primary);
+      background: #ffffff;
+      color: var(--primary);
+    }
+
+    .place-link-secondary:hover {
+      background: var(--primary-light);
+    }
+
+    .place-link.is-placeholder {
+      opacity: 0.72;
+    }
+
     .hidden-by-search {
       display: none !important;
     }
@@ -497,6 +550,11 @@
         top: 12px;
       }
 
+
+      .place-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
       .bottom-nav {
         width: calc(100% - 12px);
         bottom: max(6px, env(safe-area-inset-bottom));
@@ -514,254 +572,243 @@
   </style>
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <span class="hero-kicker">📍 Mini průvodce Plzní</span>
-      <h1>Zažij PLZEŇ</h1>
-      <p class="hero-description">Káva, jídlo, pivo, památky i večerní posezení — přehledně na jednom místě.</p>
-    </header>
-
-    <section class="intro-panel" aria-label="Úvod">
-      <p>Zajímá Tě, kam večer zajít na něco dobrého k jídlu nebo pití?</p>
-      <p>Nechceš procházet recenze na Googlu nebo jít někam jen tak naslepo?</p>
-      <p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ ♥</strong></p>
-    </section>
-
-    <section class="search-panel" aria-label="Vyhledávání v průvodci">
-      <div class="search-row">
-        <div class="search-wrap">
-          <input id="searchInput" class="search-input" type="search" placeholder="Hledat místo, jídlo nebo pití…" autocomplete="off">
-        </div>
-        <button id="clearSearch" class="clear-button" type="button" aria-label="Vymazat hledání">×</button>
-      </div>
-      <div class="search-meta">
-        <span>5 kategorií</span>
-        <span id="resultCount">25 tipů</span>
-      </div>
-    </section>
-
-    <section class="guide-list" aria-label="Tipy v Plzni">
-      <details id="coffee" class="guide-section" open data-category="káva kavárna snídaně brunch">
-        <summary class="section-summary">
-          <span class="section-icon">☕</span>
-          <span class="section-heading">
-            <span class="section-title">Kafíčko jako základ dne</span>
-            <span class="section-count">5 tipů na kávu a něco dobrého</span>
-          </span>
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="places">
-          <article class="place-card" data-search="Chromá liška malá útulná kavárna dobrá káva domácí sladkosti">
-            <span class="place-number">1</span>
-            <h2 class="place-name">Chromá liška</h2>
-            <p class="place-description">Malá útulná kavárna s dobrou kávou a domácími sladkostmi.</p>
-          </article>
-          <article class="place-card" data-search="Walter výběrová káva brunch moderní městské posezení centrum">
-            <span class="place-number">2</span>
-            <h2 class="place-name">Walter</h2>
-            <p class="place-description">Výběrová káva, brunch a moderní městské posezení přímo v centru.</p>
-          </article>
-          <article class="place-card" data-search="Le Frenchie café francouzská kavárna výběrová káva koláče snídaně">
-            <span class="place-number">3</span>
-            <h2 class="place-name">Le Frenchie café</h2>
-            <p class="place-description">Francouzsky laděná kavárna s výběrovou kávou, koláči a snídaněmi.</p>
-          </article>
-          <article class="place-card" data-search="CrossCafe plzeňská kavárenská síť rychlá káva snídaně pracovní pauza">
-            <span class="place-number">4</span>
-            <h2 class="place-name">CrossCafe</h2>
-            <p class="place-description">Plzeňská kavárenská síť na rychlou kávu, snídani nebo pracovní pauzu.</p>
-          </article>
-          <article class="place-card" data-search="Orient Café kavárna pražírna centrum káva">
-            <span class="place-number">5</span>
-            <h2 class="place-name">Orient Café</h2>
-            <p class="place-description">Kavárna a pražírna v centru, ideální pro ty, kteří berou kávu trochu vážněji.</p>
-          </article>
-        </div>
-      </details>
-
-      <details id="food" class="guide-section" data-category="jídlo restaurace pizza asie indie nepál">
-        <summary class="section-summary">
-          <span class="section-icon">🍽️</span>
-          <span class="section-heading">
-            <span class="section-title">Kam na dobré jídlo</span>
-            <span class="section-count">5 restaurací pro hladovou výpravu</span>
-          </span>
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="places">
-          <article class="place-card" data-search="Da Pietro moderní neapolská pizza pec dřevo">
-            <span class="place-number">1</span>
-            <h2 class="place-name">Da Pietro</h2>
-            <p class="place-description">Moderní neapolská pizza pečená v peci na dřevo.</p>
-          </article>
-          <article class="place-card" data-search="Pivstro pivní bistro kreativní kuchyně řemeslné pivo">
-            <span class="place-number">2</span>
-            <h2 class="place-name">Pivstro</h2>
-            <p class="place-description">Pivní bistro, kde se kreativní kuchyně potkává s řemeslným pivem.</p>
-          </article>
-          <article class="place-card" data-search="Štipec moderní kuchyně sezónní suroviny otevřená kuchyň kamenná pec">
-            <span class="place-number">3</span>
-            <h2 class="place-name">Štipec</h2>
-            <p class="place-description">Moderní kuchyně ze sezónních surovin, otevřená kuchyň a výrazná kamenná pec.</p>
-          </article>
-          <article class="place-card" data-search="Kathmandu indická nepálská kuchyně koření omáčky curry">
-            <span class="place-number">4</span>
-            <h2 class="place-name">Kathmandu</h2>
-            <p class="place-description">Indická a nepálská kuchyně plná koření, omáček a klasických curry.</p>
-          </article>
-          <article class="place-card" data-search="Homy moderní asijská kuchyně sushi Vietnam Japonsko Thajsko">
-            <span class="place-number">5</span>
-            <h2 class="place-name">Homy</h2>
-            <p class="place-description">Moderní asijská kuchyně, sushi a chutě Vietnamu, Japonska i Thajska.</p>
-          </article>
-        </div>
-      </details>
-
-      <details id="beer" class="guide-section" data-category="pivo hospoda pub šenk pivní bar">
-        <summary class="section-summary">
-          <span class="section-icon">🍺</span>
-          <span class="section-heading">
-            <span class="section-title">Pivooooo (jakože nečekali jste návod v Plzni bez piva, že ne? 😁)</span>
-            <span class="section-count">5 míst, kde to teče správným směrem</span>
-          </span>
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="places">
-          <article class="place-card" data-search="Parkán tradiční plzeňský šenk nefiltrovaný Pilsner Urquell česká kuchyně">
-            <span class="place-number">1</span>
-            <h2 class="place-name">Parkán</h2>
-            <p class="place-description">Tradiční plzeňský šenk s nefiltrovaným Pilsner Urquell a českou kuchyní.</p>
-          </article>
-          <article class="place-card" data-search="Lokál Pod Divadlem česká hospoda tanková Plzeň domácí kuchyně">
-            <span class="place-number">2</span>
-            <h2 class="place-name">Lokál Pod Divadlem</h2>
-            <p class="place-description">Poctivá česká hospoda, tanková Plzeň a klasiky domácí kuchyně.</p>
-          </article>
-          <article class="place-card" data-search="Srdcovka restaurace sady Plzeň na čepu maso terasa">
-            <span class="place-number">3</span>
-            <h2 class="place-name">Srdcovka</h2>
-            <p class="place-description">Stylová restaurace v sadech s Plzní na čepu, masem a příjemnou terasou.</p>
-          </article>
-          <article class="place-card" data-search="KEGzistence craftový pivní bar dvanáct píp lahvová piva">
-            <span class="place-number">4</span>
-            <h2 class="place-name">KEGzistence</h2>
-            <p class="place-description">Craftový pivní bar s dvanácti pípami a velkým výběrem lahvových piv.</p>
-          </article>
-          <article class="place-card" data-search="Zach’s Pub irský pub hudební klub zahrádka živá atmosféra">
-            <span class="place-number">5</span>
-            <h2 class="place-name">Zach’s Pub</h2>
-            <p class="place-description">Legendární irský pub a hudební klub se zahrádkou a živou atmosférou.</p>
-          </article>
-        </div>
-      </details>
-
-      <details id="sights" class="guide-section" data-category="památky prohlídka pivovar muzeum podzemí historie">
-        <summary class="section-summary">
-          <span class="section-icon">🏛️</span>
-          <span class="section-heading">
-            <span class="section-title">Co vidět v Plzni</span>
-            <span class="section-count">5 zastávek pro průzkumníky města</span>
-          </span>
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="places">
-          <article class="place-card" data-search="Plzeňský Prazdroj pivovar sklepy ochutnávka piva u zdroje">
-            <span class="place-number">1</span>
-            <h2 class="place-name">Plzeňský Prazdroj</h2>
-            <p class="place-description">Slavný pivovar, sklepy a ochutnávka piva přímo u zdroje.</p>
-          </article>
-          <article class="place-card" data-search="Pivovarské muzeum historie výroby pití piva právovárečný dům 15 století">
-            <span class="place-number">2</span>
-            <h2 class="place-name">Pivovarské muzeum</h2>
-            <p class="place-description">Historie výroby a pití piva v původním právovárečném domě z 15. století.</p>
-          </article>
-          <article class="place-card" data-search="Plzeňské podzemí středověké sklepy chodby studny centrum města">
-            <span class="place-number">3</span>
-            <h2 class="place-name">Plzeňské podzemí</h2>
-            <p class="place-description">Prohlídka středověkých sklepů, chodeb a studní pod centrem města.</p>
-          </article>
-          <article class="place-card" data-search="Katedrála svatého Bartoloměje náměstí dominanta věž výhled památka">
-            <span class="place-number">4</span>
-            <h2 class="place-name">Katedrála sv. Bartoloměje</h2>
-            <p class="place-description">Hlavní dominanta náměstí a parádní výhled z věže.</p>
-          </article>
-          <article class="place-card" data-search="Velká synagoga impozantní stavba výrazná plzeňská památka">
-            <span class="place-number">5</span>
-            <h2 class="place-name">Velká synagoga</h2>
-            <p class="place-description">Impozantní stavba a jedna z nejvýraznějších plzeňských památek.</p>
-          </article>
-        </div>
-      </details>
-
-      <details id="evening" class="guide-section" data-category="čaj víno koktejly bar večer čajovna vinárna">
-        <summary class="section-summary">
-          <span class="section-icon">🍷</span>
-          <span class="section-heading">
-            <span class="section-title">Nejen pivem živ je člověk</span>
-            <span class="section-count">5 tipů na čaj, víno a koktejly</span>
-          </span>
-          <span class="chevron" aria-hidden="true">⌄</span>
-        </summary>
-        <div class="places">
-          <article class="place-card" data-search="Čajovna U Pekla sypané čaje vodní dýmky zahrádka">
-            <span class="place-number">1</span>
-            <h2 class="place-name">Čajovna U Pekla</h2>
-            <p class="place-description">Čajovna s kvalitními sypanými čaji, vodními dýmkami a zahrádkou.</p>
-          </article>
-          <article class="place-card" data-search="Dobrý čajovna klidná čajovna vnitroblok výhled Stará synagoga">
-            <span class="place-number">2</span>
-            <h2 class="place-name">Dobrý čajovna</h2>
-            <p class="place-description">Klidná čajovna ve vnitrobloku s výhledem na Starou synagogu.</p>
-          </article>
-          <article class="place-card" data-search="Na břehu Rhony francouzský vinný bar vína tapas sýry">
-            <span class="place-number">3</span>
-            <h2 class="place-name">Na břehu Rhony</h2>
-            <p class="place-description">Francouzský vinný bar s víny, tapas a sýry.</p>
-          </article>
-          <article class="place-card" data-search="Vinný bar Hrozen vinárna centrum moravská zahraniční vína">
-            <span class="place-number">4</span>
-            <h2 class="place-name">Vinný bar Hrozen</h2>
-            <p class="place-description">Vinárna v centru s moravskými i zahraničními víny.</p>
-          </article>
-          <article class="place-card" data-search="My Friends stylový koktejlový bar kvalitní drinky příjemná atmosféra">
-            <span class="place-number">5</span>
-            <h2 class="place-name">My Friends</h2>
-            <p class="place-description">Stylový koktejlový bar s kvalitními drinky a příjemnou atmosférou.</p>
-          </article>
-        </div>
-      </details>
-    </section>
-
-    <div id="noResults" class="no-results">
+  <!-- URL EDITACE: U každého místa nahraďte hodnoty DOPLN_WEB_… a DOPLN_MAPY_… skutečnými odkazy začínajícími https:// -->
+<main class="app">
+<header class="hero">
+<span class="hero-kicker">📍 Mini průvodce Plzní</span>
+<h1>Zažij PLZEŇ</h1>
+<p class="hero-description">Káva, jídlo, pivo, památky i večerní posezení — přehledně na jednom místě.</p>
+</header>
+<section aria-label="Úvod" class="intro-panel">
+<p>Zajímá Tě, kam večer zajít na něco dobrého k jídlu nebo pití?</p>
+<p>Nechceš procházet recenze na Googlu nebo jít někam jen tak naslepo?</p>
+<p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ ♥</strong></p>
+</section>
+<section aria-label="Vyhledávání v průvodci" class="search-panel">
+<div class="search-row">
+<div class="search-wrap">
+<input autocomplete="off" class="search-input" id="searchInput" placeholder="Hledat místo, jídlo nebo pití…" type="search"/>
+</div>
+<button aria-label="Vymazat hledání" class="clear-button" id="clearSearch" type="button">×</button>
+</div>
+<div class="search-meta">
+<span>5 kategorií</span>
+<span id="resultCount">25 tipů</span>
+</div>
+</section>
+<section aria-label="Tipy v Plzni" class="guide-list">
+<details class="guide-section" data-category="káva kavárna snídaně brunch" id="coffee" open="">
+<summary class="section-summary">
+<span class="section-icon">☕</span>
+<span class="section-heading">
+<span class="section-title">Kafíčko jako základ dne</span>
+<span class="section-count">5 tipů na kávu a něco dobrého</span>
+</span>
+<span aria-hidden="true" class="chevron">⌄</span>
+</summary>
+<div class="places">
+<article class="place-card" data-search="Chromá liška malá útulná kavárna dobrá káva domácí sladkosti">
+<span class="place-number">1</span>
+<h2 class="place-name">Chromá liška</h2>
+<p class="place-description">Malá útulná kavárna s dobrou kávou a domácími sladkostmi.</p><div class="place-actions"><a aria-label="Otevřít web místa Chromá liška" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CHROMA_LISKA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Chromá liška v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_CHROMA_LISKA" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Walter výběrová káva brunch moderní městské posezení centrum">
+<span class="place-number">2</span>
+<h2 class="place-name">Walter</h2>
+<p class="place-description">Výběrová káva, brunch a moderní městské posezení přímo v centru.</p><div class="place-actions"><a aria-label="Otevřít web místa Walter" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_WALTER" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Walter v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_WALTER" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Le Frenchie café francouzská kavárna výběrová káva koláče snídaně">
+<span class="place-number">3</span>
+<h2 class="place-name">Le Frenchie café</h2>
+<p class="place-description">Francouzsky laděná kavárna s výběrovou kávou, koláči a snídaněmi.</p><div class="place-actions"><a aria-label="Otevřít web místa Le Frenchie café" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_LE_FRENCHIE_CAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Le Frenchie café v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_LE_FRENCHIE_CAFE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="CrossCafe plzeňská kavárenská síť rychlá káva snídaně pracovní pauza">
+<span class="place-number">4</span>
+<h2 class="place-name">CrossCafe</h2>
+<p class="place-description">Plzeňská kavárenská síť na rychlou kávu, snídani nebo pracovní pauzu.</p><div class="place-actions"><a aria-label="Otevřít web místa CrossCafe" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CROSSCAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo CrossCafe v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_CROSSCAFE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Orient Café kavárna pražírna centrum káva">
+<span class="place-number">5</span>
+<h2 class="place-name">Orient Café</h2>
+<p class="place-description">Kavárna a pražírna v centru, ideální pro ty, kteří berou kávu trochu vážněji.</p><div class="place-actions"><a aria-label="Otevřít web místa Orient Café" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_ORIENT_CAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Orient Café v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_ORIENT_CAFE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+</div>
+</details>
+<details class="guide-section" data-category="jídlo restaurace pizza asie indie nepál" id="food">
+<summary class="section-summary">
+<span class="section-icon">🍽️</span>
+<span class="section-heading">
+<span class="section-title">Kam na dobré jídlo</span>
+<span class="section-count">5 restaurací pro hladovou výpravu</span>
+</span>
+<span aria-hidden="true" class="chevron">⌄</span>
+</summary>
+<div class="places">
+<article class="place-card" data-search="Da Pietro moderní neapolská pizza pec dřevo">
+<span class="place-number">1</span>
+<h2 class="place-name">Da Pietro</h2>
+<p class="place-description">Moderní neapolská pizza pečená v peci na dřevo.</p><div class="place-actions"><a aria-label="Otevřít web místa Da Pietro" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_DA_PIETRO" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Da Pietro v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_DA_PIETRO" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Pivstro pivní bistro kreativní kuchyně řemeslné pivo">
+<span class="place-number">2</span>
+<h2 class="place-name">Pivstro</h2>
+<p class="place-description">Pivní bistro, kde se kreativní kuchyně potkává s řemeslným pivem.</p><div class="place-actions"><a aria-label="Otevřít web místa Pivstro" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PIVSTRO" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Pivstro v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_PIVSTRO" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Štipec moderní kuchyně sezónní suroviny otevřená kuchyň kamenná pec">
+<span class="place-number">3</span>
+<h2 class="place-name">Štipec</h2>
+<p class="place-description">Moderní kuchyně ze sezónních surovin, otevřená kuchyň a výrazná kamenná pec.</p><div class="place-actions"><a aria-label="Otevřít web místa Štipec" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_STIPEC" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Štipec v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_STIPEC" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Kathmandu indická nepálská kuchyně koření omáčky curry">
+<span class="place-number">4</span>
+<h2 class="place-name">Kathmandu</h2>
+<p class="place-description">Indická a nepálská kuchyně plná koření, omáček a klasických curry.</p><div class="place-actions"><a aria-label="Otevřít web místa Kathmandu" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KATHMANDU" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Kathmandu v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_KATHMANDU" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Homy moderní asijská kuchyně sushi Vietnam Japonsko Thajsko">
+<span class="place-number">5</span>
+<h2 class="place-name">Homy</h2>
+<p class="place-description">Moderní asijská kuchyně, sushi a chutě Vietnamu, Japonska i Thajska.</p><div class="place-actions"><a aria-label="Otevřít web místa Homy" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_HOMY" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Homy v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_HOMY" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+</div>
+</details>
+<details class="guide-section" data-category="pivo hospoda pub šenk pivní bar" id="beer">
+<summary class="section-summary">
+<span class="section-icon">🍺</span>
+<span class="section-heading">
+<span class="section-title">Pivooooo (jakože nečekali jste návod v Plzni bez piva, že ne? 😁)</span>
+<span class="section-count">5 míst, kde to teče správným směrem</span>
+</span>
+<span aria-hidden="true" class="chevron">⌄</span>
+</summary>
+<div class="places">
+<article class="place-card" data-search="Parkán tradiční plzeňský šenk nefiltrovaný Pilsner Urquell česká kuchyně">
+<span class="place-number">1</span>
+<h2 class="place-name">Parkán</h2>
+<p class="place-description">Tradiční plzeňský šenk s nefiltrovaným Pilsner Urquell a českou kuchyní.</p><div class="place-actions"><a aria-label="Otevřít web místa Parkán" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PARKAN" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Parkán v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_PARKAN" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Lokál Pod Divadlem česká hospoda tanková Plzeň domácí kuchyně">
+<span class="place-number">2</span>
+<h2 class="place-name">Lokál Pod Divadlem</h2>
+<p class="place-description">Poctivá česká hospoda, tanková Plzeň a klasiky domácí kuchyně.</p><div class="place-actions"><a aria-label="Otevřít web místa Lokál Pod Divadlem" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_LOKAL_POD_DIVADLEM" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Lokál Pod Divadlem v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_LOKAL_POD_DIVADLEM" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Srdcovka restaurace sady Plzeň na čepu maso terasa">
+<span class="place-number">3</span>
+<h2 class="place-name">Srdcovka</h2>
+<p class="place-description">Stylová restaurace v sadech s Plzní na čepu, masem a příjemnou terasou.</p><div class="place-actions"><a aria-label="Otevřít web místa Srdcovka" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_SRDCOVKA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Srdcovka v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_SRDCOVKA" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="KEGzistence craftový pivní bar dvanáct píp lahvová piva">
+<span class="place-number">4</span>
+<h2 class="place-name">KEGzistence</h2>
+<p class="place-description">Craftový pivní bar s dvanácti pípami a velkým výběrem lahvových piv.</p><div class="place-actions"><a aria-label="Otevřít web místa KEGzistence" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KEGZISTENCE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo KEGzistence v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_KEGZISTENCE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Zach’s Pub irský pub hudební klub zahrádka živá atmosféra">
+<span class="place-number">5</span>
+<h2 class="place-name">Zach’s Pub</h2>
+<p class="place-description">Legendární irský pub a hudební klub se zahrádkou a živou atmosférou.</p><div class="place-actions"><a aria-label="Otevřít web místa Zach’s Pub" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_ZACHS_PUB" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Zach’s Pub v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_ZACHS_PUB" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+</div>
+</details>
+<details class="guide-section" data-category="památky prohlídka pivovar muzeum podzemí historie" id="sights">
+<summary class="section-summary">
+<span class="section-icon">🏛️</span>
+<span class="section-heading">
+<span class="section-title">Co vidět v Plzni</span>
+<span class="section-count">5 zastávek pro průzkumníky města</span>
+</span>
+<span aria-hidden="true" class="chevron">⌄</span>
+</summary>
+<div class="places">
+<article class="place-card" data-search="Plzeňský Prazdroj pivovar sklepy ochutnávka piva u zdroje">
+<span class="place-number">1</span>
+<h2 class="place-name">Plzeňský Prazdroj</h2>
+<p class="place-description">Slavný pivovar, sklepy a ochutnávka piva přímo u zdroje.</p><div class="place-actions"><a aria-label="Otevřít web místa Plzeňský Prazdroj" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PLZENSKY_PRAZDROJ" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Plzeňský Prazdroj v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_PLZENSKY_PRAZDROJ" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Pivovarské muzeum historie výroby pití piva právovárečný dům 15 století">
+<span class="place-number">2</span>
+<h2 class="place-name">Pivovarské muzeum</h2>
+<p class="place-description">Historie výroby a pití piva v původním právovárečném domě z 15. století.</p><div class="place-actions"><a aria-label="Otevřít web místa Pivovarské muzeum" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PIVOVARSKE_MUZEUM" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Pivovarské muzeum v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_PIVOVARSKE_MUZEUM" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Plzeňské podzemí středověké sklepy chodby studny centrum města">
+<span class="place-number">3</span>
+<h2 class="place-name">Plzeňské podzemí</h2>
+<p class="place-description">Prohlídka středověkých sklepů, chodeb a studní pod centrem města.</p><div class="place-actions"><a aria-label="Otevřít web místa Plzeňské podzemí" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PLZENSKE_PODZEMI" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Plzeňské podzemí v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_PLZENSKE_PODZEMI" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Katedrála svatého Bartoloměje náměstí dominanta věž výhled památka">
+<span class="place-number">4</span>
+<h2 class="place-name">Katedrála sv. Bartoloměje</h2>
+<p class="place-description">Hlavní dominanta náměstí a parádní výhled z věže.</p><div class="place-actions"><a aria-label="Otevřít web místa Katedrála sv. Bartoloměje" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KATEDRALA_SV_BARTOLOMEJE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Katedrála sv. Bartoloměje v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_KATEDRALA_SV_BARTOLOMEJE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Velká synagoga impozantní stavba výrazná plzeňská památka">
+<span class="place-number">5</span>
+<h2 class="place-name">Velká synagoga</h2>
+<p class="place-description">Impozantní stavba a jedna z nejvýraznějších plzeňských památek.</p><div class="place-actions"><a aria-label="Otevřít web místa Velká synagoga" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_VELKA_SYNAGOGA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Velká synagoga v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_VELKA_SYNAGOGA" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+</div>
+</details>
+<details class="guide-section" data-category="čaj víno koktejly bar večer čajovna vinárna" id="evening">
+<summary class="section-summary">
+<span class="section-icon">🍷</span>
+<span class="section-heading">
+<span class="section-title">Nejen pivem živ je člověk</span>
+<span class="section-count">5 tipů na čaj, víno a koktejly</span>
+</span>
+<span aria-hidden="true" class="chevron">⌄</span>
+</summary>
+<div class="places">
+<article class="place-card" data-search="Čajovna U Pekla sypané čaje vodní dýmky zahrádka">
+<span class="place-number">1</span>
+<h2 class="place-name">Čajovna U Pekla</h2>
+<p class="place-description">Čajovna s kvalitními sypanými čaji, vodními dýmkami a zahrádkou.</p><div class="place-actions"><a aria-label="Otevřít web místa Čajovna U Pekla" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CAJOVNA_U_PEKLA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Čajovna U Pekla v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_CAJOVNA_U_PEKLA" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Dobrý čajovna klidná čajovna vnitroblok výhled Stará synagoga">
+<span class="place-number">2</span>
+<h2 class="place-name">Dobrý čajovna</h2>
+<p class="place-description">Klidná čajovna ve vnitrobloku s výhledem na Starou synagogu.</p><div class="place-actions"><a aria-label="Otevřít web místa Dobrý čajovna" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_DOBRY_CAJOVNA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Dobrý čajovna v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_DOBRY_CAJOVNA" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Na břehu Rhony francouzský vinný bar vína tapas sýry">
+<span class="place-number">3</span>
+<h2 class="place-name">Na břehu Rhony</h2>
+<p class="place-description">Francouzský vinný bar s víny, tapas a sýry.</p><div class="place-actions"><a aria-label="Otevřít web místa Na břehu Rhony" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_NA_BREHU_RHONY" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Na břehu Rhony v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_NA_BREHU_RHONY" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="Vinný bar Hrozen vinárna centrum moravská zahraniční vína">
+<span class="place-number">4</span>
+<h2 class="place-name">Vinný bar Hrozen</h2>
+<p class="place-description">Vinárna v centru s moravskými i zahraničními víny.</p><div class="place-actions"><a aria-label="Otevřít web místa Vinný bar Hrozen" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_VINNY_BAR_HROZEN" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Vinný bar Hrozen v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_VINNY_BAR_HROZEN" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+<article class="place-card" data-search="My Friends stylový koktejlový bar kvalitní drinky příjemná atmosféra">
+<span class="place-number">5</span>
+<h2 class="place-name">My Friends</h2>
+<p class="place-description">Stylový koktejlový bar s kvalitními drinky a příjemnou atmosférou.</p><div class="place-actions"><a aria-label="Otevřít web místa My Friends" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_MY_FRIENDS" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo My Friends v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_MY_FRIENDS" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+</article>
+</div>
+</details>
+</section>
+<div class="no-results" id="noResults">
       Pro zadané hledání jsme žádný tip nenašli. Zkus jiné slovo.
     </div>
-
-    <footer class="footer">
+<footer class="footer">
       Zažij PLZEŇ • 25 tipů pro městskou expedici
     </footer>
-  </main>
-
-  <nav class="bottom-nav" aria-label="Kategorie průvodce">
-    <a class="nav-link active" href="#coffee" data-target="coffee">
-      <span class="nav-icon">☕</span><span class="nav-text">KÁVA</span>
-    </a>
-    <a class="nav-link" href="#food" data-target="food">
-      <span class="nav-icon">🍽️</span><span class="nav-text">JÍDLO</span>
-    </a>
-    <a class="nav-link" href="#beer" data-target="beer">
-      <span class="nav-icon">🍺</span><span class="nav-text">PIVO</span>
-    </a>
-    <a class="nav-link" href="#sights" data-target="sights">
-      <span class="nav-icon">🏛️</span><span class="nav-text">VIDĚT</span>
-    </a>
-    <a class="nav-link" href="#evening" data-target="evening">
-      <span class="nav-icon">🍷</span><span class="nav-text">VEČER</span>
-    </a>
-  </nav>
-
-  <button id="backToTop" class="back-to-top" type="button" aria-label="Zpět nahoru">↑</button>
-
-  <script>
+</main>
+<nav aria-label="Kategorie průvodce" class="bottom-nav">
+<a class="nav-link active" data-target="coffee" href="#coffee">
+<span class="nav-icon">☕</span><span class="nav-text">KÁVA</span>
+</a>
+<a class="nav-link" data-target="food" href="#food">
+<span class="nav-icon">🍽️</span><span class="nav-text">JÍDLO</span>
+</a>
+<a class="nav-link" data-target="beer" href="#beer">
+<span class="nav-icon">🍺</span><span class="nav-text">PIVO</span>
+</a>
+<a class="nav-link" data-target="sights" href="#sights">
+<span class="nav-icon">🏛️</span><span class="nav-text">VIDĚT</span>
+</a>
+<a class="nav-link" data-target="evening" href="#evening">
+<span class="nav-icon">🍷</span><span class="nav-text">VEČER</span>
+</a>
+</nav>
+<button aria-label="Zpět nahoru" class="back-to-top" id="backToTop" type="button">↑</button>
+<script>
     (() => {
       const input = document.getElementById('searchInput');
       const clearButton = document.getElementById('clearSearch');
@@ -837,6 +884,24 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     })();
-  </script>
+  
+
+    // Dočasná ochrana placeholderů: dokud URL nezačíná na http:// nebo https://,
+    // tlačítko zobrazí upozornění místo otevření neexistující adresy.
+    document.querySelectorAll('.place-link').forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      const isRealUrl = /^https?:\/\//i.test(href);
+
+      if (!isRealUrl) {
+        link.classList.add('is-placeholder');
+        link.addEventListener('click', (event) => {
+          event.preventDefault();
+          alert('Tento odkaz ještě není doplněný. V HTML nahraďte hodnotu DOPLN_… skutečnou URL adresou.');
+        });
+      } else {
+        link.classList.remove('is-placeholder');
+      }
+    });
+</script>
 </body>
 </html>
