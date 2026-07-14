@@ -569,10 +569,80 @@
       }
     }
 
-  </style>
+  
+
+    .place-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    .place-tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-size: 0.76rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .place-address {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      margin: 11px 0 0;
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .place-address-icon {
+      flex: 0 0 auto;
+      color: var(--primary);
+    }
+
+    .place-link-map {
+      border: 1px solid var(--primary);
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .place-link-map:hover {
+      background: var(--primary-dark);
+      border-color: var(--primary-dark);
+    }
+
+    .place-link-context {
+      border: 1px solid var(--primary);
+      background: #ffffff;
+      color: var(--primary);
+    }
+
+    .place-link-context:hover {
+      background: var(--primary-light);
+    }
+
+    .guide-note {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    @media (max-width: 390px) {
+      .place-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+</style>
 </head>
-<body>
-  <!-- URL EDITACE: U každého místa nahraďte hodnoty DOPLN_WEB_… a DOPLN_MAPY_… skutečnými odkazy začínajícími https:// -->
+<body><!-- EDITACE MÍST: U každé karty lze ručně změnit adresu v <p class="place-address">, štítky ve <div class="place-tags"> a oba odkazy v <div class="place-actions">. Wine Point Plzeň je ponechán záměrně. -->
+
 <main class="app">
 <header class="hero">
 <span class="hero-kicker">📍 Mini průvodce Plzní</span>
@@ -583,7 +653,7 @@
 <p>Zajímá Tě, kam večer zajít na něco dobrého k jídlu nebo pití?</p>
 <p>Nechceš procházet recenze na Googlu nebo jít někam jen tak naslepo?</p>
 <p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ ♥</strong></p>
-</section>
+<p class="guide-note">Aktuální otevírací dobu, rezervace a případné změny provozu si raději ověř přímo v mapě nebo na profilu místa.</p></section>
 <section aria-label="Vyhledávání v průvodci" class="search-panel">
 <div class="search-row">
 <div class="search-wrap">
@@ -610,27 +680,27 @@
 <article class="place-card" data-search="Chromá liška malá útulná kavárna dobrá káva domácí sladkosti">
 <span class="place-number">1</span>
 <h2 class="place-name">Chromá liška</h2>
-<p class="place-description">Malá útulná kavárna s dobrou kávou a domácími sladkostmi.</p><div class="place-actions"><a aria-label="Otevřít web místa Chromá liška" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CHROMA_LISKA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Chromá liška v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Chrom%C3%A1+li%C5%A1ka/@49.7494007,13.37916,17.75z/data=!4m6!3m5!1s0x470af10033d5ca65:0x2e6628d39e1e1ea1!8m2!3d49.749212!4d13.3784871!16s%2Fg%2F11m_dx1wk2?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Malá útulná kavárna s dobrou kávou a domácími sladkostmi.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Výběrová káva</span><span class="place-tag">Domácí sladké</span><span class="place-tag">Útulné</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Rooseveltova 35/15, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Chromá liška v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Chrom%C3%A1+li%C5%A1ka/@49.7494007,13.37916,17.75z/data=!4m6!3m5!1s0x470af10033d5ca65:0x2e6628d39e1e1ea1!8m2!3d49.749212!4d13.3784871!16s%2Fg%2F11m_dx1wk2?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Chromá liška" class="place-link place-link-context" href="https://www.instagram.com/chromaliska/" rel="noopener noreferrer" target="_blank">📸 Instagram</a></div>
 </article>
 <article class="place-card" data-search="Walter výběrová káva brunch moderní městské posezení centrum">
 <span class="place-number">2</span>
 <h2 class="place-name">Walter</h2>
-<p class="place-description">Výběrová káva, brunch a moderní městské posezení přímo v centru.</p><div class="place-actions"><a aria-label="Otevřít web místa Walter" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_WALTER" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Walter v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Walter+Mitty+%E2%80%A2+Bakery+Brunch+Coffee/@49.7456099,13.3732504,17.75z/data=!4m6!3m5!1s0x470af1be6dc78bf9:0x7a1e5e3aa1159db7!8m2!3d49.7455308!4d13.374264!16s%2Fg%2F11fmsft8rh?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Výběrová káva, brunch a moderní městské posezení přímo v centru.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Brunch</span><span class="place-tag">Výběrová káva</span><span class="place-tag">Moderní interiér</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Smetanovy sady 314/12, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Walter v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Walter+Mitty+%E2%80%A2+Bakery+Brunch+Coffee/@49.7456099,13.3732504,17.75z/data=!4m6!3m5!1s0x470af1be6dc78bf9:0x7a1e5e3aa1159db7!8m2!3d49.7455308!4d13.374264!16s%2Fg%2F11fmsft8rh?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Walter" class="place-link place-link-context" href="https://www.walterpilsen.cz/" rel="noopener noreferrer" target="_blank">☕ Nabídka a info</a></div>
 </article>
 <article class="place-card" data-search="Le Frenchie café francouzská kavárna výběrová káva koláče snídaně">
 <span class="place-number">3</span>
 <h2 class="place-name">Le Frenchie café</h2>
-<p class="place-description">Francouzsky laděná kavárna s výběrovou kávou, koláči a snídaněmi.</p><div class="place-actions"><a aria-label="Otevřít web místa Le Frenchie café" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_LE_FRENCHIE_CAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Le Frenchie café v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Le+Frenchie+caf%C3%A9/@49.7454411,13.3739908,18.25z/data=!4m6!3m5!1s0x470af1fb3bed3fd3:0x77a4ee30c0000a96!8m2!3d49.7453553!4d13.3746262!16s%2Fg%2F11bx8qg63n?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Francouzsky laděná kavárna s výběrovou kávou, koláči a snídaněmi.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Snídaně</span><span class="place-tag">Francouzské koláče</span><span class="place-tag">Terasa</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Smetanovy sady 332/6, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Le Frenchie café v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Le+Frenchie+caf%C3%A9/@49.7454411,13.3739908,18.25z/data=!4m6!3m5!1s0x470af1fb3bed3fd3:0x77a4ee30c0000a96!8m2!3d49.7453553!4d13.3746262!16s%2Fg%2F11bx8qg63n?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Le Frenchie café" class="place-link place-link-context" href="https://www.lefrenchie.cz/" rel="noopener noreferrer" target="_blank">🥐 Nabídka a info</a></div>
 </article>
 <article class="place-card" data-search="CrossCafe plzeňská kavárenská síť rychlá káva snídaně pracovní pauza">
 <span class="place-number">4</span>
 <h2 class="place-name">CrossCafe</h2>
-<p class="place-description">Plzeňská kavárenská síť na rychlou kávu, snídani nebo pracovní pauzu.</p><div class="place-actions"><a aria-label="Otevřít web místa CrossCafe" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CROSSCAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo CrossCafe v Google Maps" class="place-link place-link-secondary is-placeholder" href="DOPLN_MAPY_CROSSCAFE" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Plzeňská kavárenská síť na rychlou kávu, snídani nebo pracovní pauzu.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Přímo v centru</span><span class="place-tag">Rychlá zastávka</span><span class="place-tag">Dog friendly</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>náměstí Republiky 358/33, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo CrossCafe v Google Maps" class="place-link place-link-map" href="https://www.google.com/maps/search/?api=1&amp;query=CrossCafe+Central+Plze%C5%88" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu CrossCafe" class="place-link place-link-context" href="https://www.crosscafe.cz/kavarny/central/" rel="noopener noreferrer" target="_blank">☕ Detail pobočky</a></div>
 </article>
 <article class="place-card" data-search="Orient Café kavárna pražírna centrum káva">
 <span class="place-number">5</span>
 <h2 class="place-name">Orient Café</h2>
-<p class="place-description">Kavárna a pražírna v centru, ideální pro ty, kteří berou kávu trochu vážněji.</p><div class="place-actions"><a aria-label="Otevřít web místa Orient Café" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_ORIENT_CAFE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Orient Café v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Orient+Coffee/@49.7461872,13.3751141,18z/data=!4m6!3m5!1s0x470af1e5262e8405:0x9967b062c4ac6d9b!8m2!3d49.7463004!4d13.3772307!16s%2Fg%2F1pp2twyml?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Kavárna a pražírna v centru, ideální pro ty, kteří berou kávu trochu vážněji.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Pražírna</span><span class="place-tag">Výběrová káva</span><span class="place-tag">Pro milovníky kávy</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>náměstí Republiky 135/21, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Orient Café v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Orient+Coffee/@49.7461872,13.3751141,18z/data=!4m6!3m5!1s0x470af1e5262e8405:0x9967b062c4ac6d9b!8m2!3d49.7463004!4d13.3772307!16s%2Fg%2F1pp2twyml?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Orient Café" class="place-link place-link-context" href="https://www.orientcoffee.com/" rel="noopener noreferrer" target="_blank">☕ Pražírna a info</a></div>
 </article>
 </div>
 </details>
@@ -647,27 +717,27 @@
 <article class="place-card" data-search="Da Pietro moderní neapolská pizza pec dřevo">
 <span class="place-number">1</span>
 <h2 class="place-name">Da Pietro</h2>
-<p class="place-description">Moderní neapolská pizza pečená v peci na dřevo.</p><div class="place-actions"><a aria-label="Otevřít web místa Da Pietro" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_DA_PIETRO" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Da Pietro v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Pizzeria+Da+Pietro/@49.7451094,13.374201,18z/data=!4m6!3m5!1s0x470af1fb3989cf67:0x552bec588bc76319!8m2!3d49.7452257!4d13.3750253!16s%2Fg%2F11cn9flqyn?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Moderní neapolská pizza pečená v peci na dřevo.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Neapolská pizza</span><span class="place-tag">Pec na dřevo</span><span class="place-tag">Rezervace vhodná</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Smetanovy sady 331/4, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Da Pietro v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Pizzeria+Da+Pietro/@49.7451094,13.374201,18z/data=!4m6!3m5!1s0x470af1fb3989cf67:0x552bec588bc76319!8m2!3d49.7452257!4d13.3750253!16s%2Fg%2F11cn9flqyn?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Da Pietro" class="place-link place-link-context" href="https://www.dapietroplzen.cz/" rel="noopener noreferrer" target="_blank">🍕 Menu a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Pivstro pivní bistro kreativní kuchyně řemeslné pivo">
 <span class="place-number">2</span>
 <h2 class="place-name">Pivstro</h2>
-<p class="place-description">Pivní bistro, kde se kreativní kuchyně potkává s řemeslným pivem.</p><div class="place-actions"><a aria-label="Otevřít web místa Pivstro" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PIVSTRO" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Pivstro v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Pivstro/@49.745416,13.3735442,17.25z/data=!4m6!3m5!1s0x470af1fb22c39ca5:0x3d5ea864bba34786!8m2!3d49.7456907!4d13.3744303!16s%2Fg%2F11c5qmxv2z?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Pivní bistro, kde se kreativní kuchyně potkává s řemeslným pivem.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Jídlo + pivo</span><span class="place-tag">Craft beer</span><span class="place-tag">Večerní zastávka</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Bezručova 185/31, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Pivstro v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Pivstro/@49.745416,13.3735442,17.25z/data=!4m6!3m5!1s0x470af1fb22c39ca5:0x3d5ea864bba34786!8m2!3d49.7456907!4d13.3744303!16s%2Fg%2F11c5qmxv2z?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Pivstro" class="place-link place-link-context" href="https://pivstro.cz/" rel="noopener noreferrer" target="_blank">🍽️ Menu a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Štipec moderní kuchyně sezónní suroviny otevřená kuchyň kamenná pec">
 <span class="place-number">3</span>
 <h2 class="place-name">Štipec</h2>
-<p class="place-description">Moderní kuchyně ze sezónních surovin, otevřená kuchyň a výrazná kamenná pec.</p><div class="place-actions"><a aria-label="Otevřít web místa Štipec" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_STIPEC" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Štipec v Google Maps" class="place-link place-link-secondary is-placeholder" href="google.cz/maps/place/ŠTIPEC/@49.7472249,13.3751041,17.75z/data=!4m6!3m5!1s0x470af13ee295d85b:0x1bf18933a166de3!8m2!3d49.7472925!4d13.3757761!16s%2Fg%2F11q887kw_0?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Moderní kuchyně ze sezónních surovin, otevřená kuchyň a výrazná kamenná pec.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Sezónní kuchyně</span><span class="place-tag">Jídlo z pece</span><span class="place-tag">Rezervace vhodná</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Riegrova 5, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Štipec v Google Maps" class="place-link place-link-map" href="https://google.cz/maps/place/ŠTIPEC/@49.7472249,13.3751041,17.75z/data=!4m6!3m5!1s0x470af13ee295d85b:0x1bf18933a166de3!8m2!3d49.7472925!4d13.3757761!16s%2Fg%2F11q887kw_0?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Štipec" class="place-link place-link-context" href="https://stipec.cz/" rel="noopener noreferrer" target="_blank">🍽️ Menu a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Kathmandu indická nepálská kuchyně koření omáčky curry">
 <span class="place-number">4</span>
 <h2 class="place-name">Kathmandu</h2>
-<p class="place-description">Indická a nepálská kuchyně plná koření, omáček a klasických curry.</p><div class="place-actions"><a aria-label="Otevřít web místa Kathmandu" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KATHMANDU" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Kathmandu v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Indick%C3%A1+Nep%C3%A1lsk%C3%A1+restaurace+Kathmandu/@49.7425788,13.3785678,18z/data=!4m6!3m5!1s0x470aef5a5044d653:0xbbcba0bdfe56449d!8m2!3d49.742518!4d13.3793179!16s%2Fg%2F11fk4n0q7p?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Indická a nepálská kuchyně plná koření, omáček a klasických curry.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Indie &amp; Nepál</span><span class="place-tag">Vegetariánské možnosti</span><span class="place-tag">Vydatné</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Prokopova 21, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Kathmandu v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Indick%C3%A1+Nep%C3%A1lsk%C3%A1+restaurace+Kathmandu/@49.7425788,13.3785678,18z/data=!4m6!3m5!1s0x470aef5a5044d653:0xbbcba0bdfe56449d!8m2!3d49.742518!4d13.3793179!16s%2Fg%2F11fk4n0q7p?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Kathmandu" class="place-link place-link-context" href="https://www.indickarestauraceplzen.cz/" rel="noopener noreferrer" target="_blank">🍛 Menu a objednávky</a></div>
 </article>
 <article class="place-card" data-search="Homy moderní asijská kuchyně sushi Vietnam Japonsko Thajsko">
 <span class="place-number">5</span>
 <h2 class="place-name">Homy</h2>
-<p class="place-description">Moderní asijská kuchyně, sushi a chutě Vietnamu, Japonska i Thajska.</p><div class="place-actions"><a aria-label="Otevřít web místa Homy" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_HOMY" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Homy v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Homy+Asian+Fusion/@49.7457306,13.3761242,18z/data=!4m6!3m5!1s0x470af1d626e5bdf5:0xd4eb791e7ce2f1ad!8m2!3d49.745674!4d13.3775276!16s%2Fg%2F11ht9dstff?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Moderní asijská kuchyně, sushi a chutě Vietnamu, Japonska i Thajska.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Asian fusion</span><span class="place-tag">Sushi</span><span class="place-tag">Moderní</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Bezručova 149/4, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Homy v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Homy+Asian+Fusion/@49.7457306,13.3761242,18z/data=!4m6!3m5!1s0x470af1d626e5bdf5:0xd4eb791e7ce2f1ad!8m2!3d49.745674!4d13.3775276!16s%2Fg%2F11ht9dstff?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Homy" class="place-link place-link-context" href="https://www.instagram.com/homyfusion/" rel="noopener noreferrer" target="_blank">📸 Instagram</a></div>
 </article>
 </div>
 </details>
@@ -684,27 +754,27 @@
 <article class="place-card" data-search="Parkán tradiční plzeňský šenk nefiltrovaný Pilsner Urquell česká kuchyně">
 <span class="place-number">1</span>
 <h2 class="place-name">Parkán</h2>
-<p class="place-description">Tradiční plzeňský šenk s nefiltrovaným Pilsner Urquell a českou kuchyní.</p><div class="place-actions"><a aria-label="Otevřít web místa Parkán" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PARKAN" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Parkán v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/%C5%A0enk+Na+Park%C3%A1nu/@49.748706,13.3802744,18.25z/data=!4m6!3m5!1s0x470af1ef8331f1e3:0x21e1376591eb7ae8!8m2!3d49.748715!4d13.38101!16s%2Fg%2F1tdyjy54?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Tradiční plzeňský šenk s nefiltrovaným Pilsner Urquell a českou kuchyní.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Plzeňská klasika</span><span class="place-tag">Nefiltrovaný Pilsner</span><span class="place-tag">Zahrádka</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Veleslavínova 59/4, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Parkán v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/%C5%A0enk+Na+Park%C3%A1nu/@49.748706,13.3802744,18.25z/data=!4m6!3m5!1s0x470af1ef8331f1e3:0x21e1376591eb7ae8!8m2!3d49.748715!4d13.38101!16s%2Fg%2F1tdyjy54?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Parkán" class="place-link place-link-context" href="https://www.naparkanu.com/cz/" rel="noopener noreferrer" target="_blank">🍺 Menu a info</a></div>
 </article>
 <article class="place-card" data-search="Lokál Pod Divadlem česká hospoda tanková Plzeň domácí kuchyně">
 <span class="place-number">2</span>
 <h2 class="place-name">Lokál Pod Divadlem</h2>
-<p class="place-description">Poctivá česká hospoda, tanková Plzeň a klasiky domácí kuchyně.</p><div class="place-actions"><a aria-label="Otevřít web místa Lokál Pod Divadlem" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_LOKAL_POD_DIVADLEM" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Lokál Pod Divadlem v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Lok%C3%A1l+Pod+Divadlem/@49.7474281,13.3756806,17.25z/data=!4m6!3m5!1s0x470af1fb195e0775:0xbeaa865f3a70f3d3!8m2!3d49.7459305!4d13.3739724!16s%2Fg%2F11bccmfnb3?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Poctivá česká hospoda, tanková Plzeň a klasiky domácí kuchyně.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Tanková Plzeň</span><span class="place-tag">Česká kuchyně</span><span class="place-tag">Živější večer</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Bezručova 315/34, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Lokál Pod Divadlem v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Lok%C3%A1l+Pod+Divadlem/@49.7474281,13.3756806,17.25z/data=!4m6!3m5!1s0x470af1fb195e0775:0xbeaa865f3a70f3d3!8m2!3d49.7459305!4d13.3739724!16s%2Fg%2F11bccmfnb3?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Lokál Pod Divadlem" class="place-link place-link-context" href="https://lokal-poddivadlem.ambi.cz/cz/" rel="noopener noreferrer" target="_blank">🍽️ Menu a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Srdcovka restaurace sady Plzeň na čepu maso terasa">
 <span class="place-number">3</span>
 <h2 class="place-name">Srdcovka</h2>
-<p class="place-description">Stylová restaurace v sadech s Plzní na čepu, masem a příjemnou terasou.</p><div class="place-actions"><a aria-label="Otevřít web místa Srdcovka" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_SRDCOVKA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Srdcovka v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Srdcovka+Corso/@49.745119,13.3759385,18z/data=!4m6!3m5!1s0x470af1e4c9533239:0xf33da05ffdaad373!8m2!3d49.7451022!4d13.3763781!16s%2Fg%2F11f2t9flsq?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Stylová restaurace v sadech s Plzní na čepu, masem a příjemnou terasou.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Terasa</span><span class="place-tag">Plzeň na čepu</span><span class="place-tag">Maso</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Kopeckého sady 3/14, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Srdcovka v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Srdcovka+Corso/@49.745119,13.3759385,18z/data=!4m6!3m5!1s0x470af1e4c9533239:0xf33da05ffdaad373!8m2!3d49.7451022!4d13.3763781!16s%2Fg%2F11f2t9flsq?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Srdcovka" class="place-link place-link-context" href="https://srdcovkacorso.cz/" rel="noopener noreferrer" target="_blank">🍽️ Menu a rezervace</a></div>
 </article>
 <article class="place-card" data-search="KEGzistence craftový pivní bar dvanáct píp lahvová piva">
 <span class="place-number">4</span>
 <h2 class="place-name">KEGzistence</h2>
-<p class="place-description">Craftový pivní bar s dvanácti pípami a velkým výběrem lahvových piv.</p><div class="place-actions"><a aria-label="Otevřít web místa KEGzistence" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KEGZISTENCE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo KEGzistence v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/KEGzistence/@49.7481788,13.3790649,17.5z/data=!4m6!3m5!1s0x470af1f94ca36f4f:0x3e46a761ac4ec319!8m2!3d49.7483011!4d13.3790447!16s%2Fg%2F11tjc_n7cz?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Craftový pivní bar s dvanácti pípami a velkým výběrem lahvových piv.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Craft beer</span><span class="place-tag">12 píp</span><span class="place-tag">Pro pivní nadšence</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Rooseveltova 76/4, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo KEGzistence v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/KEGzistence/@49.7481788,13.3790649,17.5z/data=!4m6!3m5!1s0x470af1f94ca36f4f:0x3e46a761ac4ec319!8m2!3d49.7483011!4d13.3790447!16s%2Fg%2F11tjc_n7cz?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu KEGzistence" class="place-link place-link-context" href="https://www.kegzistence.cz/" rel="noopener noreferrer" target="_blank">🍺 Aktuální nabídka</a></div>
 </article>
 <article class="place-card" data-search="Zach’s Pub irský pub hudební klub zahrádka živá atmosféra">
 <span class="place-number">5</span>
 <h2 class="place-name">Zach’s Pub</h2>
-<p class="place-description">Legendární irský pub a hudební klub se zahrádkou a živou atmosférou.</p><div class="place-actions"><a aria-label="Otevřít web místa Zach’s Pub" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_ZACHS_PUB" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Zach’s Pub v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Zach's+Pub/@49.7483553,13.3704089,18z/data=!4m6!3m5!1s0x470af1fa19b82fb3:0x39870a4c20cf428f!8m2!3d49.7482369!4d13.3710098!16s%2Fg%2F1vbl68yj?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Legendární irský pub a hudební klub se zahrádkou a živou atmosférou.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Živá hudba</span><span class="place-tag">Zahrádka</span><span class="place-tag">Večerní program</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Palackého náměstí 2, 301 16 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Zach’s Pub v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Zach's+Pub/@49.7483553,13.3704089,18z/data=!4m6!3m5!1s0x470af1fa19b82fb3:0x39870a4c20cf428f!8m2!3d49.7482369!4d13.3710098!16s%2Fg%2F1vbl68yj?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Zach’s Pub" class="place-link place-link-context" href="https://www.zachspub.cz/program/" rel="noopener noreferrer" target="_blank">🎵 Program akcí</a></div>
 </article>
 </div>
 </details>
@@ -721,27 +791,27 @@
 <article class="place-card" data-search="Plzeňský Prazdroj pivovar sklepy ochutnávka piva u zdroje">
 <span class="place-number">1</span>
 <h2 class="place-name">Plzeňský Prazdroj</h2>
-<p class="place-description">Slavný pivovar, sklepy a ochutnávka piva přímo u zdroje.</p><div class="place-actions"><a aria-label="Otevřít web místa Plzeňský Prazdroj" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PLZENSKY_PRAZDROJ" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Plzeňský Prazdroj v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Pivovar+Plze%C5%88sk%C3%BD+Prazdroj/@49.7464815,13.3863751,17.5z/data=!4m6!3m5!1s0x470af1e63bb5abbb:0x360b8c2294d85eaa!8m2!3d49.7467532!4d13.3875774!16zL20vMDdtZnoy?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Slavný pivovar, sklepy a ochutnávka piva přímo u zdroje.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Prohlídka</span><span class="place-tag">Plzeňská ikona</span><span class="place-tag">Rezervace vhodná</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>U Prazdroje 64/7, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Plzeňský Prazdroj v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Pivovar+Plze%C5%88sk%C3%BD+Prazdroj/@49.7464815,13.3863751,17.5z/data=!4m6!3m5!1s0x470af1e63bb5abbb:0x360b8c2294d85eaa!8m2!3d49.7467532!4d13.3875774!16zL20vMDdtZnoy?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Plzeňský Prazdroj" class="place-link place-link-context" href="https://www.prazdrojvisit.cz/cs" rel="noopener noreferrer" target="_blank">🎟️ Prohlídky a vstupenky</a></div>
 </article>
 <article class="place-card" data-search="Pivovarské muzeum historie výroby pití piva právovárečný dům 15 století">
 <span class="place-number">2</span>
 <h2 class="place-name">Pivovarské muzeum</h2>
-<p class="place-description">Historie výroby a pití piva v původním právovárečném domě z 15. století.</p><div class="place-actions"><a aria-label="Otevřít web místa Pivovarské muzeum" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PIVOVARSKE_MUZEUM" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Pivovarské muzeum v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Pivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum/@49.7487477,13.3800462,19z/data=!4m6!3m5!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Historie výroby a pití piva v původním právovárečném domě z 15. století.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Historie piva</span><span class="place-tag">Uvnitř</span><span class="place-tag">Na 60 minut</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Veleslavínova 58/6, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Pivovarské muzeum v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Pivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum/@49.7487477,13.3800462,19z/data=!4m6!3m5!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Pivovarské muzeum" class="place-link place-link-context" href="https://www.prazdrojvisit.cz/cs/tours/prohlidka-pivovarskeho-muzea" rel="noopener noreferrer" target="_blank">ℹ️ Oficiální informace</a></div>
 </article>
 <article class="place-card" data-search="Plzeňské podzemí středověké sklepy chodby studny centrum města">
 <span class="place-number">3</span>
 <h2 class="place-name">Plzeňské podzemí</h2>
-<p class="place-description">Prohlídka středověkých sklepů, chodeb a studní pod centrem města.</p><div class="place-actions"><a aria-label="Otevřít web místa Plzeňské podzemí" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_PLZENSKE_PODZEMI" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Plzeňské podzemí v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Plze%C5%88sk%C3%A9+historick%C3%A9+podzem%C3%AD/@49.7486039,13.3807689,19.5z/data=!4m6!3m5!1s0x470af1ef875a7109:0x2eac1630a121102c!8m2!3d49.7487657!4d13.3806449!16s%2Fg%2F1236yc37?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Prohlídka středověkých sklepů, chodeb a studní pod centrem města.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">S průvodcem</span><span class="place-tag">Pod zemí</span><span class="place-tag">Rezervace vhodná</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Veleslavínova 58/6, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Plzeňské podzemí v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Plze%C5%88sk%C3%A9+historick%C3%A9+podzem%C3%AD/@49.7486039,13.3807689,19.5z/data=!4m6!3m5!1s0x470af1ef875a7109:0x2eac1630a121102c!8m2!3d49.7487657!4d13.3806449!16s%2Fg%2F1236yc37?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Plzeňské podzemí" class="place-link place-link-context" href="https://www.prazdrojvisit.cz/cs/tours/prohlidka-plzenskeho-historickeho-podzemi" rel="noopener noreferrer" target="_blank">🎟️ Prohlídky a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Katedrála svatého Bartoloměje náměstí dominanta věž výhled památka">
 <span class="place-number">4</span>
 <h2 class="place-name">Katedrála sv. Bartoloměje</h2>
-<p class="place-description">Hlavní dominanta náměstí a parádní výhled z věže.</p><div class="place-actions"><a aria-label="Otevřít web místa Katedrála sv. Bartoloměje" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_KATEDRALA_SV_BARTOLOMEJE" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Katedrála sv. Bartoloměje v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Katedr%C3%A1la+svat%C3%A9ho+Bartolom%C4%9Bje/@49.7475847,13.3763246,18z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fab3f99d35:0x39c1725a705c12bb!8m2!3d49.7474704!4d13.3775538!16zL20vMGd4MnRj?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Hlavní dominanta náměstí a parádní výhled z věže.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Výhled z věže</span><span class="place-tag">Gotika</span><span class="place-tag">V centru</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>náměstí Republiky, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Katedrála sv. Bartoloměje v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Katedr%C3%A1la+svat%C3%A9ho+Bartolom%C4%9Bje/@49.7475847,13.3763246,18z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fab3f99d35:0x39c1725a705c12bb!8m2!3d49.7474704!4d13.3775538!16zL20vMGd4MnRj?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Katedrála sv. Bartoloměje" class="place-link place-link-context" href="https://www.bip.cz/cs/katedrala-sv-bartolomeje" rel="noopener noreferrer" target="_blank">ℹ️ Oficiální informace</a></div>
 </article>
 <article class="place-card" data-search="Velká synagoga impozantní stavba výrazná plzeňská památka">
 <span class="place-number">5</span>
 <h2 class="place-name">Velká synagoga</h2>
-<p class="place-description">Impozantní stavba a jedna z nejvýraznějších plzeňských památek.</p><div class="place-actions"><a aria-label="Otevřít web místa Velká synagoga" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_VELKA_SYNAGOGA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Velká synagoga v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Velk%C3%A1+synagoga/@49.7463913,13.3734602,18.25z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fa55b61e1b:0xb84600b53ce31d20!8m2!3d49.7466714!4d13.3727513!16zL20vMDVjbnpz?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Impozantní stavba a jedna z nejvýraznějších plzeňských památek.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Architektura</span><span class="place-tag">Historie</span><span class="place-tag">Fotogenické</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>sady Pětatřicátníků 35/11, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Velká synagoga v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Velk%C3%A1+synagoga/@49.7463913,13.3734602,18.25z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fa55b61e1b:0xb84600b53ce31d20!8m2!3d49.7466714!4d13.3727513!16zL20vMDVjbnpz?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Velká synagoga" class="place-link place-link-context" href="https://www.zoplzen.cz/" rel="noopener noreferrer" target="_blank">ℹ️ Oficiální informace</a></div>
 </article>
 </div>
 </details>
@@ -758,27 +828,27 @@
 <article class="place-card" data-search="Čajovna U Pekla sypané čaje vodní dýmky zahrádka">
 <span class="place-number">1</span>
 <h2 class="place-name">Čajovna U Pekla</h2>
-<p class="place-description">Čajovna s kvalitními sypanými čaji, vodními dýmkami a zahrádkou.</p><div class="place-actions"><a aria-label="Otevřít web místa Čajovna U Pekla" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_CAJOVNA_U_PEKLA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Čajovna U Pekla v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/%C4%8Cajovna+u+Pekla/@49.7490233,13.3739249,18.25z/data=!3m1!5s0x470af1f0825288cb:0xf98cff0382498437!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1f083cfa797:0xaac3b1dc513fd3ed!8m2!3d49.7491095!4d13.3734997!16s%2Fg%2F12hrk3mnj?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Čajovna s kvalitními sypanými čaji, vodními dýmkami a zahrádkou.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Sypané čaje</span><span class="place-tag">Vodní dýmky</span><span class="place-tag">Zahrádka</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>sady Pětatřicátníků 49/29, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Čajovna U Pekla v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/%C4%8Cajovna+u+Pekla/@49.7490233,13.3739249,18.25z/data=!3m1!5s0x470af1f0825288cb:0xf98cff0382498437!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1f083cfa797:0xaac3b1dc513fd3ed!8m2!3d49.7491095!4d13.3734997!16s%2Fg%2F12hrk3mnj?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Čajovna U Pekla" class="place-link place-link-context" href="https://www.cajovnaupekla.cz/kontakt/" rel="noopener noreferrer" target="_blank">🍵 Kontakt a info</a></div>
 </article>
 <article class="place-card" data-search="Dobrý čajovna klidná čajovna vnitroblok výhled Stará synagoga">
 <span class="place-number">2</span>
 <h2 class="place-name">Dobrý čajovna</h2>
-<p class="place-description">Klidná čajovna ve vnitrobloku s výhledem na Starou synagogu.</p><div class="place-actions"><a aria-label="Otevřít web místa Dobrý čajovna" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_DOBRY_CAJOVNA" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Dobrý čajovna v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Dobr%C3%A1+%C4%8Dajovna+Plze%C5%88/@49.7447521,13.3743555,17.75z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fb442989ef:0x7ef3213e82ab608e!8m2!3d49.7446499!4d13.3744832!16s%2Fg%2F1tph0fz6?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Klidná čajovna ve vnitrobloku s výhledem na Starou synagogu.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Klidné posezení</span><span class="place-tag">Čajový výběr</span><span class="place-tag">Vnitroblok</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Smetanovy sady 80/5, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Dobrý čajovna v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Dobr%C3%A1+%C4%8Dajovna+Plze%C5%88/@49.7447521,13.3743555,17.75z/data=!4m14!1m7!3m6!1s0x470af1ef9caa58f1:0xdab26f41aa43a73c!2sPivot%C3%A9ka+a+Pivovarsk%C3%A9+muzeum!8m2!3d49.7487558!4d13.3806832!16s%2Fg%2F1vppr77x!3m5!1s0x470af1fb442989ef:0x7ef3213e82ab608e!8m2!3d49.7446499!4d13.3744832!16s%2Fg%2F1tph0fz6?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Dobrý čajovna" class="place-link place-link-context" href="https://www.dobracajovnaplzen.cz/" rel="noopener noreferrer" target="_blank">🍵 Rezervace a info</a></div>
 </article>
 <article class="place-card" data-search="Na břehu Rhony francouzský vinný bar vína tapas sýry">
 <span class="place-number">3</span>
 <h2 class="place-name">Na břehu Rhony</h2>
-<p class="place-description">Francouzský vinný bar s víny, tapas a sýry.</p><div class="place-actions"><a aria-label="Otevřít web místa Na břehu Rhony" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_NA_BREHU_RHONY" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Na břehu Rhony v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Na+b%C5%99ehu+Rh%C3%B4ny+Plze%C5%88/@49.7456282,13.3752733,18.33z/data=!4m6!3m5!1s0x470af13433b162f5:0x303d4cb9fdafcb8f!8m2!3d49.7454668!4d13.3771626!16s%2Fg%2F11j8kvcvsv?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Francouzský vinný bar s víny, tapas a sýry.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Francouzská vína</span><span class="place-tag">Tapas</span><span class="place-tag">Večerní zastávka</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Bezručova 153/9, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Na břehu Rhony v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Na+b%C5%99ehu+Rh%C3%B4ny+Plze%C5%88/@49.7456282,13.3752733,18.33z/data=!4m6!3m5!1s0x470af13433b162f5:0x303d4cb9fdafcb8f!8m2!3d49.7454668!4d13.3771626!16s%2Fg%2F11j8kvcvsv?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Na břehu Rhony" class="place-link place-link-context" href="https://www.nabrehurhony.cz/nase-brehy/na-brehu-rhony---vinny-bar-plzen/" rel="noopener noreferrer" target="_blank">🍷 Info a rezervace</a></div>
 </article>
 <article class="place-card" data-search="Wine Point Plzeň">
 <span class="place-number">4</span>
 <h2 class="place-name">Wine Point Plzeň</h2>
-<p class="place-description">Vinárna v centru s moravskými i zahraničními víny.</p><div class="place-actions"><a aria-label="Otevřít web místa Wine Point Plzeň" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_VINNY_BAR_HROZEN" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo Wine Point Plzeň v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/Wine+Point+Plze%C5%88/@49.7429806,13.3792615,18z/data=!4m6!3m5!1s0x470af15d03255bb1:0x6e46ded4b21a5b35!8m2!3d49.742875!4d13.3791771!16s%2Fg%2F11s9hnr3t_?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Vinárna v centru s moravskými i zahraničními víny.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Moravská vína</span><span class="place-tag">Degustace</span><span class="place-tag">Klidnější večer</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Prokopova 17, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo Wine Point Plzeň v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/Wine+Point+Plze%C5%88/@49.7429806,13.3792615,18z/data=!4m6!3m5!1s0x470af15d03255bb1:0x6e46ded4b21a5b35!8m2!3d49.742875!4d13.3791771!16s%2Fg%2F11s9hnr3t_?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu Wine Point Plzeň" class="place-link place-link-context" href="https://winepointplzen.cz/" rel="noopener noreferrer" target="_blank">🍷 Aktuální nabídka</a></div>
 </article>
 <article class="place-card" data-search="My Friends stylový koktejlový bar kvalitní drinky příjemná atmosféra">
 <span class="place-number">5</span>
 <h2 class="place-name">My Friends</h2>
-<p class="place-description">Stylový koktejlový bar s kvalitními drinky a příjemnou atmosférou.</p><div class="place-actions"><a aria-label="Otevřít web místa My Friends" class="place-link place-link-primary is-placeholder" href="DOPLN_WEB_MY_FRIENDS" rel="noopener noreferrer" target="_blank">🌐 Web místa</a><a aria-label="Otevřít místo My Friends v Google Maps" class="place-link place-link-secondary is-placeholder" href="https://www.google.cz/maps/place/My+Friends+bar/@49.7438173,13.3740734,17.75z/data=!3m1!5s0x470af1fb5824653f:0xb718f49ffca2d867!4m6!3m5!1s0x470af1fb5905ede7:0x246516d2546c2c6e!8m2!3d49.7438889!4d13.3741667!16s%2Fg%2F1tp25_8_?entry=ttu&g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Google Maps</a></div>
+<p class="place-description">Stylový koktejlový bar s kvalitními drinky a příjemnou atmosférou.</p><div aria-label="Praktické štítky" class="place-tags"><span class="place-tag">Koktejly</span><span class="place-tag">Večerní bar</span><span class="place-tag">Prémiové drinky</span></div><p class="place-address"><span aria-hidden="true" class="place-address-icon">📍</span><span>Americká 90/11, 301 00 Plzeň</span></p><div class="place-actions"><a aria-label="Otevřít místo My Friends v Google Maps" class="place-link place-link-map" href="https://www.google.cz/maps/place/My+Friends+bar/@49.7438173,13.3740734,17.75z/data=!3m1!5s0x470af1fb5824653f:0xb718f49ffca2d867!4m6!3m5!1s0x470af1fb5905ede7:0x246516d2546c2c6e!8m2!3d49.7438889!4d13.3741667!16s%2Fg%2F1tp25_8_?entry=ttu&amp;g_ep=EgoyMDI2MDcwOC4wIKXMDSoASAFQAw%3D%3D" rel="noopener noreferrer" target="_blank">📍 Mapa a navigace</a><a aria-label="Otevřít doplňující informace k místu My Friends" class="place-link place-link-context" href="https://myfriendsbar.cz/" rel="noopener noreferrer" target="_blank">🍸 Bar a rezervace</a></div>
 </article>
 </div>
 </details>
@@ -884,24 +954,6 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     })();
-  
-
-    // Dočasná ochrana placeholderů: dokud URL nezačíná na http:// nebo https://,
-    // tlačítko zobrazí upozornění místo otevření neexistující adresy.
-    document.querySelectorAll('.place-link').forEach((link) => {
-      const href = link.getAttribute('href') || '';
-      const isRealUrl = /^https?:\/\//i.test(href);
-
-      if (!isRealUrl) {
-        link.classList.add('is-placeholder');
-        link.addEventListener('click', (event) => {
-          event.preventDefault();
-          alert('Tento odkaz ještě není doplněný. V HTML nahraďte hodnotu DOPLN_… skutečnou URL adresou.');
-        });
-      } else {
-        link.classList.remove('is-placeholder');
-      }
-    });
 </script>
 </body>
 </html>
