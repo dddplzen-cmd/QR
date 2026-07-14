@@ -641,6 +641,171 @@
         animation: none !important;
       }
     }
+
+
+    /* =========================================
+       PRales V2 — výraznější horní džungle, bez slunce
+       ========================================= */
+    .app {
+      padding-top: 34px;
+    }
+
+    .hero {
+      min-height: 250px;
+      padding-top: 50px;
+      background:
+        linear-gradient(115deg, rgba(255, 251, 239, 0.96) 0 58%, rgba(241, 224, 184, 0.92) 100%),
+        #f4ead3;
+    }
+
+    .hero::before {
+      background:
+        linear-gradient(90deg, rgba(23, 63, 42, 0.08) 1px, transparent 1px),
+        linear-gradient(rgba(23, 63, 42, 0.06) 1px, transparent 1px),
+        radial-gradient(ellipse at 24% 0%, rgba(25, 74, 44, 0.10), transparent 34%);
+      background-size: 34px 34px, 34px 34px, auto;
+      mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.50), transparent 88%);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: auto 0 0 0;
+      height: 66px;
+      border-radius: 0 0 10px 10px;
+      background:
+        linear-gradient(180deg, transparent, rgba(23, 63, 42, 0.05)),
+        repeating-linear-gradient(115deg, transparent 0 17px, rgba(36, 79, 56, 0.035) 17px 19px);
+      opacity: 1;
+    }
+
+    .hero-jungle {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .hero-jungle::before,
+    .hero-jungle::after {
+      content: "";
+      position: absolute;
+      top: -34px;
+      width: 310px;
+      height: 225px;
+      opacity: 0.97;
+      filter: drop-shadow(0 8px 10px rgba(10, 39, 22, 0.17));
+      background:
+        radial-gradient(ellipse at 12% 14%, #173f2a 0 13%, transparent 13.8%),
+        radial-gradient(ellipse at 31% 24%, #285a3b 0 15%, transparent 15.8%),
+        radial-gradient(ellipse at 51% 10%, #1c4930 0 13%, transparent 13.8%),
+        radial-gradient(ellipse at 68% 31%, #346b48 0 15%, transparent 15.8%),
+        radial-gradient(ellipse at 85% 16%, #204d33 0 12%, transparent 12.8%),
+        radial-gradient(ellipse at 20% 53%, #316746 0 14%, transparent 14.8%),
+        radial-gradient(ellipse at 45% 57%, #173f2a 0 16%, transparent 16.8%),
+        radial-gradient(ellipse at 74% 62%, #285a3b 0 14%, transparent 14.8%),
+        linear-gradient(104deg, transparent 42%, rgba(23, 63, 42, 0.92) 43% 46%, transparent 47%);
+    }
+
+    .hero-jungle::before {
+      left: -120px;
+      transform: rotate(-8deg);
+    }
+
+    .hero-jungle::after {
+      right: -120px;
+      transform: scaleX(-1) rotate(-8deg);
+    }
+
+    .jungle-vine {
+      position: absolute;
+      top: -26px;
+      width: 86px;
+      height: 205px;
+      border: solid rgba(23, 63, 42, 0.88);
+      border-width: 0 0 0 5px;
+      border-radius: 48% 0 0 65%;
+      opacity: 0.92;
+    }
+
+    .jungle-vine::before,
+    .jungle-vine::after {
+      content: "";
+      position: absolute;
+      width: 34px;
+      height: 18px;
+      border-radius: 100% 0 100% 0;
+      background: linear-gradient(135deg, #356d49, #173f2a);
+      box-shadow:
+        23px 46px 0 -2px #285a3b,
+        -3px 91px 0 -4px #346b48,
+        27px 130px 0 -3px #1c4930;
+    }
+
+    .jungle-vine::before {
+      left: -6px;
+      top: 34px;
+      transform: rotate(-26deg);
+    }
+
+    .jungle-vine::after {
+      left: -16px;
+      top: 63px;
+      transform: scaleX(-1) rotate(-28deg);
+    }
+
+    .jungle-vine-left {
+      left: 24px;
+      transform: rotate(-10deg);
+    }
+
+    .jungle-vine-right {
+      right: 24px;
+      transform: scaleX(-1) rotate(-10deg);
+    }
+
+    .hero-kicker,
+    .hero h1,
+    .hero-description {
+      position: relative;
+      z-index: 2;
+    }
+
+    @media (max-width: 520px) {
+      .app {
+        padding-top: 22px;
+      }
+
+      .hero {
+        min-height: 250px;
+        padding: 56px 18px 24px;
+      }
+
+      .hero-jungle::before,
+      .hero-jungle::after {
+        top: -34px;
+        width: 245px;
+        height: 190px;
+      }
+
+      .hero-jungle::before { left: -112px; }
+      .hero-jungle::after { right: -112px; }
+
+      .jungle-vine {
+        top: -30px;
+        height: 170px;
+      }
+
+      .jungle-vine-left { left: 8px; }
+      .jungle-vine-right { right: 8px; }
+
+      .hero h1 {
+        max-width: 100%;
+      }
+    }
+
   </style>
 </head>
 
@@ -655,6 +820,10 @@
 
   <main class="app">
     <header class="hero">
+      <div class="hero-jungle" aria-hidden="true">
+        <span class="jungle-vine jungle-vine-left"></span>
+        <span class="jungle-vine jungle-vine-right"></span>
+      </div>
       <span class="hero-kicker">📍 Mini průvodce Plzní</span>
       <h1>Zažij PLZEŇ</h1>
       <p class="hero-description">Káva, jídlo, pivo, památky i večerní posezení — přehledně na jednom místě.</p>
