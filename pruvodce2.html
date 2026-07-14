@@ -192,16 +192,21 @@
       box-shadow: var(--shadow);
     }
 
-    .intro-panel { padding: 19px 20px; }
+    .intro-panel {
+      padding: 18px 20px 18px 78px;
+      min-height: 84px;
+    }
 
     .intro-panel::before {
       content: "♥";
+      position: absolute;
+      left: 22px;
+      top: 50%;
+      transform: translateY(-50%);
       display: grid;
       place-items: center;
-      float: left;
       width: 42px;
       height: 42px;
-      margin: 1px 13px 8px 0;
       border: 1px solid rgba(36, 79, 56, 0.24);
       border-radius: 50%;
       background: #ece4d0;
@@ -210,7 +215,11 @@
       font-weight: 900;
     }
 
-    .intro-panel p { margin: 0 0 7px; color: #5c675f; }
+    .intro-panel p {
+      margin: 0 0 7px;
+      color: #5c675f;
+      line-height: 1.45;
+    }
     .intro-panel p:last-child { margin-bottom: 0; }
     .intro-panel strong { color: var(--text); }
 
@@ -632,6 +641,8 @@
       .place-actions { grid-template-columns: 1fr; }
       .info-panel { padding-left: 18px; padding-top: 62px; }
       .info-panel::before { top: 16px; }
+      .intro-panel { padding: 18px 16px 18px 16px; min-height: 0; }
+      .intro-panel::before { position: static; transform: none; margin-bottom: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -906,7 +917,7 @@
     <section class="panel intro-panel" aria-label="Úvod">
       <p>Zajímá Tě, kam večer zajít na něco dobrého k jídlu nebo pití?</p>
       <p>Nechceš procházet recenze na Googlu nebo jít někam jen tak naslepo?</p>
-      <p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ</strong></p>
+      <p>Právě pro Tebe je připravený tento drobný průvodce <strong>ZAŽIJ PLZEŇ ♥</strong></p>
     </section>
 
     <section class="panel overview-panel" aria-label="Přehled průvodce">
