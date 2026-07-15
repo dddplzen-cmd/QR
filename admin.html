@@ -497,6 +497,117 @@
       font-size: 0.9rem;
     }
 
+    .evaluation-subsection {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(111, 45, 189, 0.18);
+    }
+
+    .evaluation-subsection:first-of-type {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    .evaluation-subsection h4 {
+      margin: 0 0 5px;
+      font-size: 1rem;
+    }
+
+    .task-point-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .task-point-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border: 1px solid rgba(33, 135, 57, 0.28);
+      border-radius: 12px;
+      background: #f7fcf8;
+    }
+
+    .task-point-row.is-rejected {
+      border-color: rgba(180, 35, 24, 0.32);
+      background: var(--danger-light);
+    }
+
+    .task-point-row.is-uncompleted {
+      border-color: var(--border);
+      background: #f4f5f7;
+      opacity: 0.78;
+    }
+
+    .task-point-name {
+      display: block;
+      font-weight: 800;
+    }
+
+    .task-point-state {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .task-point-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 7px 10px;
+      border: 1px solid rgba(33, 135, 57, 0.35);
+      border-radius: 10px;
+      background: #ffffff;
+      color: var(--success);
+      font-size: 0.86rem;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .task-point-row.is-rejected .task-point-control {
+      border-color: rgba(180, 35, 24, 0.42);
+      color: var(--danger);
+    }
+
+    .task-point-row.is-uncompleted .task-point-control {
+      border-color: #d4d6da;
+      color: #777b82;
+      cursor: not-allowed;
+    }
+
+    .task-point-checkbox {
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      accent-color: var(--success);
+    }
+
+    .task-point-row.is-rejected .task-point-checkbox {
+      accent-color: var(--danger);
+    }
+
+    .task-result.point-rejected {
+      border-color: rgba(180, 35, 24, 0.38);
+      background: #fff8f7;
+    }
+
+    .badge.rejected {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+
+    .score-correction {
+      margin-top: 2px;
+      color: var(--danger);
+      font-weight: 700;
+    }
+
     .bonus-list {
       display: grid;
       gap: 10px;
@@ -757,8 +868,14 @@
 
     @media (max-width: 760px) {
       .bonus-row,
-      .evaluation-summary {
+      .evaluation-summary,
+      .task-point-row {
         grid-template-columns: 1fr;
+      }
+
+      .task-point-control {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -842,7 +959,7 @@
 
         <div class="summary-card">
           <span id="averageCompleted" class="summary-number">0</span>
-          <span class="summary-label">průměrně splněných úkolů</span>
+          <span class="summary-label">průměrně uznaných bodů</span>
         </div>
 
         <div class="summary-card">
@@ -954,10 +1071,25 @@
             <h3 id="evaluationTitle">Bodování organizátora</h3>
 
             <p class="evaluation-help">
-              Základní body odpovídají počtu splněných úkolů. Zde přidělte pouze bonusové body.
+              Tým získá za každý označený úkol automaticky 1 bod. Pokud je odpověď chybná
+              nebo důkaz nesplňuje zadání, můžete konkrétní základní bod ručně neuznat.
             </p>
 
-            <div id="bonusList" class="bonus-list"></div>
+            <div class="evaluation-subsection">
+              <h4>Základní body za jednotlivé úkoly</h4>
+              <p class="evaluation-help">
+                Zaškrtnutý úkol má 1 bod. Odškrtnutím bod odeberete; týmové odevzdání se tím nemaže.
+              </p>
+              <div id="taskPointList" class="task-point-list"></div>
+            </div>
+
+            <div class="evaluation-subsection">
+              <h4>Bonusové body</h4>
+              <p class="evaluation-help">
+                Bonusy přidělujte stejně jako dosud. Každou obsazenou kategorii může získat jen jeden tým.
+              </p>
+              <div id="bonusList" class="bonus-list"></div>
+            </div>
 
             <div class="evaluation-summary">
               <div class="summary-item">
@@ -1093,6 +1225,7 @@
     const detailVersion = document.getElementById("detailVersion");
     const taskResults = document.getElementById("taskResults");
     const photoGrid = document.getElementById("photoGrid");
+    const taskPointList = document.getElementById("taskPointList");
     const bonusList = document.getElementById("bonusList");
     const detailBasePoints = document.getElementById("detailBasePoints");
     const detailBonusPoints = document.getElementById("detailBonusPoints");
@@ -1188,11 +1321,11 @@
 
       const rankedSubmissions = [...submissions].sort((a, b) => {
         const totalA =
-          Number(a.completed_count || 0) +
+          getAwardedBasePoints(a) +
           Number(a.bonus_points || 0);
 
         const totalB =
-          Number(b.completed_count || 0) +
+          getAwardedBasePoints(b) +
           Number(b.bonus_points || 0);
 
         if (totalB !== totalA) {
@@ -1218,6 +1351,9 @@
         "Tým",
         "Členové",
         "Základní body",
+        "Automaticky označeno",
+        "Odebrané základní body",
+        "Neuznané úkoly",
         "Bonusové body",
         "Body celkem",
         "Stav hodnocení",
@@ -1230,7 +1366,10 @@
       const rows = [headers];
 
       rankedSubmissions.forEach((submission, index) => {
-        const basePoints = Number(submission.completed_count || 0);
+        const basePoints = getAwardedBasePoints(submission);
+        const originalBasePoints = Number(submission.completed_count || 0);
+        const removedBasePoints = Math.max(0, originalBasePoints - basePoints);
+        const rejectedTasks = getRejectedTaskTitles(submission).join(", ");
         const bonusPoints = Number(submission.bonus_points || 0);
 
         const sameScore =
@@ -1253,6 +1392,9 @@
           submission.team_name,
           submission.team_members || "",
           basePoints,
+          originalBasePoints,
+          removedBasePoints,
+          rejectedTasks,
           bonusPoints,
           basePoints + bonusPoints,
           submission.evaluated_at ? "Vyhodnoceno" : "Nevyhodnoceno",
@@ -1356,7 +1498,7 @@
 
       const totalCompleted = submissions.reduce(
         (sum, submission) =>
-          sum + Number(submission.completed_count || 0),
+          sum + getAwardedBasePoints(submission),
         0
       );
 
@@ -1442,8 +1584,8 @@
 
     function renderTable() {
       const rankedSubmissions = [...submissions].sort((a, b) => {
-        const baseA = Number(a.completed_count || 0);
-        const baseB = Number(b.completed_count || 0);
+        const baseA = getAwardedBasePoints(a);
+        const baseB = getAwardedBasePoints(b);
         const bonusA = Number(a.bonus_points || 0);
         const bonusB = Number(b.bonus_points || 0);
         const totalA = baseA + bonusA;
@@ -1466,7 +1608,7 @@
       let previousRank = 0;
 
       rankedSubmissions.forEach((submission, index) => {
-        const basePoints = Number(submission.completed_count || 0);
+        const basePoints = getAwardedBasePoints(submission);
         const bonusPoints = Number(submission.bonus_points || 0);
 
         const hasSameScore =
@@ -1500,7 +1642,8 @@
 
       filtered.forEach(submission => {
         const row = document.createElement("tr");
-        const basePoints = Number(submission.completed_count || 0);
+        const basePoints = getAwardedBasePoints(submission);
+        const originalBasePoints = Number(submission.completed_count || 0);
         const bonusPoints = Number(submission.bonus_points || 0);
         const totalPoints = basePoints + bonusPoints;
         const rank = rankById.get(submission.id);
@@ -1524,6 +1667,11 @@
           <td>
             <strong>${basePoints}</strong>
             <span class="small-text"> / ${Number(submission.total_count || 0)}</span>
+            ${
+              basePoints !== originalBasePoints
+                ? `<div class="small-text score-correction">původně ${originalBasePoints}</div>`
+                : ""
+            }
           </td>
 
           <td>
@@ -1587,6 +1735,81 @@
       return map;
     }
 
+    function getAwardedBasePoints(submission, overrides = submission.task_point_overrides || {}) {
+      const completionMap = getTaskCompletionMap(submission);
+      const hasDetailedCompletion = Array.isArray(submission.completed_tasks)
+        && submission.completed_tasks.some(task => task && task.id);
+
+      if (!hasDetailedCompletion) {
+        const removedCount = Object.values(overrides || {})
+          .filter(value => value === false)
+          .length;
+
+        return Math.max(
+          0,
+          Number(submission.completed_count || 0) - removedCount
+        );
+      }
+
+      return taskDefinitions.reduce((total, task) => {
+        const completed = completionMap.get(task.id) === true;
+        const pointAwarded = overrides?.[task.id] !== false;
+        return total + (completed && pointAwarded ? 1 : 0);
+      }, 0);
+    }
+
+    function getRejectedTaskTitles(submission) {
+      const completionMap = getTaskCompletionMap(submission);
+      const overrides = submission.task_point_overrides || {};
+
+      return taskDefinitions
+        .filter(task =>
+          completionMap.get(task.id) === true &&
+          overrides[task.id] === false
+        )
+        .map(task => task.title);
+    }
+
+    function getTaskPointOverridesFromInputs() {
+      const overrides = {};
+
+      taskPointList
+        .querySelectorAll(".task-point-checkbox:not(:disabled)")
+        .forEach(input => {
+          if (!input.checked) {
+            overrides[input.dataset.taskId] = false;
+          }
+        });
+
+      return overrides;
+    }
+
+    function getBasePointsFromInputs() {
+      return taskPointList
+        .querySelectorAll(".task-point-checkbox:not(:disabled):checked")
+        .length;
+    }
+
+    function updateTaskResultAwardState(taskId, awarded) {
+      const card = taskResults.querySelector(
+        `.task-result[data-task-id="${CSS.escape(taskId)}"]`
+      );
+
+      if (!card) {
+        return;
+      }
+
+      const badge = card.querySelector(".badge");
+      card.classList.toggle("point-rejected", !awarded);
+
+      if (badge) {
+        badge.className = `badge ${awarded ? "done" : "rejected"}`;
+        badge.textContent = awarded
+          ? "Splněno · 1 bod"
+          : "Splněno · bod neuznán";
+      }
+    }
+
     async function loadPhotoUrls(photoPaths) {
       const entries = Object.entries(photoPaths || {});
       const results = [];
@@ -1639,7 +1862,7 @@
         return;
       }
 
-      const basePoints = Number(submission.completed_count || 0);
+      const basePoints = getBasePointsFromInputs();
       const bonusPoints = calculateBonusTotal(
         getBonusDetailsFromInputs()
       );
@@ -1663,9 +1886,80 @@
 
     function renderEvaluation(submission) {
       currentSubmissionId = submission.id;
+      taskPointList.innerHTML = "";
       bonusList.innerHTML = "";
 
+      const completionMap = getTaskCompletionMap(submission);
+      const savedTaskOverrides = submission.task_point_overrides || {};
       const savedDetails = submission.bonus_details || {};
+
+      taskDefinitions.forEach(task => {
+        const completed = completionMap.get(task.id) === true;
+        const awarded = completed && savedTaskOverrides[task.id] !== false;
+        const row = document.createElement("div");
+
+        row.className = [
+          "task-point-row",
+          completed ? "" : "is-uncompleted",
+          completed && !awarded ? "is-rejected" : ""
+        ].filter(Boolean).join(" ");
+
+        row.innerHTML = `
+          <div>
+            <span class="task-point-name">${escapeHtml(task.title)}</span>
+            <span class="task-point-state">
+              ${
+                completed
+                  ? "Tým úkol označil jako splněný."
+                  : "Tým úkol neoznačil jako splněný."
+              }
+            </span>
+          </div>
+
+          <label class="task-point-control">
+            <input
+              class="task-point-checkbox"
+              type="checkbox"
+              data-task-id="${escapeHtml(task.id)}"
+              ${awarded ? "checked" : ""}
+              ${completed ? "" : "disabled"}
+            >
+            <span class="task-point-control-text">
+              ${
+                completed
+                  ? awarded ? "Udělit 1 bod" : "Bod neudělit"
+                  : "Bez bodu"
+              }
+            </span>
+          </label>
+        `;
+
+        taskPointList.appendChild(row);
+      });
+
+      taskPointList
+        .querySelectorAll(".task-point-checkbox:not(:disabled)")
+        .forEach(input => {
+          input.addEventListener("change", () => {
+            const row = input.closest(".task-point-row");
+            const label = row?.querySelector(".task-point-control-text");
+
+            row?.classList.toggle("is-rejected", !input.checked);
+
+            if (label) {
+              label.textContent = input.checked
+                ? "Udělit 1 bod"
+                : "Bod neudělit";
+            }
+
+            updateTaskResultAwardState(
+              input.dataset.taskId,
+              input.checked
+            );
+
+            updateEvaluationTotals();
+          });
+        });
 
       bonusDefinitions.forEach(bonus => {
         const row = document.createElement("div");
@@ -1736,7 +2030,6 @@
 
       updateEvaluationTotals();
     }
-
 
     async function deleteCurrentSubmission() {
       const submission = submissions.find(
@@ -1838,6 +2131,8 @@
         return;
       }
 
+      const taskPointOverrides = getTaskPointOverridesFromInputs();
+      const basePoints = getBasePointsFromInputs();
       const bonusDetails = getBonusDetailsFromInputs();
       const bonusPoints = calculateBonusTotal(bonusDetails);
 
@@ -1853,6 +2148,7 @@
       const { error } = await supabaseClient
         .from("submissions")
         .update({
+          task_point_overrides: taskPointOverrides,
           bonus_details: bonusDetails,
           bonus_points: bonusPoints,
           evaluation_note: evaluationNote.value.trim() || null,
@@ -1871,6 +2167,9 @@
         if (error.code === "23505") {
           evaluationStatus.textContent =
             "Tento bonus mezitím získal jiný tým. Obnovte výsledky a vyberte jinou kategorii.";
+        } else if (String(error.message || "").includes("task_point_overrides")) {
+          evaluationStatus.textContent =
+            "V databázi zatím chybí sloupec task_point_overrides. Spusťte přiložený SQL příkaz v Supabase SQL Editoru a zkuste uložení znovu.";
         } else {
           evaluationStatus.textContent =
             `Hodnocení se nepodařilo uložit: ${error.message}`;
@@ -1879,6 +2178,7 @@
         return;
       }
 
+      submission.task_point_overrides = taskPointOverrides;
       submission.bonus_details = bonusDetails;
       submission.bonus_points = bonusPoints;
       submission.evaluation_note =
@@ -1889,8 +2189,14 @@
       evaluationStatus.className =
         "evaluation-status show success";
 
-      evaluationStatus.textContent =
-        "Hodnocení bylo úspěšně uloženo.";
+      const removedPoints = Math.max(
+        0,
+        Number(submission.completed_count || 0) - basePoints
+      );
+
+      evaluationStatus.textContent = removedPoints > 0
+        ? `Hodnocení bylo uloženo. Neuznáno: ${removedPoints} základních ${removedPoints === 1 ? "bod" : removedPoints >= 2 && removedPoints <= 4 ? "body" : "bodů"}.`
+        : "Hodnocení bylo úspěšně uloženo.";
 
       renderSummary();
       renderBonusOverview();
@@ -1914,7 +2220,7 @@
         submission.team_members || "Členové týmu nebyli uvedeni.";
 
       detailCompleted.textContent =
-        `${submission.completed_count} / ${submission.total_count}`;
+        `${submission.completed_count} / ${submission.total_count} označeno · ${getAwardedBasePoints(submission)} b.`;
 
       detailCode.textContent = submission.submission_code;
       detailTime.textContent = formatDate(submission.submitted_at);
@@ -1932,13 +2238,28 @@
 
       taskResults.innerHTML = "";
 
+      const savedTaskOverrides = submission.task_point_overrides || {};
+
       taskDefinitions.forEach(task => {
         const completed = completionMap.get(task.id) === true;
+        const pointAwarded = completed && savedTaskOverrides[task.id] !== false;
         const answer = answers[task.id];
         const item = document.createElement("article");
 
-        item.className =
-          `task-result${completed ? " completed" : ""}`;
+        item.dataset.taskId = task.id;
+        item.className = [
+          "task-result",
+          completed ? "completed" : "",
+          completed && !pointAwarded ? "point-rejected" : ""
+        ].filter(Boolean).join(" ");
+
+        const badgeClass = !completed
+          ? "missing"
+          : pointAwarded ? "done" : "rejected";
+
+        const badgeText = !completed
+          ? "Nesplněno"
+          : pointAwarded ? "Splněno · 1 bod" : "Splněno · bod neuznán";
 
         item.innerHTML = `
           <div class="task-result-header">
@@ -1946,8 +2267,8 @@
               ${escapeHtml(task.title)}
             </span>
 
-            <span class="badge ${completed ? "done" : "missing"}">
-              ${completed ? "Splněno" : "Nesplněno"}
+            <span class="badge ${badgeClass}">
+              ${badgeText}
             </span>
           </div>
 
