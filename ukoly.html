@@ -2318,9 +2318,16 @@
       "sb_publishable_zID4S29fjci3_TI6M7mDPw_1vpEPpX7";
 
     const supabaseClient = window.supabase.createClient(
-      supabaseUrl,
-      supabasePublishableKey
-    );
+  supabaseUrl,
+  supabasePublishableKey,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false
+    }
+  }
+  );
 
     const teamNameInput = document.getElementById("teamName");
     const teamMembersInput = document.getElementById("teamMembers");
