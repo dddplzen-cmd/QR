@@ -1189,7 +1189,12 @@
         id: "spejbl",
         title: "Spejbl & Hurvínek – bonusová fotografie",
         max: 1,
-        allowMultipleWinners: true
+        allowMultipleWinners: true,
+        // Starší databázový index hlídá klíč "spejbl" jako jedinečný.
+        // Pro více vítězů proto nové hodnocení ukládáme pod novým klíčem,
+        // ale při čtení dál podporujeme i starší uložená data.
+        storageId: "spejbl_multi",
+        legacyStorageIds: ["spejbl"]
       },
       { id: "synagoga", title: "Synagoga – nejlepší důvod", max: 1 },
       { id: "muzeum", title: "Západočeské muzeum – nejlepší exponát", max: 1 },
@@ -1533,7 +1538,10 @@
 
       bonusDefinitions.forEach(bonus => {
         const winners = submissions.filter(submission =>
-          Number(submission.bonus_details?.[bonus.id] || 0) > 0
+          getBonusValueFromDetails(
+            submission.bonus_details,
+            bonus
+          ) > 0
         );
 
         const item = document.createElement("article");
@@ -1544,7 +1552,7 @@
         if (winners.length > 0) {
           const winnerList = winners
             .map(winner =>
-              `${escapeHtml(winner.team_name)} (${Number(winner.bonus_details?.[bonus.id] || 0)} b.)`
+              `${escapeHtml(winner.team_name)} (${getBonusValueFromDetails(winner.bonus_details, bonus)} b.)`
             )
             .join(", ");
 
@@ -1848,15 +1856,43 @@
     }
 
 
+    function getBonusStorageId(bonus) {
+      return bonus.storageId || bonus.id;
+    }
+
+    function getBonusValueFromDetails(details, bonus) {
+      const source = details || {};
+      const storageIds = [
+        getBonusStorageId(bonus),
+        ...(bonus.legacyStorageIds || [])
+      ];
+
+      return storageIds.reduce(
+        (highestValue, storageId) => Math.max(
+          highestValue,
+          Number(source[storageId] || 0)
+        ),
+        0
+      );
+    }
+
     function getBonusDetailsFromInputs() {
       const details = {};
 
       bonusList.querySelectorAll(".bonus-input").forEach(input => {
+        const bonus = bonusDefinitions.find(
+          item => item.id === input.dataset.bonusId
+        );
+
+        if (!bonus) {
+          return;
+        }
+
         const max = Number(input.dataset.max || 0);
         const rawValue = Number(input.value || 0);
         const value = Math.max(0, Math.min(max, rawValue));
 
-        details[input.dataset.bonusId] = value;
+        details[getBonusStorageId(bonus)] = value;
       });
 
       return details;
@@ -1898,8 +1934,9 @@
           return false;
         }
 
-        return Number(
-          otherSubmission.bonus_details?.[bonus.id] || 0
+        return getBonusValueFromDetails(
+          otherSubmission.bonus_details,
+          bonus
         ) > 0;
       }) || null;
     }
@@ -1992,7 +2029,7 @@
           0,
           Math.min(
             bonus.max,
-            Number(savedDetails[bonus.id] || 0)
+            getBonusValueFromDetails(savedDetails, bonus)
           )
         );
 
@@ -2187,8 +2224,13 @@
           "evaluation-status show error";
 
         if (error.code === "23505") {
-          evaluationStatus.textContent =
-            "Tento bonus mezitím získal jiný tým. Obnovte výsledky a vyberte jinou kategorii.";
+          const constraintInfo = error.details || error.message || "";
+
+          evaluationStatus.textContent = constraintInfo
+            .toLocaleLowerCase("cs")
+            .includes("spejbl")
+              ? "Uložení stále blokuje databázové omezení pro bonus Spejbl & Hurvínek. Nahrajte tuto novou verzi administrace; používá pro tento bonus více-vítězný klíč a zachová čtení starších výsledků."
+              : "Některý jednovítězný bonus mezitím získal jiný tým. Obnovte výsledky a zkontrolujte bonusové kategorie.";
         } else if (String(error.message || "").includes("task_point_overrides")) {
           evaluationStatus.textContent =
             "V databázi zatím chybí sloupec task_point_overrides. Spusťte přiložený SQL příkaz v Supabase SQL Editoru a zkuste uložení znovu.";
