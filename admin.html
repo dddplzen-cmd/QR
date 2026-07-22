@@ -766,7 +766,7 @@
 
 
     .toolbar {
-      grid-template-columns: minmax(220px, 1fr) 190px auto auto;
+      grid-template-columns: minmax(220px, 1fr) 190px auto auto auto;
     }
 
     .filter-select {
@@ -991,6 +991,10 @@
           Exportovat CSV
         </button>
 
+        <button id="downloadPhotosButton" class="export-button" type="button">
+          Stáhnout všechny fotky
+        </button>
+
         <button id="refreshButton" class="refresh-button" type="button">
           Obnovit výsledky
         </button>
@@ -1152,6 +1156,7 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
   <script>
     const supabaseUrl = "https://hqkongijaoxfbhatlxjg.supabase.co";
@@ -1216,6 +1221,7 @@
     const searchInput = document.getElementById("searchInput");
     const evaluationFilter = document.getElementById("evaluationFilter");
     const exportButton = document.getElementById("exportButton");
+    const downloadPhotosButton = document.getElementById("downloadPhotosButton");
     const bonusOverviewGrid = document.getElementById("bonusOverviewGrid");
     const submissionsBody = document.getElementById("submissionsBody");
     const emptyState = document.getElementById("emptyState");
@@ -1317,6 +1323,191 @@
       link.remove();
 
       URL.revokeObjectURL(url);
+    }
+
+    function sanitizeZipName(value, fallback = "soubor") {
+      const cleaned = String(value ?? "")
+        .replace(/[\\/:*?"<>|\u0000-\u001F]/g, "-")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/[. ]+$/g, "");
+
+      return cleaned || fallback;
+    }
+
+    function getPhotoExtension(path, blob) {
+      const pathMatch = String(path || "").match(/\.([a-zA-Z0-9]{1,8})$/);
+
+      if (pathMatch) {
+        return pathMatch[1].toLowerCase();
+      }
+
+      const extensionByType = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+        "image/gif": "gif",
+        "image/heic": "heic",
+        "image/heif": "heif"
+      };
+
+      return extensionByType[blob?.type] || "jpg";
+    }
+
+    async function downloadAllPhotos() {
+      const photoItems = submissions.flatMap(submission =>
+        Object.entries(submission.photo_paths || {}).map(
+          ([photoId, path]) => ({
+            submission,
+            photoId,
+            path
+          })
+        )
+      );
+
+      if (photoItems.length === 0) {
+        showStatus(
+          dashboardStatus,
+          "error",
+          "Nejsou k dispozici žádné fotografie ke stažení."
+        );
+
+        return;
+      }
+
+      if (!window.JSZip) {
+        showStatus(
+          dashboardStatus,
+          "error",
+          "Knihovna pro vytvoření ZIPu se nenačetla. Zkontrolujte připojení a obnovte stránku."
+        );
+
+        return;
+      }
+
+      downloadPhotosButton.disabled = true;
+      const originalButtonText = downloadPhotosButton.textContent;
+      const zip = new window.JSZip();
+      let downloadedCount = 0;
+      const failedPhotos = [];
+
+      try {
+        for (let index = 0; index < photoItems.length; index += 1) {
+          const item = photoItems[index];
+          const { submission, photoId, path } = item;
+
+          downloadPhotosButton.textContent =
+            `Stahuji ${index + 1}/${photoItems.length}…`;
+
+          showStatus(
+            dashboardStatus,
+            "working",
+            `Připravuji fotografie: ${index + 1} z ${photoItems.length}.`
+          );
+
+          const { data: photoBlob, error } = await supabaseClient
+            .storage
+            .from("team-photos")
+            .download(path);
+
+          if (error || !photoBlob) {
+            failedPhotos.push({
+              teamName: submission.team_name,
+              photoId,
+              message: error?.message || "Fotografii se nepodařilo načíst."
+            });
+            continue;
+          }
+
+          const taskTitle = taskDefinitions.find(
+            task => task.id === photoId
+          )?.title || photoId;
+
+          const teamFolder = sanitizeZipName(
+            `${submission.team_name || "Tým"} - ${submission.submission_code || submission.id}`,
+            "Tým"
+          );
+
+          const extension = getPhotoExtension(path, photoBlob);
+          const fileName = sanitizeZipName(
+            `${String(index + 1).padStart(3, "0")} - ${taskTitle}`,
+            `fotografie-${index + 1}`
+          );
+
+          zip.folder(teamFolder).file(
+            `${fileName}.${extension}`,
+            photoBlob
+          );
+
+          downloadedCount += 1;
+        }
+
+        if (downloadedCount === 0) {
+          throw new Error(
+            "Nepodařilo se načíst ani jednu fotografii. Zkontrolujte oprávnění úložiště."
+          );
+        }
+
+        if (failedPhotos.length > 0) {
+          const errorReport = [
+            "Následující fotografie se nepodařilo stáhnout:",
+            "",
+            ...failedPhotos.map(photo =>
+              `${photo.teamName} | ${photo.photoId} | ${photo.message}`
+            )
+          ].join("\n");
+
+          zip.file("CHYBY-PRI-STAHOVANI.txt", errorReport);
+        }
+
+        downloadPhotosButton.textContent = "Vytvářím ZIP…";
+        showStatus(
+          dashboardStatus,
+          "working",
+          `Vytvářím ZIP s ${downloadedCount} fotografiemi…`
+        );
+
+        const zipBlob = await zip.generateAsync({
+          type: "blob",
+          compression: "DEFLATE",
+          compressionOptions: {
+            level: 6
+          }
+        });
+
+        const date = new Date().toISOString().slice(0, 10);
+        const url = URL.createObjectURL(zipBlob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.download = `plzenska-vyzva-fotografie-${date}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        window.setTimeout(() => {
+          URL.revokeObjectURL(url);
+        }, 1000);
+
+        showStatus(
+          dashboardStatus,
+          failedPhotos.length > 0 ? "error" : "success",
+          failedPhotos.length > 0
+            ? `ZIP byl vytvořen. Staženo ${downloadedCount} fotografií, ${failedPhotos.length} se nepodařilo načíst; seznam chyb je uvnitř ZIPu.`
+            : `ZIP se ${downloadedCount} fotografiemi byl vytvořen.`
+        );
+      } catch (error) {
+        console.error(error);
+
+        showStatus(
+          dashboardStatus,
+          "error",
+          `Fotografie se nepodařilo stáhnout: ${error.message || "Neznámá chyba"}`
+        );
+      } finally {
+        downloadPhotosButton.disabled = false;
+        downloadPhotosButton.textContent = originalButtonText;
+      }
     }
 
     function exportResultsToCsv() {
@@ -2438,6 +2629,11 @@
     exportButton.addEventListener(
       "click",
       exportResultsToCsv
+    );
+
+    downloadPhotosButton.addEventListener(
+      "click",
+      downloadAllPhotos
     );
 
     closeDetailButton.addEventListener("click", () => {
