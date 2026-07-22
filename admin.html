@@ -1086,7 +1086,8 @@
             <div class="evaluation-subsection">
               <h4>Bonusové body</h4>
               <p class="evaluation-help">
-                Bonusy přidělujte stejně jako dosud. Každou obsazenou kategorii může získat jen jeden tým.
+                Každou bonusovou kategorii může získat jen jeden tým. Výjimkou je bonus
+                Spejbl &amp; Hurvínek, který lze udělit více týmům.
               </p>
               <div id="bonusList" class="bonus-list"></div>
             </div>
@@ -1184,7 +1185,12 @@
 
     const bonusDefinitions = [
       { id: "katedrala", title: "Katedrála – nejlepší přání", max: 1 },
-      { id: "spejbl", title: "Spejbl & Hurvínek – bonusová fotografie", max: 1 },
+      {
+        id: "spejbl",
+        title: "Spejbl & Hurvínek – bonusová fotografie",
+        max: 1,
+        allowMultipleWinners: true
+      },
       { id: "synagoga", title: "Synagoga – nejlepší důvod", max: 1 },
       { id: "muzeum", title: "Západočeské muzeum – nejlepší exponát", max: 1 },
       { id: "vymena", title: "Vyměňovací výzva – nejlepší výměna", max: 3 },
@@ -1526,24 +1532,34 @@
       bonusOverviewGrid.innerHTML = "";
 
       bonusDefinitions.forEach(bonus => {
-        const winner = submissions.find(submission =>
+        const winners = submissions.filter(submission =>
           Number(submission.bonus_details?.[bonus.id] || 0) > 0
         );
 
         const item = document.createElement("article");
         item.className = "bonus-overview-item";
 
+        let winnerText = "Zatím nepřiděleno";
+
+        if (winners.length > 0) {
+          const winnerList = winners
+            .map(winner =>
+              `${escapeHtml(winner.team_name)} (${Number(winner.bonus_details?.[bonus.id] || 0)} b.)`
+            )
+            .join(", ");
+
+          winnerText = bonus.allowMultipleWinners
+            ? `Oceněné týmy: ${winnerList}`
+            : `Vítěz: ${winnerList}`;
+        }
+
         item.innerHTML = `
           <span class="bonus-overview-title">
             ${escapeHtml(bonus.title)}
           </span>
 
-          <span class="bonus-overview-winner${winner ? " assigned" : ""}">
-            ${
-              winner
-                ? `Vítěz: ${escapeHtml(winner.team_name)} (${Number(winner.bonus_details?.[bonus.id] || 0)} b.)`
-                : "Zatím nepřiděleno"
-            }
+          <span class="bonus-overview-winner${winners.length > 0 ? " assigned" : ""}">
+            ${winnerText}
           </span>
         `;
 
@@ -1872,14 +1888,18 @@
       detailTotalPoints.textContent = basePoints + bonusPoints;
     }
 
-    function getBonusWinner(bonusId, currentSubmissionId) {
+    function getBonusWinner(bonus, currentSubmissionId) {
+      if (bonus.allowMultipleWinners) {
+        return null;
+      }
+
       return submissions.find(otherSubmission => {
         if (otherSubmission.id === currentSubmissionId) {
           return false;
         }
 
         return Number(
-          otherSubmission.bonus_details?.[bonusId] || 0
+          otherSubmission.bonus_details?.[bonus.id] || 0
         ) > 0;
       }) || null;
     }
@@ -1964,7 +1984,7 @@
       bonusDefinitions.forEach(bonus => {
         const row = document.createElement("div");
         const winner = getBonusWinner(
-          bonus.id,
+          bonus,
           submission.id
         );
 
@@ -1984,9 +2004,11 @@
             <span class="bonus-name">${escapeHtml(bonus.title)}</span>
             <span class="bonus-maximum">Maximum: ${bonus.max} b.</span>
             ${
-              winner
-                ? `<span class="bonus-winner">Bonus už získal tým „${escapeHtml(winner.team_name)}“.</span>`
-                : ""
+              bonus.allowMultipleWinners
+                ? `<span class="bonus-overview-winner assigned">Tento bonus lze udělit více týmům.</span>`
+                : winner
+                  ? `<span class="bonus-winner">Bonus už získal tým „${escapeHtml(winner.team_name)}“.</span>`
+                  : ""
             }
           </div>
 
